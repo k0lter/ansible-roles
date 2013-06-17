@@ -31,6 +31,7 @@
     - libcache-cache-perl
     - libdbd-pg-perl
     - libdbd-mysql-perl
+    - liblwp-useragent-determined-perl
   when_boolean: ${with_munin_node}
 
 - name: Create need directories for munin-node configuration
