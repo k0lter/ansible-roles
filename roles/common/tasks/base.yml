@@ -1,0 +1,52 @@
+- name: Write /etc/apt/sources.list
+  action: template src=apt/sources.${ansible_lsb.codename}.list.j2 dest=/etc/apt/sources.list owner=root group=root mode=0644
+  notify:
+    - Reload apt cache
+
+- name: Write /etc/apt/apt.conf.d configuration files
+  action: template src=apt/${item}.j2 dest=/etc/apt/apt.conf.d/${item} owner=root group=root mode=0644
+  with_items:
+    - local-recommends
+    - local-pdiffs
+
+- name: Install base packages
+  action: ${ansible_pkg_mgr} pkg=${item} install_recommends=no state=installed update_cache=yes
+  with_items:
+    - apticron
+    - locales-all
+    - lsb-release
+    - ntp
+    - toilet
+    - toilet-fonts
+    - facter
+    - zsh
+    - git-core
+    - vim-nox
+    - ccze
+    - tree
+    - pydf
+    - htop
+    - sudo
+
+- name: Install hosts file
+  action: template src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
+  notify:
+    - Update motd
+
+- name: Install hosts.deny file
+  action: template src=hosts.deny.j2 dest=/etc/hosts.deny owner=root group=root mode=0644
+
+- name: Install sudo configuration
+  action: template src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
+
+- name: Install unprivileged user
+  action: user name="${admin_user}" comment="${admin_fullname}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
+
+- name: Install configuration files for user
+  action: git repo=git://git.openics.org/kolter-dotfiles.git dest=/home/${admin_user}
+
+- name: Install SSH key for unprivileged user
+  action: authorized_key user="${admin_user}" key="$FILE(roles/common/data/users/${admin_user}/id_rsa.pub)" state=present
+
+- name: Install SSH key for root
+  action: authorized_key user=root key="$FILE(roles/common/data/users/${admin_user}/id_rsa.pub)" state=present

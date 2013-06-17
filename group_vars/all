@@ -1,0 +1,30 @@
+#
+# Default variables
+#
+
+ansible_prolog: True
+
+ansible_master_user: $PIPE(whoami)
+#ansible_master_hostname: $PIPE(hostname --fqdn)
+ansible_master_hostname: master.openics.org
+ansible_master_ip: $PIPE(hostname --ip)
+
+admin_fullname: Emmanuel Bouthenot
+admin_user: manu
+admin_email: kolter@openics.org
+
+hosts_deny_nfs: False
+
+with_logcheck: True
+with_rkhunter: True
+with_chkrootkit: True
+
+with_smartd: False
+
+with_smtp: False
+
+with_ssh: True
+ssh_port: 2222
+ssh_ecdsa_key: True
+
+# vim: ft=yaml

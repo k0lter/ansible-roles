@@ -1,0 +1,9 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+deb http://ftp.fr.debian.org/debian/ sid main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ sid main contrib non-free
+
+deb http://ftp.fr.debian.org/debian/ experimental main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ experimental main contrib non-free

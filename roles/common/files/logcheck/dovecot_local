@@ -1,0 +1,2 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (pop3|imap)-login: Login: user=<.+>, method=.+, rip=[0-9:\.]+, lip=[0-9:\.]+, mpid=[0-9]+, .+, session=<.+>$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (pop3|imap)\(.*\): (Connection closed|Disconnected: Logged out) in=[0-9]+ out=[0-9]+$

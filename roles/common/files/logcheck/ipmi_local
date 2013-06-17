@@ -1,0 +1,1 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel:( \[ *[[:digit:]]+\.[[:digit:]]+\])? IPMI message handler: BMC returned incorrect response, expected netfn 2d cmd 0, got netfn 2c cmd 0$

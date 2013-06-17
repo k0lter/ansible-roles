@@ -1,0 +1,59 @@
+- name: Install munin packages
+  action: ${ansible_pkg_mgr} pkg=munin state=installed update_cache=yes
+  when_boolean: ${with_munin}
+
+- name: Install munin configuration
+  action: template src=munin/munin.conf.j2 dest=/etc/munin/munin.conf owner=root group=root mode=0644
+  when_boolean: ${with_munin}
+
+- name: Install munin nginx virtual host (sites-available)
+  action: template src=munin/nginx_vhost.j2 dest=/etc/nginx/sites-available/munin owner=root group=root mode=0644
+  notify:
+    - Reload nginx for munin
+  when_boolean: ${with_munin}
+
+- name: Install munin nginx virtual host (sites-enabled)
+  action: file src=/etc/nginx/sites-available/munin path=/etc/nginx/sites-enabled/munin state=link
+  notify:
+    - Reload nginx for munin
+  when_boolean: ${with_munin}
+
+- name: Install munin-node packages
+  action: ${ansible_pkg_mgr} pkg=${item} state=installed update_cache=yes
+  with_items:
+    - munin-node
+    - munin-plugins-extra
+    - libnet-cidr-perl
+    - libcache-cache-perl
+    - libdbd-pg-perl
+    - libdbd-mysql-perl
+  when_boolean: ${with_munin_node}
+
+- name: Create need directories for munin-node configuration
+  action: file path=/etc/munin/${item} state=directory owner=root group=root mode=0755
+  with_items:
+    - plugins
+    - plugin-conf.d
+  when_boolean: ${with_munin_node}
+
+- name: Install munin node configuration
+  action: template src=munin/munin-node.conf.j2 dest=/etc/munin/munin-node.conf owner=root group=root mode=0644
+  notify:
+    - Restart munin-node
+  when_boolean: ${with_munin_node}
+
+- name: Install munin node plugins configuration
+  action: template src=munin/munin-node.conf.plugins.j2 dest=/etc/munin/plugin-conf.d/munin-node owner=root group=root mode=0644
+  notify:
+    - Restart munin-node
+  when_boolean: ${with_munin_node}
+
+- name: Autoconfigure munin-node plugins
+  action: munin_node_autoconf families=auto,manual,contrib excludes=apc_nis,apt,apt_all,port_,ipmi_fans,ipmi_power,ipmi_temp,ntp_,ircu,ntp_kernel_err,ntp_kernel_pll_freq,ntp_kernel_pll_off,ntp_offset,ntp_states
+  notify:
+    - Restart munin-node
+  when_boolean: ${with_munin_node}
+
+- name: Ensure munin-node is running
+  action: service name=munin-node state=started
+  when_boolean: ${with_munin_node}

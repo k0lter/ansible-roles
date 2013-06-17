@@ -1,0 +1,13 @@
+- name: Install nginx package
+  action: ${ansible_pkg_mgr} pkg=nginx state=installed update_cache=yes
+  when_boolean: ${with_nginx}
+
+- name: Install nginx status configuration
+  action: template src=nginx/status.conf.j2 dest=/etc/nginx/conf.d/status.conf owner=root group=root mode=0644
+  notify:
+    - Reload nginx
+  when_boolean: ${with_nginx}
+
+- name: Ensure nginx is running
+  action: service name=nginx state=started
+  when_boolean: ${with_nginx}

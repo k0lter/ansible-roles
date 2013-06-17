@@ -1,0 +1,3 @@
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ CRON\[[0-9]+\]: pam_limits\(cron:session\): Unknown kernel rlimit 'Max realtime timeout' ignored$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sshd\[[0-9]+\]: pam_limits\(sshd:session\): Unknown kernel rlimit 'Max realtime timeout' ignored$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sudo: pam_limits\(sudo:session\): Unknown kernel rlimit 'Max realtime timeout' ignored$

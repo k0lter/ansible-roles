@@ -1,0 +1,26 @@
+- name: Install apache2 packages
+  action: ${ansible_pkg_mgr} pkg=apache2 state=installed update_cache=yes
+  when_boolean: ${with_apache2}
+
+- name: Install apache2 basic security configuration
+  action: template src=apache2/conf.d/security.j2 dest=/etc/apache2/conf.d/security owner=root group=root mode=0644
+  notify:
+    - Reload apache2
+  when_boolean: ${with_apache2}
+
+- name: Install mod_php5 packages for apache2
+  action: ${ansible_pkg_mgr} pkg=apache2 state=installed update_cache=yes
+  when_boolean: ${with_apache2} and ${with_apache2_modphp5}
+
+- name: Install php5 basic security configuration
+  action: template dest=/etc/php5/apache2/conf.d/security-local.ini owner=root group=root mode=0644
+  first_available_file:
+    - apache2/php5/security-local.${ansible_hostname}.ini.j2
+    - apache2/php5/security-local.ini.j2
+  notify:
+    - Reload apache2
+  when_boolean: ${with_apache2} and ${with_apache2_modphp5}
+
+- name: Ensure apache2 is running
+  action: service name=apache2 state=started
+  when_boolean: ${with_apache2}

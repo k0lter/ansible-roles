@@ -1,0 +1,18 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+# Nginx vhost for munin master
+
+server {
+    server_name {{ munin_master_vhostname }}
+    listen 80;
+
+    access_log  /var/log/nginx/munin.access.log;
+    error_log   /var/log/nginx/munin.error.log;
+
+    location / {
+        root /var/cache/munin/www/;
+        break;
+    }
+}

@@ -1,0 +1,366 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+#
+# Mon config file
+#
+
+#
+# Global options
+#
+alertdir        = /usr/lib/mon/alert.d
+mondir          = /usr/lib/mon/mon.d
+logdir          = /var/log/mon
+historicfile    = /var/log/mon/history.log
+maxprocs        = 20
+histlength      = 100
+randstart       = 60s
+dtlogging       = yes
+dtlogfile       = dtlog
+
+#
+# Define groups of hosts to monitor
+#
+
+########
+# PING #
+########
+
+hostgroup pingd
+#
+# openics network
+#
+asuka.asyd.net gendo.asyd.net hosting.asyd.net
+dev.openics.org test.openics.org
+thor.openics.org
+kwak.netleaks.nl
+#
+# abul network
+#
+hiero.abul.org
+instabul.abul.org
+madness.abul.org
+mehyt.abul.org
+osiris.abul.org
+pra.abul.org
+rabalot.abul.org
+aquiforge.abul.org
+skara.abul.org
+#kbsd.abul.org
+#
+# rmll network
+#
+rmll0.rmll.info
+rmll1.rmll.info
+rmll2.rmll.info
+rmll3.rmll.info
+rmll4.rmll.info
+#
+# Rotex network
+#
+singa.rotary1690.org
+#
+# SOo network
+#
+listes.sud-ouest.org
+
+#######
+# SSH #
+#######
+
+hostgroup sshd
+#
+# openics network
+#
+#asuka.asyd.net
+gendo.asyd.net hosting.asyd.net
+dev.openics.org test.openics.org
+thor.openics.org
+kwak.netleaks.nl
+#
+# abul network
+#
+hiero.abul.org
+instabul.abul.org
+madness.abul.org
+mehyt.abul.org
+osiris.abul.org
+pra.abul.org
+rabalot.abul.org
+aquiforge.abul.org
+skara.abul.org
+#kbsd.abul.org
+#
+# rmll network
+#
+rmll0.rmll.info
+rmll1.rmll.info
+rmll2.rmll.info
+rmll3.rmll.info
+rmll4.rmll.info
+#
+# Rotex network
+#
+singa.rotary1690.org
+
+#########
+# HTTPS #
+#########
+
+hostgroup httpsd
+#
+# openics network
+#
+openics.org
+homogeno.us
+#
+# rmll network
+#
+reservation.rmll.info
+admin.rmll.info
+pad.rmll.info
+#
+# Rotary/Rotex network
+#
+www.rotex1690.org
+reservations.rotary1690.org
+
+########
+# HTTP #
+########
+
+hostgroup httpd
+#
+# openics network
+#
+kolter.blog.openics.org
+gallery.openics.org
+git.openics.org
+ge.openics.org
+geraldine.openics.org
+marks.openics.org
+#
+# abul network
+#
+abul.org
+ftp.abul.org
+ftp.abuledu.org
+aquiforge.abul.org
+gilantoli.com
+#
+# rmll network
+#
+rmll.info
+call.rmll.info
+listes.rmll.info
+#
+# SOo network
+#
+listes.sud-ouest.org
+#
+# Rotary/Rotex network
+#
+www.rotex1690.org
+listes.rotary1690.org
+listes.rotex1690.org
+
+########
+# SMTP #
+########
+
+hostgroup smtpd
+#
+# openics network
+#
+gendo.asyd.net
+kwak.netleaks.nl
+#
+# abul network
+#
+hiero.abul.org
+osiris.abul.org
+#
+# rmll network
+#
+rmll1.rmll.info
+rmll3.rmll.info
+#
+# SOo network
+#
+listes.sud-ouest.org
+#
+# Rotary/Rotex network
+#
+singa.rotary1690.org
+
+#########
+# IMAPS #
+#########
+
+hostgroup imapsd
+#
+# openics network
+#
+gendo.asyd.net
+
+#######
+# DNS #
+#######
+
+hostgroup dnsd_openics
+#
+# openics network
+#
+88.191.237.102
+188.241.113.39
+
+hostgroup dnsd_abul
+#
+# abul network
+#
+195.214.228.104
+147.210.68.129
+
+hostgroup dnsd_rmll
+#
+# rmll network
+#
+80.67.169.65
+#173.230.154.187
+
+#
+# Define watches
+#
+watch pingd
+    service ping
+        description Responses to ping
+        interval 5m
+        monitor fping.monitor
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch httpsd
+    service https
+        description HTTP service
+        interval 5m
+        monitor https.monitor
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch httpd
+    service http
+        description HTTP service
+        interval 5m
+        monitor http.monitor
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch smtpd
+    service smtp
+        description SMTP service
+        interval 5m
+        monitor smtp.monitor -t 60
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch imapsd
+    service imaps
+        description IMAP service
+        interval 5m
+        monitor tcp.monitor -t 60 -p 143
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch sshd
+    service ssh
+        description SSH service
+        interval 5m
+        monitor tcp.monitor -t 60 -p 2222
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch dnsd_openics
+    service dns
+        description DNS service - openics
+        interval 5m
+        monitor dns.monitor -zone openics.org -zone bouthenot.name -zone homogeno.us -master 88.191.237.102
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch dnsd_abul
+    service dns
+        description DNS service - abul
+        interval 5m
+        monitor dns.monitor -zone abul.org -zone libresoftwaremeeting.org -zone rencontresmondiales.org -master 195.214.228.104
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+watch dnsd_rmll
+    service dns
+        description DNS service
+        interval 5m
+        monitor dns.monitor -zone rmll.info -master 80.67.169.65
+        period
+            numalerts 50
+            alertevery 10m
+            alert mail.alert root
+            alert irc.alert -j -c openics -S chat.freenode.net -U OpenicsBot -n openicsbot -d
+            upalert mail.alert root
+
+#   service pop3
+#       description POP3 service
+#       interval 10m
+#       monitor pop3.monitor
+#       period
+#           numalerts 10
+#           alert mail.alert root
+#           upalert mail.alert root
+#   service imap
+#       description IMAP service
+#       interval 10m
+#       monitor imap.monitor -t 60
+#       period
+#           numalerts 10
+#           alert mail.alert root
+#           upalert mail.alert root
+#   service telnet
+#       description TELNET service
+#       interval 10m
+#       monitor telnet.monitor
+#       period wd {Mon-Fri} hr {7am-10pm}
+#           alertevery 1h
+#           alertafter 2 30m
+#           alert mail.alert root

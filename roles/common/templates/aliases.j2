@@ -1,0 +1,18 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+
+mailer-daemon:  postmaster
+postmaster:     root
+nobody:         root
+webmaster:      root
+www-data:       root
+abuse:          root
+noc:            root
+security:       root
+logcheck:       root
+
+{% if admin_email is defined %}
+root:           {{ admin_email }}
+{% endif %}

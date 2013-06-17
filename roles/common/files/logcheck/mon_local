@@ -1,0 +1,2 @@
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ mon\[[0-9]+\]: client connection from 
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ mon\[[0-9]+\]: (finished )?client command "(list (disabled|state|watch|opstatus|descriptions)|protid [0-9]+)"$

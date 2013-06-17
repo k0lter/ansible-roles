@@ -1,0 +1,10 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+#
+# sudo configuration for local admins
+#
+
+# Debian apt configuration
+%operator ALL=NOPASSWD: /usr/bin/apt-get update, /usr/bin/apt-get upgrade

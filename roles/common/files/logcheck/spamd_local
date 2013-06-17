@@ -1,0 +1,3 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ spamd\[[0-9]+\]: prefork: adjust: [0-9]+ idle children (less|more) than [0-9]+ (max|min)imum idle children. (In|De)creasing spamd children: [0-9]+ (start|kill)ed\.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ spamd\[[0-9]+\]: spamd: handled cleanup of child pid \[[0-9]+\] due to SIGCHLD: interrupted, signal [0-9]+ \([0-9]+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ spamd\[[0-9]+\]: spamd: handled cleanup of child pid \[[0-9]+\] due to SIGCHLD: exit [0-9]+$

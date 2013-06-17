@@ -1,0 +1,2 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ noip2\[[0-9]+\]: Can't connect to dynupdate\.no-ip\.com \(Connection refused\) $
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ noip2\[[0-9]+\]: Can't get our visible IP address from ip[0-9]+\.dynupdate\.no-ip\.com $

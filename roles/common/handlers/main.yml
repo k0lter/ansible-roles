@@ -1,0 +1,4 @@
+- include: base.yml
+- include: smtp.yml
+- include: ssh.yml
+- include: smartd.yml

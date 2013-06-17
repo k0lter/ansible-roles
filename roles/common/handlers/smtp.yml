@@ -1,0 +1,5 @@
+- name: Regenerate aliases cache
+  action: command newaliases
+
+- name: Restart postfix
+  action: service name=postfix state=restarted

@@ -1,0 +1,45 @@
+- name: Install mon packages
+  action: ${ansible_pkg_mgr} pkg=mon state=installed update_cache=yes
+  when_boolean: ${with_mon}
+
+- name: Create need directory for mon configuration
+  action: file path=/etc/mon/mon.d state=directory owner=root group=root mode=0755
+  when_boolean: ${with_mon}
+
+- name: Install mon configuration
+  action: template src=mon/${ansible_hostname}.conf.j2 dest=/etc/mon/mon.cf owner=root group=root mode=0644
+  notify:
+    - Restart mon
+  when_boolean: ${with_mon}
+
+- name: Install mon (default) configuration
+  action: template src=mon/default.j2 dest=/etc/default/mon owner=root group=root mode=0644
+  notify:
+    - Restart mon
+  when_boolean: ${with_mon}
+
+- name: Install custom mon plugins
+  action: copy src=mon/${item}.monitor dest=/etc/mon/mon.d/${item}.monitor owner=root group=root mode=0755
+  with_items:
+    - https
+    - imaps
+    - dns
+  notify:
+    - Restart mon
+  when_boolean: ${with_mon}
+
+- name: Install mon plugins
+  action: file src=/usr/lib/mon/mon.d/${item}.monitor path=/etc/mon/mon.d/${item}.monitor state=link
+  with_items:
+    - fping
+    - http
+    - smtp
+    - imap
+    - tcp
+  notify:
+    - Restart mon
+  when_boolean: ${with_mon}
+
+- name: Ensure mon is running
+  action: service name=mon state=started
+  when_boolean: ${with_mon}
