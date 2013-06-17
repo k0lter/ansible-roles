@@ -10,8 +10,9 @@ munin_master_vhostname: localhost
 munin_master_vhostport: 80
 
 munin_masters:
-  - 127.0.0.1
+  - 127.0.0.1/32
 munin_nodes:
-  - 127.0.0.1
+  - node: localhost
+    address: 127.0.0.1
 
 # vim: ft=yaml
