@@ -5,8 +5,7 @@
 ansible_prolog: True
 
 ansible_master_user: $PIPE(whoami)
-#ansible_master_hostname: $PIPE(hostname --fqdn)
-ansible_master_hostname: master.openics.org
+ansible_master_hostname: $PIPE(hostname --fqdn)
 ansible_master_ip: $PIPE(hostname --ip)
 
 admin_fullname: Emmanuel Bouthenot
