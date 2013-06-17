@@ -1,0 +1,7 @@
+- name: Install php5-fpm package
+  action: ${ansible_pkg_mgr} pkg=php5-fpm state=installed update_cache=yes
+  when_boolean: ${with_fpm}
+
+- name: Ensure php5-fpm is running
+  action: service name=php5-fpm state=started
+  when_boolean: ${with_fpm}

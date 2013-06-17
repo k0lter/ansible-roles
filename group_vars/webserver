@@ -5,5 +5,6 @@
 with_apache2: False
 with_apache2_modphp5: False
 with_nginx: False
+with_fpm: False
 
 # vim: ft=yaml
