@@ -1,1 +1,3 @@
+hosts
+library
 roles/common/data/user/*
