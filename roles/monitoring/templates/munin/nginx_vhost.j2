@@ -5,8 +5,8 @@
 # Nginx vhost for munin master
 
 server {
-    server_name {{ munin_master_vhostname }}
-    listen 80;
+    server_name {{ munin_master_vhostname }};
+    listen {{ munin_master_vhostport }};
 
     access_log  /var/log/nginx/munin.access.log;
     error_log   /var/log/nginx/munin.error.log;

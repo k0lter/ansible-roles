@@ -7,6 +7,8 @@ with_mon: False
 with_munin: False
 with_munin_node: False
 munin_master_vhostname: localhost
+munin_master_vhostport: 80
+
 munin_masters:
   - 127.0.0.1
 munin_nodes:
