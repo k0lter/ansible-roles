@@ -6,6 +6,10 @@
   action: template src=munin/munin.conf.j2 dest=/etc/munin/munin.conf owner=root group=root mode=0644
   when_boolean: ${with_munin}
 
+- name: Create basic authentication file for munin web interface
+  action: template src=munin/nginx_auth.j2 dest=${munin_http_auth_file} owner=root group=www-data mode=0640
+  when_boolean: ${with_munin} and ${with_munin_http_auth}
+
 - name: Install munin nginx virtual host (sites-available)
   action: template src=munin/nginx_vhost.j2 dest=/etc/nginx/sites-available/munin owner=root group=root mode=0644
   notify:

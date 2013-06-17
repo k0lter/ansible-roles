@@ -12,6 +12,10 @@ server {
     error_log   /var/log/nginx/munin.error.log;
 
     location / {
+{% if with_munin_http_auth %}
+        auth_basic "Restricted Access";
+        auth_basic_user_file {{ munin_http_auth_file }};
+{% endif %}
         root /var/cache/munin/www/;
         break;
     }
