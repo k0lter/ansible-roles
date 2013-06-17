@@ -36,6 +36,13 @@
 - name: Install hosts.deny file
   action: template src=hosts.deny.j2 dest=/etc/hosts.deny owner=root group=root mode=0644
 
+- name: Install kernel configuration
+  action: template src=kernel/sysctl.d/${item} dest=/etc/sysctl.d/${item} owner=root group=root mode=0644
+  with_items:
+      - 10-increase-file-descriptors.conf
+  notify:
+    - Apply kernel variables
+
 - name: Install sudo configuration
   action: template src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
 
