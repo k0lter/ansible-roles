@@ -14,6 +14,7 @@ admin_user: manu
 admin_email: kolter@openics.org
 
 hosts_deny_nfs: False
+host_deny_paranoid: True
 
 with_logcheck: True
 with_rkhunter: True
