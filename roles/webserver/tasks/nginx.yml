@@ -8,8 +8,27 @@
     - Restart nginx
   when_boolean: ${with_nginx}
 
-- name: Install nginx status configuration
-  action: template src=nginx/status.conf.j2 dest=/etc/nginx/conf.d/status.conf owner=root group=root mode=0644
+- name: Install nginx configuration
+  action: template src=nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
+  notify:
+    - Restart nginx
+  when_boolean: ${with_nginx}
+
+- name: Install additional nginx configuration params (conf.d/)
+  action: template src=nginx/conf.d/${item}.conf.j2 dest=/etc/nginx/conf.d/${item}.conf owner=root group=root mode=0644
+  with_items:
+    - status
+  notify:
+    - Reload nginx
+  when_boolean: ${with_nginx}
+
+- name: Install additional nginx configuration params (vhost_*)
+  action: template src=nginx/vhost_${item}.j2 dest=/etc/nginx/vhost_${item} owner=root group=root mode=0644
+  with_items:
+    - all
+    - expires
+    - cache-fd
+    - protect-files
   notify:
     - Reload nginx
   when_boolean: ${with_nginx}

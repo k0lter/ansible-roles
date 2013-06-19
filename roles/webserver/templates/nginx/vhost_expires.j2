@@ -1,0 +1,32 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+#
+# Expirerules for static content
+#
+
+# cache.appcache, your document html and data
+location ~* \.(?:manifest|appcache|html?|xml|json)$ {
+  expires -1;
+}
+
+# Feeds
+location ~* \.(?:rss|atom)$ {
+  expires 1h;
+  add_header Cache-Control "public";
+}
+
+# Media: images, icons, video, audio, HTC
+location ~* \.(?:jpg|jpeg|gif|png|ico|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ {
+  expires 1M;
+  access_log off;
+  add_header Cache-Control "public";
+}
+
+# CSS and Javascript
+location ~* \.(?:css|js)$ {
+  expires 2M;
+  access_log off;
+  add_header Cache-Control "public";
+}
