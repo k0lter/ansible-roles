@@ -49,11 +49,6 @@
 - name: Install unprivileged user
   action: user name="${admin_user}" comment="${admin_fullname}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
 
-- name: Install configuration files for user
-  action: git repo=git://git.openics.org/kolter-dotfiles.git dest=/home/${admin_user}
-  tags:
-    - userconf
-
 - name: Install SSH key for unprivileged user
   action: authorized_key user="${admin_user}" key="$FILE(roles/common/data/users/${admin_user}/id_rsa.pub)" state=present
 
