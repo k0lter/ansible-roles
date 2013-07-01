@@ -33,6 +33,34 @@
     - Reload nginx
   when_boolean: ${with_nginx}
 
+- name: Create basic authentication file for admin (nginx)
+  action: template src=nginx/auth_admin.j2 dest=/etc/nginx/auth_admin owner=root group=www-data mode=0640
+  when_boolean: ${with_nginx}
+
+- name: Install PHPMyAdmin virtual host for nginx (sites-available)
+  action: template src=nginx/pma_vhost.j2 dest=/etc/nginx/sites-available/pma owner=root group=root mode=0644
+  notify:
+    - Reload nginx
+  when_boolean: ${with_phpmyadmin} and ${with_nginx}
+
+- name: Install PHPMyAdmin virtual host for nginx (sites-enabled)
+  action: file src=/etc/nginx/sites-available/pma path=/etc/nginx/sites-enabled/pma state=link
+  notify:
+    - Reload nginx
+  when_boolean: ${with_phpmyadmin} and ${with_nginx}
+
+- name: Install PHP system checks virtual host for nginx (sites-available)
+  action: template src=nginx/sys_vhost.j2 dest=/etc/nginx/sites-available/sys owner=root group=root mode=0644
+  notify:
+    - Reload nginx
+  when_boolean: ${with_php} and ${with_nginx}
+
+- name: Install PHP system checks virtual host for nginx (sites-enabled)
+  action: file src=/etc/nginx/sites-available/sys path=/etc/nginx/sites-enabled/sys state=link
+  notify:
+    - Reload nginx
+  when_boolean: ${with_php} and ${with_nginx}
+
 - name: Ensure nginx is running
   action: service name=nginx state=started
   when_boolean: ${with_nginx}

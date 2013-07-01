@@ -4,8 +4,45 @@
 
 with_apache2: False
 with_apache2_modphp5: False
+
 with_nginx: False
+# nginx_workers ~= $(getconf _NPROCESSORS_ONLN)
+nginx_workers: 2
+
 with_fpm: False
 fpm_pool_count: 1
+fpm_user: www-data
+fpm_group: www-data
+# fpm_max_children ~= (total RAM - RAM used by other process) / (average amount of RAM used by a PHP process)
+fpm_max_children: 42
+fpm_min_spare_servers: 10
+fpm_max_spare_servers: 20
+
+with_php: False
+phpsyscheck_vhostname: sys.localhost
+php_config:
+  - key: short_open_tag
+    value: off
+  - key: expose_php
+    value: off
+  - key: display_errors
+    value : off
+  - key: display_startup_errors
+    value: off
+  - key: log_errors
+    value: on
+  - key: html_errors
+    value: off
+  - key: cgi.fix_pathinfo
+    value: 0
+  - key: error_log
+    value: syslog
+  - key: date.timezone
+    value: Europe/Paris
+
+with_php_apc: False
+
+with_phpmyadmin: False
+phpmyadmin_vhostname: pma.localhost
 
 # vim: ft=yaml

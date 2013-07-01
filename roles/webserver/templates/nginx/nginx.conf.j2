@@ -15,7 +15,7 @@ user www-data;
 
 # The maximum number of connections for Nginx is calculated by:
 # max_clients = worker_processes * worker_connections
-worker_processes 4;
+worker_processes {{ nginx_workers }};
 
 # Maximum open file descriptors per process;
 # should be > worker_connections.
@@ -25,7 +25,7 @@ events {
     # When you need > 8000 * cpu_cores connections, you start optimizing your OS,
     # and this is probably the point at where you hire people who are smarter than
     # you, as this is *a lot* of requests.
-    worker_connections 8192;
+worker_connections 4096;
     # Event model to use
     use epoll;
 }
