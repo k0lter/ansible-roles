@@ -27,4 +27,6 @@ with_ssh: True
 ssh_port: 2222
 ssh_ecdsa_key: True
 
+http_auth_admin_password: seVDetGvSs7nA # openssl passwd -crypt adm123in
+
 # vim: ft=yaml
