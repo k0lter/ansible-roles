@@ -13,6 +13,7 @@
     - dovecot
     - dropbear
     - ipmi
+    - kernel
     - libpam-modules
     - mon
     - noip2
