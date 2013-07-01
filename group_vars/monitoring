@@ -8,12 +8,8 @@ with_munin: False
 with_munin_node: False
 
 munin_master_vhostname: localhost
-munin_master_vhostport: 80
 
 with_munin_http_auth: False
-munin_http_auth_file: /etc/nginx/auth_munin
-munin_http_auth_username: munin
-munin_http_auth_password_hash: kRNB9HYFOWHgo # openssl passwd -crypt mu1234nin
 
 munin_masters:
   - 127.0.0.1/32

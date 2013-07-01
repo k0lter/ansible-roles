@@ -1,0 +1,31 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+# Apache vhost for munin
+
+<VirtualHost *:80>
+    ServerName {{ munin_master_vhostname }}
+
+    DocumentRoot /var/cache/munin/www
+    DirectoryIndex index.html
+
+    <Location />
+        AuthType basic
+        AuthName "Restricted Access"
+        AuthUserFile /etc/apache2/auth_admin
+        Require valid-user
+    </Location>
+
+    <Directory /var/cache/munin/www>
+        Options None
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/munin.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/munin.error.log
+
+</VirtualHost>
