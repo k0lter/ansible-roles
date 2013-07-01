@@ -1,0 +1,8 @@
+#
+# Default variables for webservers
+#
+
+with_mysql: False
+mysql_root_password: ro1234ot
+
+# vim: ft=yaml

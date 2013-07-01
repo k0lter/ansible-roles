@@ -1,0 +1,5 @@
+- name: Reload mysql
+  action: service name=mysql state=reloaded
+
+- name: Restart nginx
+  action: service name=mysql state=restarted
