@@ -2,7 +2,6 @@
   action: ${ansible_pkg_mgr} pkg=${item} state=installed update_cache=yes
   with_items:
     - mysql-server
-    - python-mysqldb
     - automysqlbackup
   when_boolean: ${with_mysql}
 
