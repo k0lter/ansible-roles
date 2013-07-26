@@ -1,3 +1,6 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (pop3|imap)-login: Login: user=<.+>, method=.+, rip=[0-9:\.]+, lip=[0-9:\.]+, mpid=[0-9]+, .+, session=<.+>$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (pop3|imap)\(.*\): (Connection closed|Disconnected: Logged out) in=[0-9]+ out=[0-9]+$
-^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (dovecot: )?(imap|pop3)-login: Disconnected \((disconnected before greeting, waited|no auth attempts in) [0-9]+ secs\): user=<>, rip=[:.0-9]+, lip=[:.0-9]+, secured, session=<.*>$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (dovecot: )?(imap|pop3)-login: Disconnected \((disconnected before greeting, waited|no auth attempts in) [0-9]+ secs\): user=<>, rip=[:.0-9]+, lip=[:.0-9]+, (secured, )?session=<.*>$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: auth: Warning: auth client [0-9]+ disconnected with [0-9]+ pending requests: (Connection reset by peer|EOF)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (imap|pop3)-login: (Disconnected|Aborted login) \(auth failed, [0-9]+ attempts in [0-9]+ secs\): user=<.+>, method=.+, rip=[:.0-9]+, lip=[:.0-9]+, session=<.*>$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: auth-worker\([0-9]+\): mysql\(.+\): Connected to database .+$

@@ -4,3 +4,7 @@
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \([?.[:alnum:]-]+@[._[:alnum:]-]+\) \[ERROR\] Can't create directory: File exists$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \([._[:alnum:]-]+@[._[:alnum:]-]+\) \[NOTICE\] Restarting at [0-9]+$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \([?.[:alnum:]-]+@[:._[:alnum:]-]+\) \[INFO\] New connection from [:._[:alnum:]-]+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: pam_unix\(pure-ftpd:auth\): check pass; user unknown$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: pam_unix\(pure-ftpd:auth\): authentication failure; logname= uid=[0-9]+ euid=[0-9]+ tty=pure-ftpd ruser=anonymous rhost=.*$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \(\?@[:.0-9]+\) \[INFO\] PAM_RHOST enabled. Getting the peer address$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \(\?@[:.0-9]+\) \[WARNING\] Authentication failed for user \[.*\]$

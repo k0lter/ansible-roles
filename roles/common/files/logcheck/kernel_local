@@ -1,1 +1,2 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: do_IRQ: [0-9\.]+ No irq handler for vector \(irq [-0-9]+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: Peer [:.0-9]+:[0-9]+/[0-9]+ unexpectedly shrunk window [0-9]+:[0-9]+ \(repaired\)$
