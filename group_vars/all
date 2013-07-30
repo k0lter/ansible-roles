@@ -15,6 +15,7 @@ admin_email: kolter@openics.org
 hosts_deny_nfs: False
 host_deny_paranoid: True
 
+with_auto_upgrade: True
 with_logcheck: True
 with_rkhunter: True
 with_chkrootkit: True
