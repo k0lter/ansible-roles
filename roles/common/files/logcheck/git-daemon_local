@@ -1,0 +1,2 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ git-daemon\[[[:digit:]]+\]: The remote end hung up unexpectedly$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ git-daemon\[[[:digit:]]+\]: \[[[:digit:]]+\] Disconnected \(with error\)$
