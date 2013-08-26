@@ -47,10 +47,12 @@
   action: template src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
 
 - name: Install unprivileged user
-  action: user name="${admin_user}" comment="${admin_fullname}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
+  action: user name="${item.user}" comment="${item.fullname}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
+  with_items: ${admins}
 
 - name: Install SSH key for unprivileged user
-  action: authorized_key user="${admin_user}" key="$FILE(roles/common/data/users/${admin_user}/id_rsa.pub)" state=present
+  action: authorized_key user="${item.user}" key="$FILE(roles/common/data/users/${item.user}/id_rsa.pub)" state=present
+  with_items: ${admins}
 
 - name: Install SSH key for root
   action: authorized_key user=root key="$FILE(roles/common/data/users/${admin_user}/id_rsa.pub)" state=present

@@ -8,9 +8,11 @@ ansible_master_user: $PIPE(whoami)
 ansible_master_hostname: $PIPE(hostname --fqdn)
 ansible_master_ip: $PIPE(hostname --ip)
 
-admin_fullname: Emmanuel Bouthenot
-admin_user: manu
-admin_email: kolter@openics.org
+admins:
+  - user: manu
+    fullname: Emmanuel Bouthenot
+
+email_forward: kolter@openics.org
 
 hosts_deny_nfs: False
 host_deny_paranoid: True

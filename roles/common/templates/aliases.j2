@@ -15,6 +15,6 @@ logcheck:       root
 clamav:         root
 monit:          root
 
-{% if admin_email is defined %}
-root:           {{ admin_email }}
+{% if email_forward is defined %}
+root:           {{ email_forward }}
 {% endif %}
