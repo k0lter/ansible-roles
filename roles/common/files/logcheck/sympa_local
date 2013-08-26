@@ -1,76 +1,75 @@
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ archived\[[0-9]+\]: notice Archiving .* for list
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ archived\[[[:digit:]]+\]: notice Archiving .+ for list
 
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice task_manager exited normally due to signal$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::execute\(\) Running task .*, line [0-9]+ with vars \)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::purge_logs_table\(\) purge_logs_table\(\): logs purged$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::next_cmd\(\) line [0-9]+ of [_a-z]+ : next \([0-9]+, ACTION\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::next_cmd\(\) --> new task [_a-z]+ \(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::create\(\) creation of .*$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::create\(\) with model .*$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::execute\(\) Running task .*, line [0-9]+ with vars \)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::purge_tables\(\) [0-9]+ rows removed in bulkspool_table$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::purge_session_table\(\) purge_session_table\(\): [0-9]+ row removed in session_table$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: notice main::purge_one_time_ticket_table\(\) purge_one_time_ticket_table\(\): [0-9]+ row removed in one_time_ticket_table$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info main::eval_bouncers\(\) eval_bouncers\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info main::purge_tables\(\) task_manager::purge_tables\(\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info main::purge_session_table\(\) task_manager::purge_session_table\(\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info main::purge_one_time_ticket_table\(\) task_manager::purge_one_time_ticket_table\(\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info Configuration file read, default log level [0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info SympaSession::purge_old_sessions\(\) SympaSession::purge_old_sessions\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ task_manager\[[0-9]+\]: info SympaSession::purge_old_tickets\(\) SympaSession::purge_old_tickets\(.*\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice task_manager exited normally due to signal$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::execute\(\) Running task .+, line [[:digit:]]+ with vars \)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::purge_logs_table\(\) purge_logs_table\(\): logs purged$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::next_cmd\(\) line [[:digit:]]+ of [_a-z]+ : next \([[:digit:]]+, ACTION\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::next_cmd\(\) --> new task [_a-z]+ \(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::create\(\) creation of .+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::create\(\) with model .+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::execute\(\) Running task .+, line [[:digit:]]+ with vars \)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::purge_tables\(\) [[:digit:]]+ rows removed in bulkspool_table$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::purge_session_table\(\) purge_session_table\(\): [[:digit:]]+ row removed in session_table$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: notice main::purge_one_time_ticket_table\(\) purge_one_time_ticket_table\(\): [[:digit:]]+ row removed in one_time_ticket_table$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info main::eval_bouncers\(\) eval_bouncers\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info main::purge_tables\(\) task_manager::purge_tables\(\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info main::purge_session_table\(\) task_manager::purge_session_table\(\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info main::purge_one_time_ticket_table\(\) task_manager::purge_one_time_ticket_table\(\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info Configuration file read, default log level [[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info SympaSession::purge_old_sessions\(\) SympaSession::purge_old_sessions\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ task_manager\[[[:digit:]]+\]: info SympaSession::purge_old_tickets\(\) SympaSession::purge_old_tickets\(.+\)$
 
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: notice List::load_topics\(\) No topic defined in 
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info WWSympa started$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_loginrequest\(\) do_loginrequest$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_info\(\) do_info$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_admin\(\) do_admin$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_edit_list_request\(\) do_edit_list_request\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_review\(\) do_review\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_add_request\(\) do_add_request\(\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_viewlogs\(\) do_viewlogs\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_add\(\) do_add\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_signoff\(\) do_signoff$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_home\(\) do_home$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] main::do_home\(\) do_home$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[user .*\] \[list .*\] main::do_arc\(\) do_arc\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_arc\(\) do_arc\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] main::do_lists\(\) do_lists\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_info\(\) do_info$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] main::do_help\(\) do_help\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] main::do_(first|renew)passwd\(\) do_(first|renew)passwd\(\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_(first|renew)passwd\(\) do_(first|renew)passwd\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] main::do_login\(\) do_login\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_login\(\) do_login\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_login\(\) do_login\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[rss\] main::do_lists\(\) do_lists\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[rss\] main::do_latest_lists\(\) do_latest_lists\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[rss\] main::do_active_lists\(\) do_active_lists\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_subscribe\(\) do_subscribe\(\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_subrequest\(\) do_subrequest\(.*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::do_rss_request\(\) do_rss_request$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info List::insert_delete_exclusion\(.*, .*, .*, .*\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: info \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::check_authz\(\) check_authz: access denied in do_arc for
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: err Scenario::new\(\) Missing parameter$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: err Scenario::request_action\(\) Failed to load scenario for '.*'$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: err \[robot .*\] \[session [0-9]+\] \[client [.0-9]+\] \[list .*\] main::check_action_parameters\(\) user not logged in$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa\[[0-9]+\]: err List::delete_subscription_request\(\) No pending subscription was found for users 
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: notice List::load_topics\(\) No topic defined in 
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_loginrequest\(\) do_loginrequest$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_info\(\) do_info$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_admin\(\) do_admin$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_edit_list_request\(\) do_edit_list_request\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_review\(\) do_review\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_add_request\(\) do_add_request\(\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_viewlogs\(\) do_viewlogs\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_add\(\) do_add\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_signoff\(\) do_signoff$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_home\(\) do_home$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] main::do_home\(\) do_home$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[user .+\] \[list .+\] main::do_arc\(\) do_arc\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_arc\(\) do_arc\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] main::do_lists\(\) do_lists\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_info\(\) do_info$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] main::do_help\(\) do_help\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] main::do_(first|renew)passwd\(\) do_(first|renew)passwd\(\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_(first|renew)passwd\(\) do_(first|renew)passwd\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] main::do_login\(\) do_login\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_login\(\) do_login\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_login\(\) do_login\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[rss\] main::do_lists\(\) do_lists\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[rss\] main::do_latest_lists\(\) do_latest_lists\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[rss\] main::do_active_lists\(\) do_active_lists\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_subscribe\(\) do_subscribe\(\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_subrequest\(\) do_subrequest\(.+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::do_rss_request\(\) do_rss_request$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] \[list .+\] main::check_authz\(\) check_authz: access denied in do_arc for
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info \[robot .+\] \[session [[:digit:]]+\] \[client [:.[:digit:]]+\] (Wrong parameters|main::check_param_in\(\) check_param_in: unknown list status)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: info List::insert_delete_exclusion\(.+, .+, .+, .+\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: err \[robot .+\] \[session [[:digit:]]+\] \[client [.[:digit:]]+\] \[list .+\] main::check_action_parameters\(\) user not logged in$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: err Scenario::new\(\) Missing parameter$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: err Scenario::request_action\(\) Failed to load scenario for '.+'$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa\[[[:digit:]]+\]: err List::delete_subscription_request\(\) No pending subscription was found for users 
 
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: notice tools::CleanSpool\(\) Deleting old (file|directory)
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: notice main::DoFile\(\) Processing .* ; sender: .*#[0-9]+ ; message-id: <.*>#[0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: notice main::DoMessage\(\) Message for .* from .* kept for authentication with key \w+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: notice main::DoCommand\(\) Multipart message changed to singlepart$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: notice Commands::parse\(\) Parsing: C(ONFIRM|onfirm) \w+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: info main::DoMessage\(\) Processing message for .* with priority [0-9]+, <.*>#[0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: info main::DoMessage\(\) Processing message for .* with priority [0-9]+, <.*>#[0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: info main::DoMessage\(\) Message for .* from .* accepted \([0-9]+ seconds, [0-9]+ sessions, [0-9]+ subscribers\), message-id=<.*>#[0-9]+, size=[0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: info Commands::confirm\(\) CONFIRM [a-z0-9]+ from .* for list .* accepted \([0-9]+ seconds\)$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ sympa\[[0-9]+\]: err List::get_subscriber\(\) Unable to retrieve information from database for user 
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: notice tools::CleanSpool\(\) Deleting old (file|directory)
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: notice main::DoFile\(\) Processing .+ ; sender: .+#[[:digit:]]+ ; message-id: <.+>#[[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: notice main::DoMessage\(\) Message for .+ from .+ kept for authentication with key \w+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: notice main::DoCommand\(\) Multipart message changed to singlepart$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: notice Commands::parse\(\) Parsing: C(ONFIRM|onfirm) \w+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: info main::DoMessage\(\) Processing message for .+ with priority [[:digit:]]+, <.+>#[[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: info main::DoMessage\(\) Processing message for .+ with priority [[:digit:]]+, <.+>#[[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: info main::DoMessage\(\) Message for .+ from .+ accepted \([[:digit:]]+ seconds, [[:digit:]]+ sessions, [[:digit:]]+ subscribers\), message-id=<.+>#[[:digit:]]+, size=[[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: info Commands::confirm\(\) CONFIRM [a-z[:digit:]]+ from .+ for list .+ accepted \([[:digit:]]+ seconds\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sympa\[[[:digit:]]+\]: err List::get_subscriber\(\) Unable to retrieve information from database for user 
 
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ bulk\[[0-9]+\]: notice Done sending message (<.*>)? to list .* \(priority [0-9]+\) in [0-9]+ seconds since scheduled expedition date\.$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ bulk\[[0-9]+\]: info Workload increased: [0-9]+ packets to process. Creating [0-9]+ child bulks to increase sending rate.$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ bulk\[[0-9]+\]: info Bulk slave daemon started with pid [0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ bulk\[[0-9]+\]: info Starting bulk child daemon, pid [0-9]+$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ bulk\[[0-9]+\]: info Process [0-9]+ didn't send any message since [0-9]+ seconds, exiting.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ bulk\[[[:digit:]]+\]: notice Done sending message (<.+>)? to list .+ \(priority [[:digit:]]+\) in [[:digit:]]+ seconds since scheduled expedition date\.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ bulk\[[[:digit:]]+\]: info Workload increased: [[:digit:]]+ packets to process. Creating [[:digit:]]+ child bulks to increase sending rate.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ bulk\[[[:digit:]]+\]: info Bulk slave daemon started with pid [[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ bulk\[[[:digit:]]+\]: info Starting bulk child daemon, pid [[:digit:]]+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ bulk\[[[:digit:]]+\]: info Process [[:digit:]]+ didn't send any message since [[:digit:]]+ seconds, exiting.$
 
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ wwsympa.fcgi: err wwslib::load_config\(\) Unknown parameter ldap_force_canonical_email in 
-
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ wwsympa.fcgi: err wwslib::load_config\(\) Unknown parameter ldap_force_canonical_email in 
