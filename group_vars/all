@@ -33,4 +33,6 @@ ssh_ecdsa_key: True
 
 http_auth_admin_password: seVDetGvSs7nA # openssl passwd -crypt adm123in
 
+with_ovh: False
+
 # vim: ft=yaml

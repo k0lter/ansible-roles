@@ -1,0 +1,15 @@
+- name: Install kernel configuration for OVH dedicated servers (proc)
+  action: template src=kernel/sysctl.d/${item}.j2 dest=/etc/sysctl.d/${item} owner=root group=root mode=0644
+  with_items:
+      - 01-ovh-network.conf
+  notify:
+    - Apply kernel configuration (proc)
+  when_boolean: ${with_ovh}
+
+- name: Install kernel configuration for OVH dedicated servers (sys)
+  action: template src=kernel/sysfs.d/${item}.j2 dest=/etc/sysfs.d/${item} owner=root group=root mode=0644
+  with_items:
+      - 01-ovh-network.conf
+  notify:
+    - Refresh sysfs configuration
+  when_boolean: ${with_ovh}
