@@ -66,4 +66,5 @@
   with_items: ${admins}
 
 - name: Install SSH key for root
-  action: authorized_key user=root key="$FILE(roles/common/data/users/${admin_user}/id_rsa.pub)" state=present
+  action: authorized_key user=root key="$FILE(roles/common/data/users/${item.user}/id_rsa.pub)" state=present
+  with_items: ${admins}
