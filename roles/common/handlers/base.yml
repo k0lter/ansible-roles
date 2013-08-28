@@ -1,8 +1,16 @@
 - name: Reload apt cache
   action: command apt-get update
 
-- name: Apply kernel variables
+- name: Apply kernel configuration (proc)
   action: service name=procps state=restarted
+
+- name: Apply kernel configuration (sys)
+  action: service name=sysfsutils state=restarted
+
+- name: Refresh sysfs configuration
+  action: shell cat /etc/sysfs.d/* > /etc/sysfs.conf
+  notify:
+    - Apply kernel configuration (sys)
 
 - name: Update motd
   action: shell toilet -f future ${ansible_fqdn} > /var/run/motd && echo >> /var/run/motd && uname -snrvm >> /var/run/motd && echo >> /var/run/motd

@@ -1,3 +1,11 @@
+- name: Install hosts file
+  action: template src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
+  notify:
+    - Update motd
+
+- name: Install hosts.deny file
+  action: template src=hosts.deny.j2 dest=/etc/hosts.deny owner=root group=root mode=0644
+
 - name: Write /etc/apt/sources.list
   action: template src=apt/sources.${ansible_lsb.codename}.list.j2 dest=/etc/apt/sources.list owner=root group=root mode=0644
   notify:
@@ -27,21 +35,24 @@
     - pydf
     - htop
     - sudo
+    - sysfsutils
 
-- name: Install hosts file
-  action: template src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
-  notify:
-    - Update motd
-
-- name: Install hosts.deny file
-  action: template src=hosts.deny.j2 dest=/etc/hosts.deny owner=root group=root mode=0644
-
-- name: Install kernel configuration
-  action: template src=kernel/sysctl.d/${item} dest=/etc/sysctl.d/${item} owner=root group=root mode=0644
+- name: Install kernel configuration (proc)
+  action: template src=kernel/sysctl.d/${item}.j2 dest=/etc/sysctl.d/${item} owner=root group=root mode=0644
   with_items:
       - 10-increase-file-descriptors.conf
   notify:
-    - Apply kernel variables
+    - Apply kernel configuration (proc)
+
+- name: Create sysfs configuration directory - /etc/sysfs.d
+  action: file path=/etc/sysfs.d state=directory owner=root group=root mode=0755
+
+- name: Install kernel configuration (sys)
+  action: template src=kernel/sysfs.d/${item}.j2 dest=/etc/sysfs.d/${item} owner=root group=root mode=0644
+  with_items:
+      - 00-sysfs-prolog.conf
+  notify:
+    - Refresh sysfs configuration
 
 - name: Install sudo configuration
   action: template src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
