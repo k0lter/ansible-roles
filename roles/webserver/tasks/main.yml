@@ -1,4 +1,4 @@
+- include: fpm.yml
 - include: apache2.yml
 - include: nginx.yml
-- include: fpm.yml
 - include: php.yml
