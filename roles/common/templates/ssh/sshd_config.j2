@@ -30,6 +30,12 @@ HostKey /etc/ssh/ssh_host_ecdsa_key
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
 
+{% if not ssh_usedns %}
+# Enable/Disable reverse DNS check
+# Avois long lag in case of IPv6 connection with no reverse configured
+UseDns no
+{% endif %}
+
 # Lifetime and size of ephemeral version 1 server key
 KeyRegenerationInterval 3600
 ServerKeyBits 768
