@@ -3,3 +3,5 @@ fastcgi_split_path_info ^(.+\.php)(/.+)$;
 include fastcgi_params;
 fastcgi_pass fpm-backend;
 fastcgi_index index.php;
+fastcgi_buffer_size 8m;
+fastcgi_buffers 8 8m;
