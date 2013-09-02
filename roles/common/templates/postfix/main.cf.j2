@@ -21,14 +21,23 @@ append_dot_mydomain = no
 readme_directory = no
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
-smtpd_use_tls=yes
+smtpd_use_tls = yes
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_ask_ccert = yes
+smtpd_tls_req_ccert = no
+smtpd_tls_session_cache_timeout = 3600
+smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
-# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
-# information on enabling SSL in the smtp client.
+smtp_use_tls = yes
+smtp_tls_loglevel = 1
+smtp_tls_note_starttls_offer = yes
+smtp_tls_session_cache_timeout = 3600
+smtp_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
+smtp_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
 myhostname = {{ ansible_fqdn }}
 myorigin = $myhostname
@@ -77,5 +86,3 @@ smtpd_sender_restrictions =
     permit_mynetworks,
     reject_non_fqdn_sender,
     reject_unknown_sender_domain
-
-
