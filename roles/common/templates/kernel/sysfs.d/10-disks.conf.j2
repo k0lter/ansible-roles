@@ -1,0 +1,10 @@
+#
+# sysfs: disk settings / tuning
+#
+{% if sysfs_disk_settings %}
+{% for disk in ansible_devices -%}
+{% for param in sysfs_disk_settings %}
+block/{{ disk }}/{{ param.key }} = {{ param.value }}
+{% endfor %}
+{%- endfor %}
+{% endif %}

@@ -55,6 +55,14 @@
   notify:
     - Refresh sysfs configuration
 
+- name: Install kernel configuration (sys) for disks
+  action: template src=kernel/sysfs.d/${item}.j2 dest=/etc/sysfs.d/${item} owner=root group=root mode=0644
+  with_items:
+      - 10-disks.conf
+  notify:
+    - Refresh sysfs configuration
+  when_boolean: ${sysfs_disk_settings}
+
 - name: Install sudo configuration
   action: template src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
 

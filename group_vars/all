@@ -36,4 +36,6 @@ http_auth_admin_password: seVDetGvSs7nA # openssl passwd -crypt adm123in
 
 with_ovh: False
 
+sysfs_disk_settings: False
+
 # vim: ft=yaml
