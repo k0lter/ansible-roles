@@ -1,11 +1,12 @@
 - name: Install common PHP dependencies
   action: ${ansible_pkg_mgr} pkg=${item} state=installed update_cache=yes
   with_items:
-    - php-mime-type
     - php5-cli
+    - php5-curl
     - php5-gd
     - php5-intl
     - php5-mcrypt
+    - php-mime-type
   when_boolean: ${with_php}
 
 - name: Instal local PHP configuration
