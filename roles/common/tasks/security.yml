@@ -3,7 +3,10 @@
   when_boolean: ${with_auto_upgrade}
 
 - name: Configure auto upgrades
-  action: template src=apt/auto-upgrades.j2 dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+  action: template src=${item} dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+  first_available_file:
+    - apt/auto-upgrades.${ansible_lsb.codename}.j2
+    - apt/auto-upgrades.j2
   when_boolean: ${with_auto_upgrade}
 
 - name: Install logcheck packages
