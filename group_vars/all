@@ -24,7 +24,7 @@ with_chkrootkit: True
 
 with_smartd: False
 
-with_smtp: False
+with_postfix: False
 with_mail_aliases: False
 
 with_ssh: True
