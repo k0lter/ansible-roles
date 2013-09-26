@@ -25,7 +25,7 @@ with_chkrootkit: True
 with_smartd: False
 
 with_smtp: False
-with_smtp_aliases: False
+with_mail_aliases: False
 
 with_ssh: True
 ssh_port: 2222

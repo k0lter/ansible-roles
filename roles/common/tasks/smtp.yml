@@ -6,7 +6,7 @@
   action: template src=aliases.j2 dest=/etc/aliases owner=root group=root mode=0644
   notify:
     - Regenerate aliases cache
-  when_boolean: ${with_smtp} or ${with_smtp_aliases}
+  when_boolean: ${with_smtp} or ${with_mail_aliases}
 
 - name: Install postfix main configuration
   action: template src=postfix/main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root mode=0644
