@@ -12,7 +12,7 @@ admins:
   - user: manu
     fullname: Emmanuel Bouthenot
 
-email_forward: kolter@openics.org
+admin_email: kolter@openics.org
 
 hosts_deny_nfs: False
 host_deny_paranoid: False
