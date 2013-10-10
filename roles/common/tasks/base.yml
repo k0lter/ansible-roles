@@ -61,7 +61,7 @@
       - 10-disks.conf
   notify:
     - Refresh sysfs configuration
-  when_boolean: ${sysfs_disk_settings}
+  when: ${sysfs_disk_settings}
 
 - name: Install sudo configuration
   action: template src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440

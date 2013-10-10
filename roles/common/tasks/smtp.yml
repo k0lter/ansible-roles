@@ -1,15 +1,15 @@
 - name: Install postfix packages
   action: apt pkg=postfix state=installed update_cache=yes
-  when_boolean: ${with_postfix}
+  when: ${with_postfix}
 
 - name: Install mail aliases file
   action: template src=aliases.j2 dest=/etc/aliases owner=root group=root mode=0644
   notify:
     - Regenerate aliases cache
-  when_boolean: ${with_postfix} or ${with_mail_aliases}
+  when: ${with_postfix} or ${with_mail_aliases}
 
 - name: Install postfix main configuration
   action: template src=postfix/main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root mode=0644
   notify:
     - Restart postfix
-  when_boolean: ${with_postfix}
+  when: ${with_postfix}
