@@ -3,12 +3,12 @@
 {{ prolog() }}
 {% endif -%}
 
-127.0.0.1       localhost
-{% if ansible_default_ipv4 is defined %}
-{{ ansible_default_ipv4.address }}  {{ ansible_fqdn }}  {{ ansible_hostname }}
+127.0.0.1 localhost.localdomain localhost
+{% if ansible_default_ipv4.address is defined %}
+{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}
 {% endif %}
-{% if ansible_default_ipv6 is defined %}
-{{ ansible_default_ipv6.address }}  {{ ansible_fqdn }}  {{ ansible_hostname }}
+{% if ansible_default_ipv6.address is defined %}
+{{ ansible_default_ipv6.address }} {{ ansible_fqdn }} {{ ansible_hostname }}
 {% endif %}
 
 # The following lines are desirable for IPv6 capable hosts
