@@ -1,14 +1,14 @@
 - name: Install mysql-server related packages
-  action: ${ansible_pkg_mgr} pkg=${item} state=installed update_cache=yes
+  apt: pkg=${item} state=installed update_cache=yes
   with_items:
     - mysql-server
     - automysqlbackup
   when: ${with_mysql}
 
 - name: Change mysql root default password
-  action: raw if "SELECT VERSION();" | mysql -u root >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('${mysql_root_password}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
+  raw: if "SELECT VERSION();" | mysql -u root >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('${mysql_root_password}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
   when: ${with_mysql}
 
 - name: Ensure mysql-server is running
-  action: service name=mysql state=started
+  service: name=mysql state=started
   when: ${with_mysql}

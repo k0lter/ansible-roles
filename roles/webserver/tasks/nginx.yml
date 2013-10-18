@@ -1,21 +1,21 @@
 - name: Install nginx package
-  action: ${ansible_pkg_mgr} pkg=nginx state=installed update_cache=yes
+  apt: pkg=nginx state=installed update_cache=yes
   when: ${with_nginx}
 
 - name: Install nginx default file configuration
-  action: template src=nginx/default.j2 dest=/etc/default/nginx owner=root group=root mode=0644
+  template: src=nginx/default.j2 dest=/etc/default/nginx owner=root group=root mode=0644
   notify:
     - Restart nginx
   when: ${with_nginx}
 
 - name: Install nginx configuration
-  action: template src=nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
+  template: src=nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
   notify:
     - Restart nginx
   when: ${with_nginx}
 
 - name: Install additional nginx configuration params (conf.d/)
-  action: template src=nginx/conf.d/${item}.conf.j2 dest=/etc/nginx/conf.d/${item}.conf owner=root group=root mode=0644
+  template: src=nginx/conf.d/${item}.conf.j2 dest=/etc/nginx/conf.d/${item}.conf owner=root group=root mode=0644
   with_items:
     - status
   notify:
@@ -23,7 +23,7 @@
   when: ${with_nginx}
 
 - name: Install additional nginx configuration params (vhost_*)
-  action: template src=nginx/vhost_${item}.j2 dest=/etc/nginx/vhost_${item} owner=root group=root mode=0644
+  template: src=nginx/vhost_${item}.j2 dest=/etc/nginx/vhost_${item} owner=root group=root mode=0644
   with_items:
     - all
     - expires
@@ -34,33 +34,33 @@
   when: ${with_nginx}
 
 - name: Create basic authentication file for admin (nginx)
-  action: template src=nginx/auth_admin.j2 dest=/etc/nginx/auth_admin owner=root group=www-data mode=0640
+  template: src=nginx/auth_admin.j2 dest=/etc/nginx/auth_admin owner=root group=www-data mode=0640
   when: ${with_nginx}
 
 - name: Install PHPMyAdmin virtual host for nginx (sites-available)
-  action: template src=nginx/pma_vhost.j2 dest=/etc/nginx/sites-available/pma owner=root group=root mode=0644
+  template: src=nginx/pma_vhost.j2 dest=/etc/nginx/sites-available/pma owner=root group=root mode=0644
   notify:
     - Reload nginx
   when: ${with_phpmyadmin} and ${with_nginx}
 
 - name: Install PHPMyAdmin virtual host for nginx (sites-enabled)
-  action: file src=/etc/nginx/sites-available/pma path=/etc/nginx/sites-enabled/pma state=link
+  file: src=/etc/nginx/sites-available/pma path=/etc/nginx/sites-enabled/pma state=link
   notify:
     - Reload nginx
   when: ${with_phpmyadmin} and ${with_nginx}
 
 - name: Install PHP system checks virtual host for nginx (sites-available)
-  action: template src=nginx/sys_vhost.j2 dest=/etc/nginx/sites-available/sys owner=root group=root mode=0644
+  template: src=nginx/sys_vhost.j2 dest=/etc/nginx/sites-available/sys owner=root group=root mode=0644
   notify:
     - Reload nginx
   when: ${with_php} and ${with_nginx}
 
 - name: Install PHP system checks virtual host for nginx (sites-enabled)
-  action: file src=/etc/nginx/sites-available/sys path=/etc/nginx/sites-enabled/sys state=link
+  file: src=/etc/nginx/sites-available/sys path=/etc/nginx/sites-enabled/sys state=link
   notify:
     - Reload nginx
   when: ${with_php} and ${with_nginx}
 
 - name: Ensure nginx is running
-  action: service name=nginx state=started
+  service: name=nginx state=started
   when: ${with_nginx}

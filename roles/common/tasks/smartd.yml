@@ -1,9 +1,9 @@
 - name: Install smartmontools package
-  action: ${ansible_pkg_mgr} pkg=smartmontools state=installed update_cache=yes
+  apt: pkg=smartmontools state=installed update_cache=yes
   when: ${with_smartd}
 
 - name: Install smartd configuration
-  action: template dest=/etc/smartd.conf owner=root group=root mode=0644
+  template: dest=/etc/smartd.conf owner=root group=root mode=0644
   first_available_file:
     - smartd/smartd.{{ ansible_hostname }}.conf.j2
     - smartd/smartd.conf.j2
@@ -12,11 +12,11 @@
   when: ${with_smartd}
 
 - name: Update smartmontools default/init parameters
-  action: template src=smartd/default.j2 dest=/etc/default/smartmontools owner=root group=root mode=0644
+  template: src=smartd/default.j2 dest=/etc/default/smartmontools owner=root group=root mode=0644
   notify:
     - Restart smartmontools
   when: ${with_smartd}
 
 - name: Ensure smartmontools is running
-  action: service name=smartmontools state=started
+  service: name=smartmontools state=started
   when: ${with_smartd}

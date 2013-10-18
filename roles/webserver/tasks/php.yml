@@ -1,5 +1,5 @@
 - name: Install common PHP dependencies
-  action: ${ansible_pkg_mgr} pkg=${item} state=installed update_cache=yes
+  apt: pkg=${item} state=installed update_cache=yes
   with_items:
     - php5-cli
     - php5-curl
@@ -10,29 +10,29 @@
   when: ${with_php}
 
 - name: Instal local PHP configuration
-  action: template src=php/php-config.ini.j2 dest=/etc/php5/conf.d/99-local-config.ini owner=root group=root mode=0644
+  template: src=php/php-config.ini.j2 dest=/etc/php5/conf.d/99-local-config.ini owner=root group=root mode=0644
   when: ${with_php}
 
 - name: Create system checks directory /etc/php5/syscheck.d
-  action: file path=/etc/php5/syscheck.d owner=root group=root mode=0755 state=directory
+  file: path=/etc/php5/syscheck.d owner=root group=root mode=0755 state=directory
   when: ${with_php}
 
 - name: Install phpinfo system check
-  action: template src=php/phpinfo.php dest=/etc/php5/syscheck.d/index.php owner=root group=root mode=0644
+  template: src=php/phpinfo.php dest=/etc/php5/syscheck.d/index.php owner=root group=root mode=0644
   when: ${with_php}
 
 - name: Install PHP APC extension
-  action: ${ansible_pkg_mgr} pkg=php-apc state=installed update_cache=yes
+  apt: pkg=php-apc state=installed update_cache=yes
   when: ${with_php_apc}
 
 - name: Install php-apc system check
-  action: template src=php/apc.php dest=/etc/php5/syscheck.d/apc.php owner=root group=root mode=0644
+  template: src=php/apc.php dest=/etc/php5/syscheck.d/apc.php owner=root group=root mode=0644
   when: ${with_php_apc}
 
 - name: Install MySQL extension for PHP
-  action: ${ansible_pkg_mgr} pkg=php5-mysqlnd state=installed update_cache=yes
+  apt: pkg=php5-mysqlnd state=installed update_cache=yes
   when: ${with_mysql} and ${with_php}
 
 - name: Install PHPMyAdmin
-  action: ${ansible_pkg_mgr} pkg=phpmyadmin state=installed update_cache=yes
+  apt: pkg=phpmyadmin state=installed update_cache=yes
   when: ${with_phpmyadmin}

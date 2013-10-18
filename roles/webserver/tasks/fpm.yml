@@ -1,31 +1,31 @@
 - name: Install php5-fpm package
-  action: ${ansible_pkg_mgr} pkg=php5-fpm state=installed update_cache=yes
+  apt: pkg=php5-fpm state=installed update_cache=yes
   when: ${with_fpm}
 
 - name: Install php5-fpm init script config file
-  action: template src=fpm/default.j2 dest=/etc/default/php5-fpm owner=root group=root mode=0644
+  template: src=fpm/default.j2 dest=/etc/default/php5-fpm owner=root group=root mode=0644
   notify:
       - Restart php5-fpm
   when: ${with_fpm}
 
 - name: Install php5-fpm configuration file
-  action: template src=fpm/php-fpm-custom.conf.j2 dest=/etc/php5/fpm/php-fpm-custom.conf owner=root group=root mode=0644
+  template: src=fpm/php-fpm-custom.conf.j2 dest=/etc/php5/fpm/php-fpm-custom.conf owner=root group=root mode=0644
   notify:
       - Restart php5-fpm
   when: ${with_fpm}
 
 - name: Install nginx config files for php5-fpm (fpm servers pool)
-  action: template src=fpm/nginx/fpm-pool.conf.j2 dest=/etc/nginx/conf.d/fpm-pool.conf owner=root group=root mode=0644
+  template: src=fpm/nginx/fpm-pool.conf.j2 dest=/etc/nginx/conf.d/fpm-pool.conf owner=root group=root mode=0644
   notify:
       - Reload nginx
   when: ${with_fpm} and ${with_nginx}
 
 - name: Install nginx config files for php5-fpm (fpm fastcgi config)
-  action: template src=fpm/nginx/fastcgi_pass_fpm.j2 dest=/etc/nginx/fastcgi_pass_fpm owner=root group=root mode=0644
+  template: src=fpm/nginx/fastcgi_pass_fpm.j2 dest=/etc/nginx/fastcgi_pass_fpm owner=root group=root mode=0644
   notify:
       - Reload nginx
   when: ${with_fpm} and ${with_nginx}
 
 - name: Ensure php5-fpm is running
-  action: service name=php5-fpm state=started
+  service: name=php5-fpm state=started
   when: ${with_fpm}

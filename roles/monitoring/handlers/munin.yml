@@ -1,8 +1,8 @@
 - name: Restart munin-node
-  action: service name=munin-node state=restarted
+  service: name=munin-node state=restarted
 
 - name: Reload nginx for munin
-  action: service name=nginx state=reloaded
+  service: name=nginx state=reloaded
 
 - name: Reload apache2 for munin
-  action: service name=apache2 state=reloaded
+  service: name=apache2 state=reloaded
