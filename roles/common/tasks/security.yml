@@ -1,23 +1,23 @@
 - name: Install auto upgrades package
   apt: pkg=unattended-upgrades state=installed update_cache=yes
-  when: ${with_auto_upgrade}
+  when: with_auto_upgrade
 
 - name: Configure auto upgrades
-  template: src=${item} dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+  template: src={{ item }} dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
   first_available_file:
-    - apt/auto-upgrades.${ansible_lsb.codename}.j2
+    - apt/auto-upgrades.{{ ansible_lsb.codename }}.j2
     - apt/auto-upgrades.j2
-  when: ${with_auto_upgrade}
+  when: with_auto_upgrade
 
 - name: Install logcheck packages
-  apt: pkg=${item} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - logcheck
     - logcheck-database
-  when: ${with_logcheck}
+  when: with_logcheck
 
 - name: Install local configuration files for logcheck
-  copy: src=logcheck/${item}_local dest=/etc/logcheck/ignore.d.server/${item}_local owner=root group=root mode=0644
+  copy: src=logcheck/{{ item }}_local dest=/etc/logcheck/ignore.d.server/{{ item }}_local owner=root group=root mode=0644
   with_items:
     - ansible
     - amavisd-new
@@ -42,20 +42,20 @@
     - sshd
     - svn
     - sympa
-  when: ${with_logcheck}
+  when: with_logcheck
 
 - name: Update logcheck cron job
   template: src=cron/logcheck.j2 dest=/etc/cron.d/logcheck owner=root group=root mode=0644
-  when: ${with_logcheck}
+  when: with_logcheck
 
 - name: Update rkhunter default/init parameters
   template: src=rkhunter/default.j2 dest=/etc/default/rkhunter owner=root group=root mode=0644
-  when: ${with_rkhunter}
+  when: with_rkhunter
 
 - name: Update rkhunter configuration
-  template: src=rkhunter/${ansible_lsb.codename}.conf.j2 dest=/etc/rkhunter.conf owner=root group=root mode=0644
-  when: ${with_rkhunter}
+  template: src=rkhunter/{{ ansible_lsb.codename }}.conf.j2 dest=/etc/rkhunter.conf owner=root group=root mode=0644
+  when: with_rkhunter
 
 - name: Update chkrootkit configuration
   template: src=chkrootkit/chkrootkit.conf.j2 dest=/etc/chkrootkit.conf owner=root group=root mode=0644
-  when: ${with_chkrootkit}
+  when: with_chkrootkit

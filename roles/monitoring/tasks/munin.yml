@@ -1,13 +1,13 @@
 - name: Install munin packages
   apt: pkg=munin state=installed update_cache=yes
-  when: ${with_munin}
+  when: with_munin
 
 - name: Install munin configuration
   template: src=munin/munin.conf.j2 dest=/etc/munin/munin.conf owner=root group=root mode=0644
-  when: ${with_munin}
+  when: with_munin
 
 - name: Install munin-node packages
-  apt: pkg=${item} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - munin-node
     - munin-plugins-extra
@@ -16,57 +16,57 @@
     - libdbd-pg-perl
     - libdbd-mysql-perl
     - liblwp-useragent-determined-perl
-  when: ${with_munin_node}
+  when: with_munin_node
 
 - name: Create need directories for munin-node configuration
-  file: path=/etc/munin/${item} state=directory owner=root group=root mode=0755
+  file: path=/etc/munin/{{ item }} state=directory owner=root group=root mode=0755
   with_items:
     - plugins
     - plugin-conf.d
-  when: ${with_munin_node}
+  when: with_munin_node
 
 - name: Install munin node configuration
   template: src=munin/munin-node.conf.j2 dest=/etc/munin/munin-node.conf owner=root group=root mode=0644
   notify:
     - Restart munin-node
-  when: ${with_munin_node}
+  when: with_munin_node
 
 - name: Install munin node plugins configuration
   template: src=munin/munin-node.conf.plugins.j2 dest=/etc/munin/plugin-conf.d/munin-node owner=root group=root mode=0644
   notify:
     - Restart munin-node
-  when: ${with_munin_node}
+  when: with_munin_node
 
 - name: Autoconfigure munin-node plugins
   munin_node_autoconf: families=auto,manual,contrib excludes=apc_nis,apt,apt_all,port_,ipmi_fans,ipmi_power,ipmi_temp,ntp_,ircu,ntp_kernel_err,ntp_kernel_pll_freq,ntp_kernel_pll_off,ntp_offset,ntp_states
   notify:
     - Restart munin-node
-  when: ${with_munin_node}
+  when: with_munin_node
 
 - name: Install nginx virtual host for munin (sites-available)
   template: src=munin/nginx_vhost.j2 dest=/etc/nginx/sites-available/munin owner=root group=root mode=0644
   notify:
     - Reload nginx for munin
-  when: ${with_munin} and ${with_nginx}
+  when: with_munin and with_nginx
 
 - name: Install nginx virtual host for munin (sites-enabled)
   file: src=/etc/nginx/sites-available/munin path=/etc/nginx/sites-enabled/munin state=link
   notify:
     - Reload nginx for munin
-  when: ${with_munin} and ${with_nginx}
+  when: with_munin and with_nginx
 
 - name: Install apache2 virtual host for munin (sites-available)
   template: src=munin/apache2_vhost.j2 dest=/etc/apache2/sites-available/munin owner=root group=root mode=0644
   notify:
     - Reload apache2 for munin
-  when: ${with_munin} and ${with_apache2}
+  when: with_munin and with_apache2
 
 - name: Install apache2 virtual host for munin (sites-enabled)
   file: src=/etc/apache2/sites-available/munin path=/etc/apache2/sites-enabled/munin state=link
   notify:
     - Reload apache2 for munin
-  when: ${with_munin} and ${with_apache2}
+  when: with_munin and with_apache2
 
 - name: Ensure munin-node is running
   service: name=munin-node state=started
-  when: ${with_munin_node}
+  when: with_munin_node

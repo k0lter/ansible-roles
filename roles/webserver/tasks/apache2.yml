@@ -1,45 +1,45 @@
 - name: Install apache2 packages
   apt: pkg=apache2 state=installed update_cache=yes
-  when: ${with_apache2}
+  when: with_apache2
 
 - name: Install apache2 basic security configuration
   template: src=apache2/conf.d/security.j2 dest=/etc/apache2/conf.d/security owner=root group=root mode=0644
   notify:
     - Reload apache2
-  when: ${with_apache2}
+  when: with_apache2
 
 - name: Install mod_php5 packages for apache2
   apt: pkg=libapache2-mod-php5 state=installed update_cache=yes
-  when: ${with_apache2} and ${with_apache2_modphp5}
+  when: with_apache2 and with_apache2_modphp5
 
 - name: Create basic authentication file for admin (apache2)
   template: src=apache2/auth_admin.j2 dest=/etc/apache2/auth_admin owner=root group=www-data mode=0640
-  when: ${with_apache2}
+  when: with_apache2
 
 - name: Install PHPMyAdmin virtual host for apache2 (sites-available)
   template: src=apache2/pma_vhost.j2 dest=/etc/apache2/sites-available/pma owner=root group=root mode=0644
   notify:
     - Reload apache2
-  when: ${with_phpmyadmin} and ${with_apache2}
+  when: with_phpmyadmin and with_apache2
 
 - name: Install PHPMyAdmin virtual host for apache2 (sites-enabled)
   file: src=/etc/apache2/sites-available/pma path=/etc/apache2/sites-enabled/pma state=link
   notify:
     - Reload apache2
-  when: ${with_phpmyadmin} and ${with_apache2}
+  when: with_phpmyadmin and with_apache2
 
 - name: Install PHP system checks virtual host for apache2 (sites-available)
   template: src=apache2/sys_vhost.j2 dest=/etc/apache2/sites-available/sys owner=root group=root mode=0644
   notify:
     - Reload apache2
-  when: ${with_php} and ${with_apache2}
+  when: with_php and with_apache2
 
 - name: Install PHP system checks virtual host for apache2 (sites-enabled)
   file: src=/etc/apache2/sites-available/sys path=/etc/apache2/sites-enabled/sys state=link
   notify:
     - Reload apache2
-  when: ${with_php} and ${with_apache2}
+  when: with_php and with_apache2
 
 - name: Ensure apache2 is running
   service: name=apache2 state=started
-  when: ${with_apache2}
+  when: with_apache2

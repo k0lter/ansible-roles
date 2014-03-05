@@ -13,4 +13,4 @@
     - Apply kernel configuration (sys)
 
 - name: Update motd
-  shell: toilet -f future ${ansible_fqdn} > /var/run/motd && echo >> /var/run/motd && uname -snrvm >> /var/run/motd && echo >> /var/run/motd
+  shell: toilet -f future {{ ansible_fqdn }} > /var/run/motd && echo >> /var/run/motd && uname -snrvm >> /var/run/motd && echo >> /var/run/motd

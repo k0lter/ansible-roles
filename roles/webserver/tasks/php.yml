@@ -1,5 +1,5 @@
 - name: Install common PHP dependencies
-  apt: pkg=${item} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - php5-cli
     - php5-curl
@@ -7,32 +7,32 @@
     - php5-intl
     - php5-mcrypt
     - php-mime-type
-  when: ${with_php}
+  when: with_php
 
-- name: Instal local PHP configuration
+- name: Install local PHP configuration
   template: src=php/php-config.ini.j2 dest=/etc/php5/conf.d/99-local-config.ini owner=root group=root mode=0644
-  when: ${with_php}
+  when: with_php
 
 - name: Create system checks directory /etc/php5/syscheck.d
   file: path=/etc/php5/syscheck.d owner=root group=root mode=0755 state=directory
-  when: ${with_php}
+  when: with_php
 
 - name: Install phpinfo system check
   template: src=php/phpinfo.php dest=/etc/php5/syscheck.d/index.php owner=root group=root mode=0644
-  when: ${with_php}
+  when: with_php
 
 - name: Install PHP APC extension
   apt: pkg=php-apc state=installed update_cache=yes
-  when: ${with_php_apc}
+  when: with_php_apc
 
 - name: Install php-apc system check
   template: src=php/apc.php dest=/etc/php5/syscheck.d/apc.php owner=root group=root mode=0644
-  when: ${with_php_apc}
+  when: with_php_apc
 
 - name: Install MySQL extension for PHP
   apt: pkg=php5-mysqlnd state=installed update_cache=yes
-  when: ${with_mysql} and ${with_php}
+  when: with_mysql and with_php
 
 - name: Install PHPMyAdmin
   apt: pkg=phpmyadmin state=installed update_cache=yes
-  when: ${with_phpmyadmin}
+  when: with_phpmyadmin

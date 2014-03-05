@@ -1,29 +1,29 @@
 - name: Install nginx package
   apt: pkg=nginx state=installed update_cache=yes
-  when: ${with_nginx}
+  when: with_nginx
 
 - name: Install nginx default file configuration
   template: src=nginx/default.j2 dest=/etc/default/nginx owner=root group=root mode=0644
   notify:
     - Restart nginx
-  when: ${with_nginx}
+  when: with_nginx
 
 - name: Install nginx configuration
   template: src=nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
   notify:
     - Restart nginx
-  when: ${with_nginx}
+  when: with_nginx
 
 - name: Install additional nginx configuration params (conf.d/)
-  template: src=nginx/conf.d/${item}.conf.j2 dest=/etc/nginx/conf.d/${item}.conf owner=root group=root mode=0644
+  template: src=nginx/conf.d/{{ item }}.conf.j2 dest=/etc/nginx/conf.d/{{ item }}.conf owner=root group=root mode=0644
   with_items:
     - status
   notify:
     - Reload nginx
-  when: ${with_nginx}
+  when: with_nginx
 
 - name: Install additional nginx configuration params (vhost_*)
-  template: src=nginx/vhost_${item}.j2 dest=/etc/nginx/vhost_${item} owner=root group=root mode=0644
+  template: src=nginx/vhost_{{ item }}.j2 dest=/etc/nginx/vhost_{{ item }} owner=root group=root mode=0644
   with_items:
     - all
     - expires
@@ -31,36 +31,36 @@
     - protect-files
   notify:
     - Reload nginx
-  when: ${with_nginx}
+  when: with_nginx
 
 - name: Create basic authentication file for admin (nginx)
   template: src=nginx/auth_admin.j2 dest=/etc/nginx/auth_admin owner=root group=www-data mode=0640
-  when: ${with_nginx}
+  when: with_nginx
 
 - name: Install PHPMyAdmin virtual host for nginx (sites-available)
   template: src=nginx/pma_vhost.j2 dest=/etc/nginx/sites-available/pma owner=root group=root mode=0644
   notify:
     - Reload nginx
-  when: ${with_phpmyadmin} and ${with_nginx}
+  when: with_phpmyadmin and with_nginx
 
 - name: Install PHPMyAdmin virtual host for nginx (sites-enabled)
   file: src=/etc/nginx/sites-available/pma path=/etc/nginx/sites-enabled/pma state=link
   notify:
     - Reload nginx
-  when: ${with_phpmyadmin} and ${with_nginx}
+  when: with_phpmyadmin and with_nginx
 
 - name: Install PHP system checks virtual host for nginx (sites-available)
   template: src=nginx/sys_vhost.j2 dest=/etc/nginx/sites-available/sys owner=root group=root mode=0644
   notify:
     - Reload nginx
-  when: ${with_php} and ${with_nginx}
+  when: with_php and with_nginx
 
 - name: Install PHP system checks virtual host for nginx (sites-enabled)
   file: src=/etc/nginx/sites-available/sys path=/etc/nginx/sites-enabled/sys state=link
   notify:
     - Reload nginx
-  when: ${with_php} and ${with_nginx}
+  when: with_php and with_nginx
 
 - name: Ensure nginx is running
   service: name=nginx state=started
-  when: ${with_nginx}
+  when: with_nginx
