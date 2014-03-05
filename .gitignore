@@ -1,3 +1,6 @@
+.gitignore
 hosts
+host_vars/*
+group_vars/*
 library
-roles/common/data/user/*
+roles/common/data/users/*
