@@ -1,2 +1,3 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: do_IRQ: [0-9\.]+ No irq handler for vector \(irq [-0-9]+\)$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: Peer [:.0-9]+:[0-9]+/[0-9]+ unexpectedly shrunk window [0-9]+:[0-9]+ \(repaired\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: \[[0-9]+\.[0-9]+\] \[drm\] Cannot find any crtc or sizes - going [0-9]+x[0-9]+$

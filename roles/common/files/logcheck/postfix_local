@@ -1,2 +1,2 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ postfix/smtpd?\[[[:digit:]]+\]: warning: hostname .+ does not resolve to address .+(: Name or service not known)?$
-^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ postfix/smtpd?\[[[:digit:]]+\]: Untrusted TLS connection established (to|from) [-\.[:alnum:]]+\[[:\.[:xdigit:]]+\]:([[:digit:]]+:)? TLSv[\.[:digit:]]+ with cipher [-[:alnum:]]+ \([[:digit:]]+/[[:digit:]]+ bits\)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ postfix/smtpd?\[[[:digit:]]+\]: (Unt|T)rusted TLS connection established (to|from) [-\.[:alnum:]]+\[[:\.[:xdigit:]]+\]:([[:digit:]]+:)? TLSv[\.[:digit:]]+ with cipher [-[:alnum:]]+ \([[:digit:]]+/[[:digit:]]+ bits\)$

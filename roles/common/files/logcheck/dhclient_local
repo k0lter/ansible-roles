@@ -1,0 +1,4 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dhclient: PRC: Renewing lease on [[:alnum:]]+\.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dhclient: XMT: Renew on [[:alnum:]]+, interval [[:digit:]]+ms\.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dhclient: RCV: Reply message on [[:alnum:]]+ from [:[:alnum:]]+\.$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dhclient: IA_PD status code (NoBinding: "Who are you\? Do I know you\?"|Success: ("Assigned fixed out-of-pool address."|"Prefix\(es\) renewed."))$
