@@ -31,7 +31,7 @@
 
 - name: Install MySQL extension for PHP
   apt: pkg=php5-mysqlnd state=installed update_cache=yes
-  when: with_mysql and with_php
+  when: with_php and with_mysql is defined and with_mysql
 
 - name: Install PHPMyAdmin
   apt: pkg=phpmyadmin state=installed update_cache=yes
