@@ -22,6 +22,7 @@
     - ansible
     - amavisd-new
     - bind
+    - dhclient
     - dovecot
     - dropbear
     - git-daemon
