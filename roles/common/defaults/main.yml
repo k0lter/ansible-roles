@@ -22,7 +22,7 @@ with_smartd: False
 with_postfix: False
 with_mail_aliases: False
 
-with_ssh: False
+with_ssh: True
 ssh_port: 22
 ssh_ecdsa_key: True
 ssh_usedns: True
