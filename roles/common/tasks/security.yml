@@ -19,8 +19,8 @@
 - name: Install local configuration files for logcheck
   copy: src=logcheck/{{ item }}_local dest=/etc/logcheck/ignore.d.server/{{ item }}_local owner=root group=root mode=0644
   with_items:
-    - ansible
     - amavisd-new
+    - ansible
     - bind
     - dhclient
     - dovecot
@@ -48,6 +48,14 @@
 - name: Update logcheck cron job
   template: src=cron/logcheck.j2 dest=/etc/cron.d/logcheck owner=root group=root mode=0644
   when: with_logcheck
+
+- name: Install rkhunter related packages
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - lsof
+    - unhide
+    - rkhunter
+  when: with_rkhunter
 
 - name: Update rkhunter default/init parameters
   template: src=rkhunter/default.j2 dest=/etc/default/rkhunter owner=root group=root mode=0644
