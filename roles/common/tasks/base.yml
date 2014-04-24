@@ -36,6 +36,7 @@
     - htop
     - sudo
     - sysfsutils
+    - tmux
     - rsync
 
 - name: Install kernel configuration (proc)
