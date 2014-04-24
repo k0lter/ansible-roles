@@ -1,0 +1,2 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ pmxcfs\[[[:digit:]]+\]: \[dcdb\] notice: data verification successful$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: svc: [:\.[:alnum:]]+, port=[[:digit:]]+: unknown version \([[:digit:]]+ for prog [[:digit:]]+, nfsd\)$

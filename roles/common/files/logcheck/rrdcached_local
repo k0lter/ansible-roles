@@ -1,0 +1,1 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ rrdcached\[[[:digit:]]+\]: (flushing old values|rotating journals|(started new|removing old) journal /.*/rrd\.journal\.[\.[:digit:]]+)$

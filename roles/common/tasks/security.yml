@@ -36,7 +36,10 @@
     - php
     - postfix
     - pure-ftpd
+    - pve-cluster
     - redir
+    - rpc.mountd
+    - rrdcached
     - rsyslog
     - smartd
     - spamd
