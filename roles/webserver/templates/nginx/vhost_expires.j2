@@ -24,6 +24,14 @@ location ~* \.(?:jpg|jpeg|gif|png|ico|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ {
   add_header Cache-Control "public";
 }
 
+# Web fonts
+location ~* \.(?:ttf|ttc|otf|eot|woff)$ {
+    expires 1M;
+    access_log off;
+    add_header Cache-Control "public";
+    add_header "Access-Control-Allow-Origin" "*";
+}
+
 # CSS and Javascript
 location ~* \.(?:css|js)$ {
   expires 2M;
