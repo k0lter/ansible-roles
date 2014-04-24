@@ -19,6 +19,7 @@ fpm_min_spare_servers: 10
 fpm_max_spare_servers: 20
 
 with_php: False
+with_php_lt_54: False
 phpsyscheck_vhostname: sys.localhost
 php_config:
   - key: "short_open_tag"

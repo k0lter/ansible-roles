@@ -29,9 +29,13 @@
   template: src=php/apc.php dest=/etc/php5/syscheck.d/apc.php owner=root group=root mode=0644
   when: with_php_apc
 
-- name: Install MySQL extension for PHP
+- name: Install MySQL extension for PHP (native driver)
   apt: pkg=php5-mysqlnd state=installed update_cache=yes
-  when: with_php and with_mysql is defined and with_mysql
+  when: with_php and not with_php_lt_54 and with_mysql is defined and with_mysql
+
+- name: Install MySQL extension for PHP (old driver)
+  apt: pkg=php5-mysql state=installed update_cache=yes
+  when: with_php and with_php_lt_54 and with_mysql is defined and with_mysql
 
 - name: Install PHPMyAdmin
   apt: pkg=phpmyadmin state=installed update_cache=yes
