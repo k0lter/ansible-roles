@@ -71,3 +71,9 @@
 - name: Update chkrootkit configuration
   template: src=chkrootkit/chkrootkit.conf.j2 dest=/etc/chkrootkit.conf owner=root group=root mode=0644
   when: with_chkrootkit
+
+- name: Update fstab to hide pids from /proc
+  lineinfile: dest=/etc/fstab regexp='(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$' line='\1defaults,hidepid=2\3' backrefs=yes
+  notify:
+      - Remount /proc
+  when: with_hideproc
