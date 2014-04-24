@@ -21,24 +21,24 @@ fpm_max_spare_servers: 20
 with_php: False
 phpsyscheck_vhostname: sys.localhost
 php_config:
-  - key: short_open_tag
-    value: off
-  - key: expose_php
-    value: off
-  - key: display_errors
-    value : off
-  - key: display_startup_errors
-    value: off
-  - key: log_errors
-    value: on
-  - key: html_errors
-    value: off
-  - key: cgi.fix_pathinfo
-    value: 0
-  - key: error_log
-    value: syslog
-  - key: date.timezone
-    value: Europe/Paris
+  - key: "short_open_tag"
+    value: "Off"
+  - key: "expose_php"
+    value: "Off"
+  - key: "display_errors"
+    value : "Off"
+  - key: "display_startup_errors"
+    value: "Off"
+  - key: "log_errors"
+    value: "On"
+  - key: "html_errors"
+    value: "Off"
+  - key: "cgi.fix_pathinfo"
+    value: "0"
+  - key: "error_log"
+    value: "syslog"
+  - key: "date.timezone"
+    value: "Europe/Paris"
 
 with_php_apc: False
 

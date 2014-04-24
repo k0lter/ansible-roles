@@ -17,7 +17,7 @@
 
 {% if php_local_config is defined %}
 ;
-; Thos host overrides
+; This host overrides
 ;
 {% for param in php_local_config %}
 {{ param.key }} = {{ param.value }}
