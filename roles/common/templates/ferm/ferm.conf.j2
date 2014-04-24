@@ -1,0 +1,84 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+#
+#  Configuration file for ferm(1).
+#
+
+@def $PORTS = (
+{%- if firewall_opened_ports -%}
+{% for port in firewall_opened_ports %}{{ port }} {% endfor %}
+{%- endif -%}
+{%- if ssh_port is defined -%}{{ ssh_port }} {%- endif -%}
+{%- if ssh_ports_extra is defined -%}
+{% for port in ssh_ports_extra %}{{ port }} {% endfor %}
+{%- endif -%}
+); # Services running
+
+table filter {
+    chain INPUT {
+        policy DROP;
+
+        # connection tracking
+        mod state state INVALID DROP;
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+
+        # allow local packages
+        interface lo ACCEPT;
+
+        # respond to ping
+        proto icmp icmp-type echo-request ACCEPT;
+
+        # standard ports we allow from the outside
+        proto tcp dport $PORTS ACCEPT;
+    }
+
+    chain OUTPUT {
+        policy ACCEPT;
+
+        # connection tracking
+        #mod state state INVALID DROP;
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+    }
+
+    chain FORWARD {
+        policy DROP;
+
+        # connection tracking
+        mod state state INVALID DROP;
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+    }
+}
+
+domain ip6 table filter {
+    chain INPUT {
+        policy DROP;
+
+        # connection tracking
+        mod state state INVALID DROP;
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+
+        # allow ICMP (for neighbor solicitation, like ARP for IPv4)
+        proto ipv6-icmp ACCEPT;
+
+        # standard ports we allow from the outside
+        proto tcp dport $PORTS ACCEPT;
+    }
+
+    chain OUTPUT {
+        policy ACCEPT;
+
+        # connection tracking
+        #mod state state INVALID DROP;
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+    }
+
+    chain FORWARD {
+        policy DROP;
+
+        # connection tracking
+        mod state state INVALID DROP;
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+    }
+}

@@ -18,6 +18,13 @@ with_rkhunter: False
 with_chkrootkit: False
 with_hideproc: False
 
+with_firewall: False
+firewall_opened_ports:
+  - ssh
+  - http
+  - https
+  - smtp
+
 with_smartd: False
 
 with_postfix: False

@@ -1,0 +1,2 @@
+- name: Apply firewall rules (ferm)
+  service: name=ferm state=reloaded
