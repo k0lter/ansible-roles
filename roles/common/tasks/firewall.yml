@@ -1,6 +1,7 @@
 - name: Install firewall package (ferm)
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
+    - linux-image-{{ facter_architecture }}
     - ferm
   when: with_firewall
 
