@@ -34,28 +34,15 @@ worker_connections 4096;
 pid /var/run/nginx.pid;
 
 http {
+    ### Global settings ###
 
     # Hide nginx version information.
     server_tokens off;
 
-    # Define the MIME types for files.
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
-
-    # Format to use in log files
-    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
-                    '$status $body_bytes_sent "$http_referer" '
-                    '"$http_user_agent" "$http_x_forwarded_for"';
-
-    # Default log files
-    # (this is only used when you don't override {error,access}_log on a server{} level)
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
-
     # How long to allow each connection to stay idle; longer values are better
     # for each individual client, particularly for SSL, but means that worker
     # connections are tied up longer. (Default: 65)
-    keepalive_timeout 20;
+    keepalive_timeout 60 60;
 
     # Speed up file transfers by using sendfile() to copy directly
     # between descriptors rather than using read()/write().
@@ -70,6 +57,35 @@ http {
     # bandwidth at the cost of a nearly imperceptible increase to latency. (removes TCP_NODELAY)
     tcp_nodelay on;
 
+    # Specifies the maximum accepted body size of a client request, as
+    # indicated by the request header Content-Length (0 to disable)
+    client_max_body_size 4m;
+
+    # Directive assigns the maximum number and size of buffers for large
+    # headers to read from client request.
+    large_client_header_buffers 8 8k;
+
+    # Directive sets the headerbuffer size for the request header from client.
+    # For the overwhelming majority of requests it is completely sufficient
+    # with a buffer size of 1K
+    client_header_buffer_size 4k;
+
+
+    ### Define the MIME types for files ###
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    # Format to use in log files
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+
+    ### Default log files ###
+
+    # (this is only used when you don't override {error,access}_log on a server{} level)
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
 
     # Compression
 
@@ -120,7 +136,7 @@ http {
     # text/html is always compressed by HttpGzipModule
 
 
-    # SSL
+    ### SSL ###
 
     # This should be turned on if you are going to have pre-compressed copies (.gz) of
     # static files available. If not it should be left off as it will cause extra I/O
@@ -147,21 +163,22 @@ http {
     #ssl_certificate_key  /etc/nginx/default_ssl.key;
 
 
-    # Passenger
+    ### Passenger ###
 
     #passenger_root /usr;
     #passenger_ruby /usr/bin/ruby;
 
 
-    # Naxsi
+    ### Naxsi ###
 
     #include /etc/nginx/naxsi_core.rules;
 
 
-    # Extended configuration
+    ### Extended configuration ###
 
     # More configuration parameters
     include /etc/nginx/conf.d/*.conf;
-    # Virtual hosts
+
+    # Virtual hosts inclusion
     include /etc/nginx/sites-enabled/*;
 }
