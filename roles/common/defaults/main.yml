@@ -37,6 +37,8 @@ ssh_port: 22
 ssh_ecdsa_key: True
 ssh_usedns: True
 
+with_dnscache: False
+
 with_ovh: False
 
 sysfs_disk_settings: False
