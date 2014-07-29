@@ -108,6 +108,8 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 # and ChallengeResponseAuthentication to 'no'.
 UsePAM yes
 
+# Maximum number of authentication attempts permitted per connection
+MaxAuthTries 3
+
 # Define users groups allowed to login
 AllowGroups root operator ssh
-
