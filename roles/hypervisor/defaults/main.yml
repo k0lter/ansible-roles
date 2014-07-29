@@ -1,0 +1,9 @@
+#
+# Default variables
+#
+
+with_xen: False
+# memory amount in MB
+xendom0_mem: 1024
+
+# vim: ft=yaml

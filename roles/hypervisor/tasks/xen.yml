@@ -1,0 +1,33 @@
+- name: Install Xen related packages
+  apt: pkg={{ item }} install_recommends=no state=installed update_cache=yes
+  with_items:
+    - bridge-utils
+    - xen-linux-system-amd64
+    - debootstrap
+  when: with_xen
+
+- name: Add GRUB options for Xen
+  lineinfile: dest=/etc/default/grub regexp="^GRUB_CMDLINE_XEN_DEFAULT=" insertafter="^GRUB_CMDLINE_LINUX=" line='GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M"'
+  when: with_xen
+
+- name: Set Xen hypervisor to boot first
+  command: dpkg-divert --divert /etc/grub.d/09_linux_xen --rename /etc/grub.d/20_linux_xen creates=/etc/grub.d/09_linux_xen
+  notify:
+    - Update GRUB
+  when: with_xen
+
+- name: Configure Xend (memory)
+  lineinfile: dest=/etc/xen/xend-config.sxp regexp="^#?\(dom0-min-mem" line="(dom0-min-mem {{ xendom0_mem }})"
+  when: with_xen
+
+- name: Configure Xend (disable auto-ballooning)
+  lineinfile: dest=/etc/xen/xend-config.sxp regexp="^#?\(enable-dom0-ballooning" line="(enable-dom0-ballooning no)"
+  when: with_xen
+
+- name: Configure Xendomains init script (disable restore)
+  lineinfile: dest=/etc/default/xendomains regexp="^#?XENDOMAINS_RESTORE=" line="XENDOMAINS_RESTORE=false"
+  when: with_xen
+
+- name: Configure Xendomains init script (disable save)
+  lineinfile: dest=/etc/default/xendomains regexp="^#?XENDOMAINS_SAVE=" line="XENDOMAINS_SAVE="
+  when: with_xen
