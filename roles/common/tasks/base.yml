@@ -1,3 +1,7 @@
+- name: Install default locale
+  lineinfile: dest=/etc/default/locale regexp="^LANG=" line='LANG="{{locale}}"'
+  lineinfile: dest=/etc/default/locale regexp="^LANGUAGE=" state=absent
+
 - name: Install hosts file
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
   notify:
@@ -71,13 +75,13 @@
   template: src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
 
 - name: Install unprivileged user
-  user: name="{{ item.user }}" comment="{{ item.fullname }}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
+  user: name="{{item.user}}" comment="{{item.fullname}}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
   with_items: admins
 
 - name: Install SSH key for unprivileged user
-  authorized_key: user="{{ item.user }}" key="{{ lookup('file', '../data/users/' + item.user + '/id_rsa.pub') }}" state=present
+  authorized_key: user="{{item.user}}" key="{{lookup('file', '../data/users/' + item.user + '/id_rsa.pub')}}" state=present
   with_items: admins
 
 - name: Install SSH key for root
-  authorized_key: user=root key="{{ lookup('file', '../data/users/' + item.user + '/id_rsa.pub') }}" state=present
+  authorized_key: user=root key="{{lookup('file', '../data/users/' + item.user + '/id_rsa.pub')}}" state=present
   with_items: admins

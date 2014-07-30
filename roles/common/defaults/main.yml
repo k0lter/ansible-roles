@@ -9,6 +9,8 @@ ansible_master_ip: $PIPE(hostname --ip)
 admins:
 admin_email: root@localhost
 
+locale: en_US.UTF-8
+
 debian_mirror: ftp://ftp.fr.debian.org/debian
 
 hosts_deny_nfs: False
