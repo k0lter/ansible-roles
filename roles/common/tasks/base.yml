@@ -12,7 +12,10 @@
     - Reload apt cache
 
 - name: Write /etc/apt/apt.conf.d configuration files
-  template: src=apt/{{ item }}.j2 dest=/etc/apt/apt.conf.d/{{ item }} owner=root group=root mode=0644
+  template: src=apt/apt-options.j2 dest=/etc/apt/apt.conf.d/90local owner=root group=root mode=0644
+
+- name: Remove deprecated apt options files
+  file: path=/etc/apt/apt.conf.d/{{ item }} state=absent
   with_items:
     - local-recommends
     - local-pdiffs
