@@ -27,6 +27,7 @@
     - dropbear
     - git-daemon
     - ipmi
+    - irqbalance
     - kernel
     - libpam-modules
     - mon
