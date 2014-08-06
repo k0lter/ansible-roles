@@ -45,6 +45,7 @@
     - sysfsutils
     - tmux
     - rsync
+    - ca-certificates
 
 - name: Install kernel configuration (proc)
   template: src=kernel/sysctl.d/{{ item }}.j2 dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
