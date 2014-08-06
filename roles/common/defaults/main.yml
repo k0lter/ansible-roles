@@ -46,7 +46,7 @@ with_ovh: False
 sysfs_disk_settings: False
 
 with_dotfiles: False
-dotfiles_repo: git://forge.openics.org/server-dotfiles-zsh.git
+dotfiles_repo: http://forge.openics.org/server-dotfiles-zsh.git
 dotfiles_dest: /srv/hosting-tools/shell
 
 # vim: ft=yaml
