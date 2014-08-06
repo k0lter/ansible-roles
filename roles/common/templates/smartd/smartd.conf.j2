@@ -24,7 +24,13 @@
 # are found.  Most users should comment out DEVICESCAN and explicitly
 # list the devices that they wish to monitor.
 #DEVICESCAN -d removable -n standby -m root -M exec /usr/share/smartmontools/smartd-runner
+{% if smartd_disks is defined %}
+{% for disk in smartd_disks %}
+{{ disk }} -H -l error -l selftest -t -f -m root -M exec /usr/share/smartmontools/smartd-runner -s (S/../.././02|L/../../6/03)
+{% endfor %}
+{% else %}
 DEVICESCAN -H -l error -l selftest -t -f -m root -M exec /usr/share/smartmontools/smartd-runner -s (S/../.././02|L/../../6/03)
+{% endif %}
 
 # Alternative setting to ignore temperature and power-on hours reports
 # in syslog.
