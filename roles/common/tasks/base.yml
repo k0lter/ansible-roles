@@ -1,6 +1,5 @@
 - name: Install default locale
-  lineinfile: dest=/etc/default/locale regexp="^LANG=" line='LANG="{{locale}}"'
-  lineinfile: dest=/etc/default/locale regexp="^LANGUAGE=" state=absent
+  lineinfile: dest=/etc/default/locale regexp="^LANG=" line='LANG="{{locale}}"' create=yes mode=0644
 
 - name: Install hosts file
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
@@ -46,6 +45,8 @@
     - tmux
     - rsync
     - ca-certificates
+    - sysstat
+    - etckeeper
 
 - name: Install kernel configuration (proc)
   template: src=kernel/sysctl.d/{{ item }}.j2 dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
