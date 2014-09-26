@@ -1,0 +1,54 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+
+/var/log/syslog
+/var/log/daemon.log
+/var/log/kern.log
+/var/log/user.log
+/var/log/lpr.log
+/var/log/cron.log
+/var/log/debug
+/var/log/messages
+{
+    rotate 200
+    daily
+    dateext
+    dateyesterday
+    missingok
+    notifempty
+    delaycompress
+    compress
+    postrotate
+{% if ansible_lsb.codename == 'lenny' or ansible_lsb.codename == 'squeeze' %}
+        invoke-rc.d rsyslog reload > /dev/null
+{% else %}
+        invoke-rc.d rsyslog rotate > /dev/null
+{% endif %}
+    endscript
+}
+
+/var/log/auth.log
+/var/log/mail.info
+/var/log/mail.warn
+/var/log/mail.err
+/var/log/mail.log
+{
+    rotate 1000
+    daily
+    dateext
+    dateyesterday
+    missingok
+    notifempty
+    compress
+    delaycompress
+    sharedscripts
+    postrotate
+{% if ansible_lsb.codename == 'lenny' or ansible_lsb.codename == 'squeeze' %}
+        invoke-rc.d rsyslog reload > /dev/null
+{% else %}
+        invoke-rc.d rsyslog rotate > /dev/null
+{% endif %}
+    endscript
+}

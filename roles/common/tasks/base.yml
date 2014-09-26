@@ -57,6 +57,9 @@
     - Reconfigure locales
     - Reconfigure timezone
 
+- name: Override logrotate configuration for rsyslog
+  template: src=logrotate/rsyslog.j2 dest=/etc/logrotate.d/rsyslog owner=root group=root mode=0644
+
 - name: Install kernel configuration (proc)
   template: src=kernel/sysctl.d/{{ item }}.j2 dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   with_items:
