@@ -2,18 +2,18 @@
 # Default variables
 #
 
-ansible_master_user: admin
-ansible_master_hostname: localhost
+ansible_master_user: 'admin'
+ansible_master_hostname: 'localhost'
 ansible_master_ip: $PIPE(hostname --ip)
 
 admins:
-admin_email: root@localhost
+admin_email: 'root@localhost'
 
 locale: 'en_US.UTF-8'
 timezone_area: 'Europe'
 timezone_city: 'Paris'
 
-debian_mirror: ftp://ftp.fr.debian.org/debian
+debian_mirror: 'ftp://ftp.fr.debian.org/debian'
 
 hosts_deny_nfs: False
 host_deny_paranoid: False
@@ -26,10 +26,10 @@ with_hideproc: False
 
 with_firewall: False
 firewall_opened_ports:
-  - ssh
-  - http
-  - https
-  - smtp
+  - 'ssh'
+  - 'http'
+  - 'https'
+  - 'smtp'
 
 with_smartd: False
 
@@ -48,7 +48,7 @@ with_ovh: False
 sysfs_disk_settings: False
 
 with_dotfiles: False
-dotfiles_repo: http://forge.openics.org/server-dotfiles-zsh.git
-dotfiles_dest: /srv/hosting-tools/shell
+dotfiles_repo: 'http://forge.openics.org/server-dotfiles-zsh.git'
+dotfiles_dest: '/srv/hosting-tools/shell'
 
 # vim: ft=yaml
