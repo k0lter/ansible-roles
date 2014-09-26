@@ -33,6 +33,7 @@
     - facter
     - zsh
     - git-core
+    - tig
     - vim-nox
     - ccze
     - tree
