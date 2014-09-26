@@ -17,6 +17,8 @@ server {
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
 
+    client_max_body_size 32m;
+
     location ~ \.php$ {
         include fastcgi_pass_fpm;
     }
