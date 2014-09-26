@@ -1,0 +1,2 @@
+- name: Reload rsyslog for php
+  service: name=rsyslog state=restarted

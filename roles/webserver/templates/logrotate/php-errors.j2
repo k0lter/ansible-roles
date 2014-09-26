@@ -1,0 +1,16 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+
+/var/log/php/*.log
+{
+    rotate 12
+    daily
+    dateext
+    dateyesterday
+    missingok
+    notifempty
+    delaycompress
+    compress
+}

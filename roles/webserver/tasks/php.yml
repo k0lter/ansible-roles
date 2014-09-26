@@ -9,6 +9,19 @@
     - php-mime-type
   when: with_php
 
+- name: Create PHP log directory
+  file: path=/var/log/php state=directory owner=root group=root mode=0755
+  when: with_php and with_fpm
+
+- name: Install PHP configuration for syslog
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  with_items:
+    - { src: 'rsyslog/php-errors.conf.j2', dest: '/etc/rsyslog.d/php-errors.conf' }
+    - { src: 'logrotate/php-errors.j2', dest: '/etc/logrotate.d/php-errors' }
+  notify:
+      - Reload rsyslog for php
+  when: with_php and with_fpm
+
 - name: Install local PHP configuration
   template: src=php/php-config.ini.j2 dest=/etc/php5/conf.d/99-local-config.ini owner=root group=root mode=0644
   when: with_php
