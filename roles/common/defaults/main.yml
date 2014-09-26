@@ -25,7 +25,7 @@ with_chkrootkit: False
 with_hideproc: False
 
 with_firewall: False
-firewall_opened_ports:
+firewall_public:
   - 'ssh'
   - 'http'
   - 'https'
