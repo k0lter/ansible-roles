@@ -494,7 +494,24 @@ catch_workers_output = yes
 ;php_admin_value[error_log] = /var/log/fpm-php.www.log
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
+{% if php_config_web is defined %}
+{% for param in php_config_web %}
+{% if param.value == "on" or param.value == "On" or param.value == "off" or param.value == "Off" %}
+php_admin_flag[{{ param.key }}] = {{ param.value }}
+{% else %}
+php_admin_value[{{ param.key }}] = {{ param.value }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if php_local_config_web is defined %}
+{% for param in php_local_config_web %}
+{% if param.value == "on" or param.value == "On" or param.value == "off" or param.value == "Off" %}
+php_admin_flag[{{ param.key }}] = {{ param.value }}
+{% else %}
+php_admin_value[{{ param.key }}] = {{ param.value }}
+{% endif %}
+{% endfor %}
+{% endif %}
 
 {% endfor %}
-
 ; vim: ft=dosini

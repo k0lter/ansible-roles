@@ -11,8 +11,8 @@ nginx_workers: 2
 
 with_fpm: False
 fpm_pool_count: 1
-fpm_user: www-data
-fpm_group: www-data
+fpm_user: 'www-data'
+fpm_group: 'www-data'
 # fpm_max_children ~= (total RAM - RAM used by other process) / (average amount of RAM used by a PHP process)
 fpm_start_servers: 2
 fpm_max_children: 5
@@ -23,24 +23,27 @@ with_php: False
 with_php_lt_54: False
 phpsyscheck_vhostname: sys.localhost
 php_config:
-  - key: "short_open_tag"
-    value: "Off"
-  - key: "expose_php"
-    value: "Off"
-  - key: "display_errors"
-    value : "Off"
-  - key: "display_startup_errors"
-    value: "Off"
-  - key: "log_errors"
-    value: "On"
-  - key: "html_errors"
-    value: "Off"
-  - key: "cgi.fix_pathinfo"
-    value: "0"
-  - key: "error_log"
-    value: "syslog"
-  - key: "date.timezone"
-    value: "Europe/Paris"
+  - key: 'date.timezone'
+    value: 'Europe/Paris'
+  - key: 'short_open_tag'
+    value: 'off'
+  - key: 'expose_php'
+    value: 'off'
+
+php_config_web:
+  - key: 'display_errors'
+    value : 'off'
+  - key: 'display_startup_errors'
+    value: 'off'
+  - key: 'log_errors'
+    value: 'on'
+  - key: 'html_errors'
+    value: 'off'
+  - key: 'cgi.fix_pathinfo'
+    value: '0'
+# Set with /etc/default/php5-fpm (see https://bugs.php.net/bug.php?id=66239)
+#  - key: 'error_log'
+#    value: 'syslog'
 
 with_php_apc: False
 
