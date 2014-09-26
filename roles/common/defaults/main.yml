@@ -9,7 +9,9 @@ ansible_master_ip: $PIPE(hostname --ip)
 admins:
 admin_email: root@localhost
 
-locale: en_US.UTF-8
+locale: 'en_US.UTF-8'
+timezone_area: 'Europe'
+timezone_city: 'Paris'
 
 debian_mirror: ftp://ftp.fr.debian.org/debian
 

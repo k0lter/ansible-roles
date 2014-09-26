@@ -1,6 +1,3 @@
-- name: Install default locale
-  lineinfile: dest=/etc/default/locale regexp="^LANG=" line='LANG="{{locale}}"' create=yes mode=0644
-
 - name: Install hosts file
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
   notify:
@@ -28,6 +25,7 @@
   with_items:
     - apticron
     - locales-all
+    - locales
     - lsb-release
     - ntp
     - toilet
@@ -47,6 +45,16 @@
     - ca-certificates
     - sysstat
     - etckeeper
+
+- name: Configure default locale and timezone
+  debconf: name="{{item.name}}" question="{{item.question}}" value="{{item.value}}" vtype="{{item.vtype}}"
+  with_items:
+    - { name: 'locales', question: 'locales/default_environment_locale', value: '{{ locale }}', vtype: 'select' }
+    - { name: 'tzdata', question: 'tzdata/Areas', value: '{{ timezone_area }}', vtype: 'select' }
+    - { name: 'tzdata', question: 'tzdata/Zones/{{ timezone_area }}', value: '{{ timezone_city }}', vtype: 'select' }
+  notify:
+    - Reconfigure locales
+    - Reconfigure timezone
 
 - name: Install kernel configuration (proc)
   template: src=kernel/sysctl.d/{{ item }}.j2 dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
