@@ -31,11 +31,11 @@
 
 - name: Install MySQL extension for PHP (native driver)
   apt: pkg=php5-mysqlnd state=installed update_cache=yes
-  when: with_php and not with_php_lt_54 and with_mysql is defined and with_mysql
+  when: with_php and not with_php_lt_54
 
 - name: Install MySQL extension for PHP (old driver)
   apt: pkg=php5-mysql state=installed update_cache=yes
-  when: with_php and with_php_lt_54 and with_mysql is defined and with_mysql
+  when: with_php and with_php_lt_54
 
 - name: Install PHPMyAdmin
   apt: pkg=phpmyadmin state=installed update_cache=yes
