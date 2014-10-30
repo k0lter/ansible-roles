@@ -11,12 +11,6 @@
     - Regenerate aliases cache
   when: with_postfix or with_mail_aliases
 
-- name: Create Diffie-Helman parameters (2048 bits) for postfix
-  command: openssl dhparam -2 -out /etc/ssl/private/dh2048.pem 2048 creates=/etc/ssl/private/dh2048.pem
-  notify:
-    - Restart postfix
-  when: with_postfix
-
 - name: Install postfix main configuration
   template: src=postfix/main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root mode=0644
   notify:
