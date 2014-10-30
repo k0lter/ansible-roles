@@ -6,16 +6,9 @@
 # See the sshd_config(5) manpage for details
 
 # What ports, IPs and protocols we listen for
-{% if ssh_port is defined %}
-Port {{ ssh_port }}
-{% else %}
-Port 22
-{% endif %}
-{% if ssh_ports_extra is defined %}
-{% for port in ssh_ports_extra %}
+{% for port in ssh_ports %}
 Port {{ port }}
 {% endfor %}
-{% endif %}
 
 # Use these options to restrict which interfaces/protocols sshd will bind to
 #ListenAddress ::
