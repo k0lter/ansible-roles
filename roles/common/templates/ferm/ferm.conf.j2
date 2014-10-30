@@ -27,7 +27,7 @@ table filter {
 {% if firewall_private is defined %}
         # Private networks configuration
 {% for fwconf in firewall_private %}
-        interface {{ fwconf.interface }}{% if fwconf.network is defined %} saddr {{ fwconf.network }}{% endif %} {
+        interface {{ fwconf.interface }}{% if fwconf.networks is defined %} saddr ({{ fwconf.networks | join(' ') }}){% endif %} {
             proto (udp tcp) dport ({{ fwconf.ports | join(' ') }}) ACCEPT;
         }
 {% endfor %}
