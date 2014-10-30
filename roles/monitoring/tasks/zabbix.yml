@@ -1,0 +1,11 @@
+- name: Install Zabbix agent
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - zabbix-agent
+  when: with_zabbix_agent
+
+- name: Install Zabbix agent config file
+  template: src='zabbix/agent.conf.j2' dest='/etc/zabbix/zabbix_agentd.conf' owner=root group=root mode=0600
+  when: with_zabbix_agent
+  notify:
+    - Restart zabbix agent

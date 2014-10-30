@@ -17,4 +17,7 @@ munin_nodes:
   - node: localhost
     address: 127.0.0.1
 
+with_zabbix_agent: False
+zabbix_remote_server: 'zabbix.domain.tld'
+
 # vim: ft=yaml
