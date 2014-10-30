@@ -77,4 +77,10 @@
   lineinfile: dest=/etc/fstab regexp='(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$' line='\1defaults,hidepid=2\3' backrefs=yes
   notify:
       - Remount /proc
-  when: with_hideproc
+  when: with_hideproc and hideproc_gid == ''
+
+- name: Update fstab to hide pids from /proc with group id (gid)
+  lineinfile: dest=/etc/fstab regexp='(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$' line='\1defaults,hidepid=2,gid={{hideproc_gid}}\3' backrefs=yes
+  notify:
+      - Remount /proc
+  when: with_hideproc and hideproc_gid != ''

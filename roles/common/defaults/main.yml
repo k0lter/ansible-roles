@@ -22,7 +22,9 @@ with_auto_upgrade: False
 with_logcheck: False
 with_rkhunter: False
 with_chkrootkit: False
+
 with_hideproc: False
+hideproc_gid: ''
 
 with_firewall: False
 firewall_public:
