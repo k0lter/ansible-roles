@@ -22,7 +22,9 @@ fpm_max_spare_servers: 3
 
 with_php: False
 with_php_lt_54: False
+
 phpsyscheck_vhostname: sys.localhost
+
 php_config:
   - key: 'date.timezone'
     value: 'Europe/Paris'
@@ -50,7 +52,11 @@ with_php_apc: False
 
 with_phpmyadmin: False
 phpmyadmin_vhostname: pma.localhost
+http_auth_phpmyadmin_username: ''
+http_auth_phpmyadmin_password: ''
 
+http_auth_user_name: ''
+http_auth_user_password: ''
 http_auth_admin_password: seVDetGvSs7nA # openssl passwd -crypt adm123in
 
 # vim: ft=yaml
