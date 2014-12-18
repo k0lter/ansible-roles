@@ -104,5 +104,12 @@ UsePAM yes
 # Maximum number of authentication attempts permitted per connection
 MaxAuthTries 3
 
+{% if ssh_allowed_users %}
+# Define users allowed to login
+AllowUsers {{ ssh_allowed_users | join(' ') }}
+{% endif %}
+
+{% if not ssh_allowed_users and ssh_allowed_groups %}
 # Define users groups allowed to login
-AllowGroups root operator ssh
+AllowGroups {{ ssh_allowed_groups | join(' ') }}
+{% endif %}
