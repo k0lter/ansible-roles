@@ -3,6 +3,7 @@
   with_items:
     - postfix
     - ca-certificates
+    - procmail
   when: with_postfix
 
 - name: Install mail aliases file
