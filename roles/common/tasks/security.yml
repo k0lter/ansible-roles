@@ -67,8 +67,14 @@
     - rkhunter
   when: with_rkhunter
 
-- name: Update rkhunter default/init parameters
-  template: src=rkhunter/default.j2 dest=/etc/default/rkhunter owner=root group=root mode=0644
+- name: Reconfigure rkhunter package
+  debconf: name="{{item.name}}" question="{{item.question}}" value="{{item.value}}" vtype="{{item.vtype}}"
+  with_items:
+    - { name: 'rkhunter', question: 'rkhunter/apt_autogen', value: 'true', vtype: 'boolean' }
+    - { name: 'rkhunter', question: 'rkhunter/cron_daily_run', value: 'true', vtype: 'boolean' }
+    - { name: 'rkhunter', question: 'rkhunter/cron_db_update', value: 'true', vtype: 'boolean' }
+  notify:
+    - Reconfigure rkhunter
   when: with_rkhunter
 
 - name: Update rkhunter configuration

@@ -1,5 +1,8 @@
 - name: Reconfigure unattended-upgrades
   raw: rm -f /etc/apt/apt.conf.d/20auto-upgrades* ; UCF_FORCE_CONFFMISS=1 UCF_FORCE_CONFFNEW=1 dpkg-reconfigure --frontend noninteractive unattended-upgrades
 
+- name: Reconfigure rkhunter
+  raw: rm -f /etc/default/rkhunter* ; UCF_FORCE_CONFFMISS=1 UCF_FORCE_CONFFNEW=1 dpkg-reconfigure --frontend noninteractive rkhunter
+
 - name: Remount /proc
   shell: mount -o remount /proc
