@@ -6,13 +6,13 @@
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 Unattended-Upgrade::Mail "root";
-//Unattended-Upgrade::MailOnlyOnError "true";
+Unattended-Upgrade::MailOnlyOnError "true";
 
 // Automatically upgrade packages from these origin patterns
 Unattended-Upgrade::Origins-Pattern {
-            // Archive or Suite based matching:
-            // Note that this will silently match a different release after
-            // migration to the specified archive (e.g. testing becomes the
-            // new stable).
-            "o=Debian,a=unstable";
+    // Archive or Suite based matching:
+    // Note that this will silently match a different release after
+    // migration to the specified archive (e.g. testing becomes the
+    // new stable).
+    "o=Debian,a=unstable";
 };

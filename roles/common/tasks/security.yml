@@ -2,8 +2,14 @@
   apt: pkg=unattended-upgrades state=installed update_cache=yes
   when: with_auto_upgrade
 
-- name: Configure auto upgrades
-  template: src={{ item }} dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+- name: Reconfigure unattended-upgrades package
+  debconf: name="unattended-upgrades" question="unattended-upgrades/enable_auto_updates" value="true" vtype="boolean"
+  notify:
+    - Reconfigure unattended-upgrades
+  when: with_auto_upgrade
+
+- name: Update unattended-upgrades configuration
+  template: src={{ item }} dest=/etc/apt/apt.conf.d/90unattended-upgrades-local owner=root group=root mode=0644
   first_available_file:
     - apt/auto-upgrades.{{ ansible_lsb.codename }}.j2
     - apt/auto-upgrades.j2
