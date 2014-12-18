@@ -40,6 +40,16 @@ table filter {
         # connection tracking
         #mod state state INVALID DROP;
         mod state state (ESTABLISHED RELATED) ACCEPT;
+{% if firewall_private is defined %}
+{% for fwconf in firewall_private %}
+{% if fwconf.users is defined %}
+
+        # Private networks configuration
+        mod owner uid-owner ({{ fwconf.users | join(' ') }}) outerface {{ fwconf.interface }} ACCEPT;
+        outerface {{ fwconf.interface }} DROP;
+{% endif %}
+{% endfor %}
+{% endif %}
     }
 
     chain FORWARD {
