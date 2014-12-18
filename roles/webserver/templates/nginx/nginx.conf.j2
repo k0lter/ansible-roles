@@ -182,3 +182,10 @@ http {
     # Virtual hosts inclusion
     include /etc/nginx/sites-enabled/*;
 }
+
+#
+# Include more global diretives (mail, rtmp, etc.)
+#
+
+include /etc/nginx/conf.d/*.inc;
+
