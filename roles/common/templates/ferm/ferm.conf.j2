@@ -59,6 +59,9 @@ domain ip6 table filter {
         mod state state INVALID DROP;
         mod state state (ESTABLISHED RELATED) ACCEPT;
 
+        # allow local packet
+        interface lo ACCEPT;
+
         # allow ICMP (for neighbor solicitation, like ARP for IPv4)
         proto ipv6-icmp ACCEPT;
 
