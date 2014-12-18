@@ -2,7 +2,7 @@
   command: dpkg-reconfigure --frontend noninteractive locales
 
 - name: Reconfigure timezone
-  shell: rm -f /etc/timezone ; dpkg-reconfigure --frontend noninteractive tzdata
+  raw: rm -f /etc/timezone ; dpkg-reconfigure --frontend noninteractive tzdata
 
 - name: Reload apt cache
   command: apt-get update
