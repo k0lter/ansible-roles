@@ -2,12 +2,11 @@
 # Default variables
 #
 
-ansible_master_user: 'admin'
-ansible_master_hostname: 'localhost'
-ansible_master_ip: $PIPE(hostname --ip)
+ansible_master: 'root@localhost'
 
 admins:
-admin_email: 'root@localhost'
+admins_emails:
+  - 'root@localhost'
 
 locale: 'en_US.UTF-8'
 timezone_area: 'Europe'
