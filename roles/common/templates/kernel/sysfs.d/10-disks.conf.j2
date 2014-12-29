@@ -3,8 +3,8 @@
 #
 {% if sysfs_disk_settings %}
 {% for disk in ansible_devices -%}
-{% for param in sysfs_disk_settings %}
-block/{{ disk }}/{{ param.key }} = {{ param.value }}
+{% for key in sysfs_disk_settings %}
+block/{{ disk }}/{{ key }} = {{ sysfs_disk_settings[key] }}
 {% endfor %}
 {%- endfor %}
 {% endif %}
