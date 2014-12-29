@@ -15,6 +15,6 @@ logcheck:       root
 clamav:         root
 monit:          root
 
-{% if admin_email is defined %}
-root:           {{ admin_email }}
+{% if admins_emails is defined %}
+root:           {{ admins_emails | join(', ') }}
 {% endif %}
