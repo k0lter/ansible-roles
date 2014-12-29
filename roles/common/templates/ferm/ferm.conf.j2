@@ -76,7 +76,7 @@ domain ip6 table filter {
         proto ipv6-icmp ACCEPT;
 
         # standard ports we allow from the outside
-        proto tcp dport $PORTS ACCEPT;
+        proto (udp tcp) dport $PORTS ACCEPT;
     }
 
     chain OUTPUT {
