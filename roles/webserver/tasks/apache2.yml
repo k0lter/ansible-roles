@@ -13,25 +13,25 @@
   when: with_apache2
 
 - name: Install PHPMyAdmin virtual host for apache2 (sites-available)
-  template: src=apache2/pma_vhost.j2 dest=/etc/apache2/sites-available/pma owner=root group=root mode=0644
+  template: src=apache2/pma_vhost.j2 dest=/etc/apache2/sites-available/pma.conf owner=root group=root mode=0644
   notify:
     - Reload apache2
   when: with_phpmyadmin and with_apache2
 
 - name: Install PHPMyAdmin virtual host for apache2 (sites-enabled)
-  file: src=/etc/apache2/sites-available/pma path=/etc/apache2/sites-enabled/pma state=link
+  file: src=/etc/apache2/sites-available/pma.conf path=/etc/apache2/sites-enabled/pma.conf state=link
   notify:
     - Reload apache2
   when: with_phpmyadmin and with_apache2
 
 - name: Install PHP system checks virtual host for apache2 (sites-available)
-  template: src=apache2/sys_vhost.j2 dest=/etc/apache2/sites-available/sys owner=root group=root mode=0644
+  template: src=apache2/sys_vhost.j2 dest=/etc/apache2/sites-available/sys.conf owner=root group=root mode=0644
   notify:
     - Reload apache2
   when: with_php and with_apache2
 
 - name: Install PHP system checks virtual host for apache2 (sites-enabled)
-  file: src=/etc/apache2/sites-available/sys path=/etc/apache2/sites-enabled/sys state=link
+  file: src=/etc/apache2/sites-available/sys.conf path=/etc/apache2/sites-enabled/sys.conf state=link
   notify:
     - Reload apache2
   when: with_php and with_apache2

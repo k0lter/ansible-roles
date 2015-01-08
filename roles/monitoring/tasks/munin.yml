@@ -56,13 +56,13 @@
   when: with_munin and with_nginx is defined and with_nginx
 
 - name: Install apache2 virtual host for munin (sites-available)
-  template: src=munin/apache2_vhost.j2 dest=/etc/apache2/sites-available/munin owner=root group=root mode=0644
+  template: src=munin/apache2_vhost.j2 dest=/etc/apache2/sites-available/munin.conf owner=root group=root mode=0644
   notify:
     - Reload apache2 for munin
   when: with_munin and with_apache2 is defined and with_apache2
 
 - name: Install apache2 virtual host for munin (sites-enabled)
-  file: src=/etc/apache2/sites-available/munin path=/etc/apache2/sites-enabled/munin state=link
+  file: src=/etc/apache2/sites-available/munin.conf path=/etc/apache2/sites-enabled/munin.conf state=link
   notify:
     - Reload apache2 for munin
   when: with_munin and with_apache2 is defined and with_apache2
