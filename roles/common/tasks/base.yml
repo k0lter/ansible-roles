@@ -46,6 +46,7 @@
     - ca-certificates
     - sysstat
     - etckeeper
+    - sharutils
 
 - name: Configure default locale and timezone
   debconf: name="{{item.name}}" question="{{item.question}}" value="{{item.value}}" vtype="{{item.vtype}}"
