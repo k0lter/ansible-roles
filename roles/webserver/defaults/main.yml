@@ -3,12 +3,14 @@
 #
 
 with_apache2: False
-with_apache2_modphp5: False
 
 with_nginx: False
 # nginx_workers ~= $(getconf _NPROCESSORS_ONLN)
 nginx_workers: 2
 nginx_ssl_strengthened: False
+
+
+with_modphp5: False
 
 with_fpm: False
 fpm_pool_count: 1
@@ -26,27 +28,18 @@ with_php_lt_54: False
 phpsyscheck_vhostname: sys.localhost
 
 php_config:
-  - key: 'date.timezone'
-    value: 'Europe/Paris'
-  - key: 'short_open_tag'
-    value: 'off'
-  - key: 'expose_php'
-    value: 'off'
+  date.timezone: 'Europe/Paris'
+  short_open_tag: 'off'
+  expose_php: 'off'
 
 php_config_web:
-  - key: 'display_errors'
-    value : 'off'
-  - key: 'display_startup_errors'
-    value: 'off'
-  - key: 'log_errors'
-    value: 'on'
-  - key: 'html_errors'
-    value: 'off'
-  - key: 'cgi.fix_pathinfo'
-    value: '0'
+  display_errors: 'off'
+  display_startup_errors: 'off'
+  log_errors: 'on'
+  html_errors: 'off'
+  cgi.fix_pathinfo: '0'
 # Set with /etc/default/php5-fpm (see https://bugs.php.net/bug.php?id=66239)
-#  - key: 'error_log'
-#    value: 'syslog'
+#  error_log: 'syslog'
 
 with_php_apc: False
 

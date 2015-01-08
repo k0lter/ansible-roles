@@ -8,10 +8,6 @@
     - Reload apache2
   when: with_apache2
 
-- name: Install mod_php5 packages for apache2
-  apt: pkg=libapache2-mod-php5 state=installed update_cache=yes
-  when: with_apache2 and with_apache2_modphp5
-
 - name: Create basic authentication file for admin (apache2)
   template: src=apache2/auth_admin.j2 dest=/etc/apache2/auth_admin owner=root group=www-data mode=0640
   when: with_apache2

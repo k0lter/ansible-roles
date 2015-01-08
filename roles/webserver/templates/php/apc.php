@@ -5,5 +5,15 @@
 {% endif -%}
 
 define('USE_AUTHENTICATION', 0);
-require_once '/usr/share/doc/php-apc/apc.php';
+
+$files = array('/usr/share/doc/php5-apcu/apc.php', '/usr/share/doc/php-apc/apc.php');
+
+foreach($files as $file) {
+    if (file_exists($file)) {
+        require_once $file;
+        exit(0);
+    }
+}
+
+die("Unable to find APC control file");
 ?>
