@@ -2,11 +2,17 @@
   apt: pkg=apache2 state=installed update_cache=yes
   when: with_apache2
 
-- name: Install apache2 basic security configuration
+- name: Install apache2 basic security configuration (Debian < 8)
   template: src=apache2/conf.d/security.j2 dest=/etc/apache2/conf.d/security owner=root group=root mode=0644
   notify:
     - Reload apache2
-  when: with_apache2
+  when: with_apache2 and ansible_lsb.major_release|int < 8
+
+- name: Install apache2 basic security configuration (Debian >= 8)
+  template: src=apache2/conf.d/security.j2 dest=/etc/apache2/conf-available/security.conf owner=root group=root mode=0644
+  notify:
+    - Reload apache2
+  when: with_apache2 and ansible_lsb.major_release|int >= 8
 
 - name: Create basic authentication file for admin (apache2)
   template: src=apache2/auth_admin.j2 dest=/etc/apache2/auth_admin owner=root group=www-data mode=0640
