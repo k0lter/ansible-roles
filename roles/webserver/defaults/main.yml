@@ -9,7 +9,6 @@ with_nginx: False
 nginx_workers: 2
 nginx_ssl_strengthened: False
 
-
 with_modphp5: False
 
 with_fpm: False
@@ -37,7 +36,6 @@ php_config_web:
   display_startup_errors: 'off'
   log_errors: 'on'
   html_errors: 'off'
-  cgi.fix_pathinfo: '0'
 # Set with /etc/default/php5-fpm (see https://bugs.php.net/bug.php?id=66239)
 #  error_log: 'syslog'
 

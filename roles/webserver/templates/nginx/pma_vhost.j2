@@ -19,7 +19,7 @@ server {
 
     client_max_body_size 32m;
 
-    location ~ \.php$ {
+    location ~ \.php(/|$) {
         include fastcgi_pass_fpm;
     }
 }
