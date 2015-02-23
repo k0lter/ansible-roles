@@ -3,6 +3,7 @@
 #
 
 with_mysql: False
-mysql_root_password: ro1234ot
+with_mysql_backup: True
+mysql_root_password: Null
 
 # vim: ft=yaml

@@ -1,21 +1,25 @@
-- name: Install mysql-server related packages
+- name: Install MySQL server related packages
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - mysql-server
-    - automysqlbackup
+    - mysql-client
   when: with_mysql
+
+- name: Install MySQL backup related packages (automysqlbackup)
+  apt: pkg=automysqlbackup state=installed update_cache=yes
+  when: with_mysql and with_mysql_backup
 
 - name: Fix automysqlbackup to handle events properly
   lineinfile:
     dest: /usr/sbin/automysqlbackup
     regexp: "^OPT="
     line: 'OPT="--quote-names --events" # OPT string for use with mysqldump ( see man mysqldump )'
-  when: with_mysql
+  when: with_mysql and with_mysql_backup
 
-- name: Change mysql root default password
+- name: Change MySQL root default password
   raw: if ! echo "SELECT VERSION();" | mysql -u root --password='{{ mysql_root_password }}' >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('{{ mysql_root_password }}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
-  when: with_mysql
+  when: with_mysql and mysql_root_password
 
-- name: Ensure mysql-server is running
+- name: Ensure MySQL is running
   service: name=mysql state=started
   when: with_mysql
