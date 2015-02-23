@@ -17,8 +17,11 @@ Protocol 2
 # HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_dsa_key
-{% if ssh_ecdsa_key %}
+{% if ansible_lsb.major_release|int >= 7 %}
 HostKey /etc/ssh/ssh_host_ecdsa_key
+{% endif %}
+{% if ansible_lsb.major_release|int >= 8 %}
+HostKey /etc/ssh/ssh_host_ed25519_key
 {% endif %}
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes

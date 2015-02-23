@@ -40,7 +40,6 @@ with_mail_aliases: False
 with_ssh: True
 ssh_ports:
   - 22
-ssh_ecdsa_key: True
 ssh_usedns: True
 ssh_allowed_users: Null
 ssh_allowed_groups:
