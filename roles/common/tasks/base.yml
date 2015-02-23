@@ -27,7 +27,6 @@
     - locales-all
     - locales
     - lsb-release
-    - ntp
     - toilet
     - toilet-fonts
     - facter
@@ -47,6 +46,10 @@
     - sysstat
     - etckeeper
     - sharutils
+
+- name: Install ntp daemon
+  apt: pkg=ntp install_recommends=no state=installed update_cache=yes
+  when: with_ntp
 
 - name: Configure default locale and timezone
   debconf: name="{{item.name}}" question="{{item.question}}" value="{{item.value}}" vtype="{{item.vtype}}"

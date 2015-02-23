@@ -25,6 +25,8 @@ with_chkrootkit: False
 with_hideproc: False
 hideproc_gid: ''
 
+with_ntp: True
+
 with_firewall: False
 firewall_public:
   - 'ssh'
