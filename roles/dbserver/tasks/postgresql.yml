@@ -1,0 +1,14 @@
+- name: Install PostgreSQL server related packages
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - postgresql
+    - postgresql-client
+  when: with_postgresql
+
+- name: Install PostgreSQL backup related packages (autopostgresqlbackup)
+  apt: pkg=autopostgresqlbackup state=installed update_cache=yes
+  when: with_postgresql and with_postgresql_backup
+
+- name: Ensure PostgreSQL server is running
+  service: name=postgresql state=started
+  when: with_postgresql

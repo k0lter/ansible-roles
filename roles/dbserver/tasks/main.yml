@@ -1,1 +1,2 @@
 - include: mysql.yml
+- include: postgresql.yml

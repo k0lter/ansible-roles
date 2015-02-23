@@ -6,4 +6,7 @@ with_mysql: False
 with_mysql_backup: True
 mysql_root_password: Null
 
+with_postgresql: False
+with_postgresql_backup: True
+
 # vim: ft=yaml
