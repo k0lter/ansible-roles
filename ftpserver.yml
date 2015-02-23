@@ -1,0 +1,4 @@
+- hosts: ftpserver
+  roles:
+    - ftpserver
+

@@ -1,0 +1,8 @@
+#
+# Default variables for webservers
+#
+
+with_ftp: False
+ftp_accounts: Null
+
+# vim: ft=yaml
