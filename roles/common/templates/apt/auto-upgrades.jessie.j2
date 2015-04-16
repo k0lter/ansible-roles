@@ -10,12 +10,12 @@ Unattended-Upgrade::Mail "root";
 
 // Automatically upgrade packages from these origin patterns
 Unattended-Upgrade::Origins-Pattern {
-            // Archive or Suite based matching:
-            // Note that this will silently match a different release after
-            // migration to the specified archive (e.g. testing becomes the
-            // new stable).
-            "o=Debian,a=stable";
-            "o=Debian,a=stable-updates";
-    //      "o=Debian,a=stable-proposed-updates";
-            "origin=Debian,archive=stable,label=Debian-Security";
+    // Archive or Suite based matching:
+    // Note that this will silently match a different release after
+    // migration to the specified archive (e.g. testing becomes the
+    // new stable).
+    "o=Debian,a=stable";
+    "o=Debian,a=stable-updates";
+//  "o=Debian,a=stable-proposed-updates";
+    "origin=Debian,archive=stable,label=Debian-Security";
 };
