@@ -10,12 +10,14 @@
     DocumentRoot /usr/share/phpmyadmin
     DirectoryIndex index.php
 
+{% if http_auth_phpmyadmin %}
     <Location />
         AuthType basic
         AuthName "Restricted Access"
         AuthUserFile /etc/apache2/auth_admin
         Require valid-user
     </Location>
+{% endif %}
 
     Include /etc/phpmyadmin/apache.conf
 

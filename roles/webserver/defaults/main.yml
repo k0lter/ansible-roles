@@ -24,7 +24,7 @@ fpm_max_spare_servers: 3
 with_php: False
 with_php_mysql_legacy: False
 
-phpsyscheck_vhostname: sys.localhost
+phpsyscheck_vhostname: 'sys.localhost'
 
 php_config:
   date.timezone: 'Europe/Paris'
@@ -42,12 +42,15 @@ php_config_web:
 with_php_apc: False
 
 with_phpmyadmin: False
-phpmyadmin_vhostname: pma.localhost
-http_auth_phpmyadmin_username: ''
-http_auth_phpmyadmin_password: ''
+phpmyadmin_vhostname: 'pma.localhost'
+http_auth_phpmyadmin: False
 
 with_phppgadmin: False
 phppgadmin_vhostname: 'pga.localhost'
 http_auth_phppgadmin: False
+
+http_auth_admin_password: Null
+http_auth_user_name: Null
+http_auth_user_password: Null
 
 # vim: ft=yaml
