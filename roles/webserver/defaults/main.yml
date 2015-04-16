@@ -46,8 +46,8 @@ phpmyadmin_vhostname: pma.localhost
 http_auth_phpmyadmin_username: ''
 http_auth_phpmyadmin_password: ''
 
-http_auth_user_name: ''
-http_auth_user_password: ''
-http_auth_admin_password: seVDetGvSs7nA # openssl passwd -crypt adm123in
+with_phppgadmin: False
+phppgadmin_vhostname: 'pga.localhost'
+http_auth_phppgadmin: False
 
 # vim: ft=yaml

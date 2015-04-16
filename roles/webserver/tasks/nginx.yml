@@ -49,6 +49,18 @@
     - Reload nginx
   when: with_phpmyadmin and with_nginx
 
+- name: Install PHPPgAdmin virtual host for nginx (sites-available)
+  template: src=nginx/pga_vhost.j2 dest=/etc/nginx/sites-available/pga owner=root group=root mode=0644
+  notify:
+    - Reload nginx
+  when: with_phppgadmin and with_nginx
+
+- name: Install PHPPgAdmin virtual host for nginx (sites-enabled)
+  file: src=/etc/nginx/sites-available/pga path=/etc/nginx/sites-enabled/pga state=link
+  notify:
+    - Reload nginx
+  when: with_phppgadmin and with_nginx
+
 - name: Install PHP system checks virtual host for nginx (sites-available)
   template: src=nginx/sys_vhost.j2 dest=/etc/nginx/sites-available/sys owner=root group=root mode=0644
   notify:

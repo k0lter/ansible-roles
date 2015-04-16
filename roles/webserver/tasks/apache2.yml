@@ -30,6 +30,18 @@
     - Reload apache2
   when: with_phpmyadmin and with_apache2
 
+- name: Install PHPPgAdmin virtual host for apache2 (sites-available)
+  template: src=apache2/pga_vhost.j2 dest=/etc/apache2/sites-available/pga.conf owner=root group=root mode=0644
+  notify:
+    - Reload apache2
+  when: with_phppgadmin and with_apache2
+
+- name: Install PHPPgAdmin virtual host for apache2 (sites-enabled)
+  file: src=/etc/apache2/sites-available/pga.conf path=/etc/apache2/sites-enabled/pga.conf state=link
+  notify:
+    - Reload apache2
+  when: with_phppgadmin and with_apache2
+
 - name: Install PHP system checks virtual host for apache2 (sites-available)
   template: src=apache2/sys_vhost.j2 dest=/etc/apache2/sites-available/sys.conf owner=root group=root mode=0644
   notify:

@@ -1,0 +1,30 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+# Apache vhost for phppgadmin
+
+<VirtualHost *:80>
+    ServerName {{ phppgadmin_vhostname }}
+
+    DocumentRoot /usr/share/phppgadmin
+    DirectoryIndex index.php
+
+{% if http_auth_phppgadmin %}
+    <Location />
+        AuthType basic
+        AuthName "Restricted Access"
+        AuthUserFile /etc/apache2/auth_admin
+        Require valid-user
+    </Location>
+{% endif %}
+
+    <Directory /usr/share/phppgadmin>
+        Require all granted
+    </Directory>
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/pga.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/pga.error.log
+
+</VirtualHost>

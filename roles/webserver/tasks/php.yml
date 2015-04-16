@@ -66,6 +66,10 @@
   apt: pkg=phpmyadmin state=installed update_cache=yes
   when: with_phpmyadmin
 
+- name: Install PHPPgAdmin
+  apt: pkg=phppgadmin state=installed update_cache=yes
+  when: with_phppgadmin
+
 - name: Install php5-fpm package
   apt: pkg=php5-fpm state=installed update_cache=yes
   when: with_fpm
