@@ -3,6 +3,10 @@
 {{ prolog() }}
 {% endif -%}
 
+#
+# Common aliases
+#
+
 mailer-daemon:  postmaster
 postmaster:     root
 nobody:         root
@@ -15,6 +19,22 @@ logcheck:       root
 clamav:         root
 monit:          root
 
+{% if mail_aliases is defined %}
+#
+# Custom aliases
+#
+{% for user in mail_aliases %}
+{% if mail_aliases[user][:1] == '|' %}
+{{ user }}:  "{{ mail_aliases[user] }}"
+{% else %}
+{{ user }}:  {{ mail_aliases[user] }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+#
+# root alias
+#
 {% if admins_emails is defined %}
 root:           {{ admins_emails | join(', ') }}
 {% endif %}
