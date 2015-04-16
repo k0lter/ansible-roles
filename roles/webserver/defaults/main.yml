@@ -22,7 +22,7 @@ fpm_min_spare_servers: 1
 fpm_max_spare_servers: 3
 
 with_php: False
-with_php_lt_54: False
+with_php_mysql_legacy: False
 
 phpsyscheck_vhostname: sys.localhost
 
