@@ -1,5 +1,5 @@
 - name: Install dotfiles
-  git: repo={{ dotfiles_repo }} dest={{ dotfiles_dest }} recursive=yes accept_hostkey=yes
+  git: repo={{ dotfiles_repo }} dest={{ dotfiles_dest }} recursive=yes accept_hostkey=yes force=yes
   when: with_dotfiles
 
 - name: Enable sourcing of dotfiles
