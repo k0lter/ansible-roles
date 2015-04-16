@@ -52,7 +52,7 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 myhostname = {{ ansible_fqdn }}
 myorigin = $myhostname
 mydomain = $myhostname
-mydestination = {{ ansible_fqdn }} {{ ansible_hostname }}
+mydestination = {{ ansible_fqdn }} {{ ansible_hostname }} localhost localhost.localdomain
 
 alias_maps = hash:/etc/aliases
 alias_database = $alias_maps
