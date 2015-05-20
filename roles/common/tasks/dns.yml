@@ -12,4 +12,4 @@
 
 - name: Install resolv.conf
   template: src=dns/resolv.conf.j2 dest=/etc/resolv.conf owner=root group=root mode=0644
-  when: with_dnscache or nameservers is defined
+  when: with_dnscache or (nameservers is defined and nameservers)
