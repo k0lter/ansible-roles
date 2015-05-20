@@ -1,4 +1,3 @@
 .gitignore
-hosts
 library
 roles/common/data/users/*
