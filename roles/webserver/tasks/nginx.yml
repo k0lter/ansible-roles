@@ -29,6 +29,7 @@
     - expires
     - cache-fd
     - protect-files
+    - security
   notify:
     - Reload nginx
   when: with_nginx
