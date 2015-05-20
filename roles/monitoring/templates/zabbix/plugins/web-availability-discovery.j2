@@ -1,0 +1,13 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+{% if zabbix_plugins_config.discovery.web.availability is defined %}
+{% for key in zabbix_plugins_config.discovery.web.availability %}
+{{ key }}:
+    url: '{{ zabbix_plugins_config.discovery.web.availability[key]['url'] }}'
+    status: {{ zabbix_plugins_config.discovery.web.availability[key]['status'] }}
+    timeout: {{ zabbix_plugins_config.discovery.web.availability[key]['timeout'] }}
+    regexp: '{{ zabbix_plugins_config.discovery.web.availability[key]['regexp'] }}'
+{% endfor %}
+{% endif %}

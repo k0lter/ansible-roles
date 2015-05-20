@@ -9,3 +9,25 @@
   when: with_zabbix_agent
   notify:
     - Restart zabbix agent
+
+- name: Create zabbix plugins configuration directory
+  file:
+    path: '/etc/zabbix/zabbix_plugins.conf.d'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    state: 'directory'
+  when: with_zabbix_agent and zabbix_plugins_config
+
+- name: Install zabbix plugins configuration (ssl, web availability, web metrics)
+  template:
+    src: 'zabbix/plugins/{{ item }}.j2'
+    dest: '/etc/zabbix/zabbix_plugins.conf.d/{{ item }}.yml'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'ssl-discovery'
+    - 'web-metrics-discovery'
+    - 'web-availability-discovery'
+  when: with_zabbix_agent and zabbix_plugins_config

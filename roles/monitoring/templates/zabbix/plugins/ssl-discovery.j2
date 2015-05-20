@@ -1,0 +1,10 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+{% if zabbix_plugins_config.discovery.ssl is defined %}
+{% for key in zabbix_plugins_config.discovery.ssl %}
+{{ key }}:
+    uri: '{{ zabbix_plugins_config.discovery.ssl[key]['uri'] }}'
+{% endfor %}
+{% endif %}
