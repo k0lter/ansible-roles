@@ -14,6 +14,10 @@ timezone_city: 'Paris'
 
 debian_mirror: 'ftp://ftp.fr.debian.org/debian'
 
+apt_keys: Null
+apt_repositories: Null
+apt_additional_packages: Null
+
 hosts_deny_nfs: False
 host_deny_paranoid: False
 
