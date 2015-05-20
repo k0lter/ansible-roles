@@ -22,6 +22,8 @@ hosts_deny_nfs: False
 host_deny_paranoid: False
 
 with_auto_upgrade: False
+auto_upgrade_additional_patterns: Null
+
 with_logcheck: False
 with_rkhunter: False
 with_chkrootkit: False

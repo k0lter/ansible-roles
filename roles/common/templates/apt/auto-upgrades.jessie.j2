@@ -18,4 +18,9 @@ Unattended-Upgrade::Origins-Pattern {
     "o=Debian,a=stable-updates";
 //  "o=Debian,a=stable-proposed-updates";
     "origin=Debian,archive=stable,label=Debian-Security";
+{% if auto_upgrade_additional_patterns %}
+{% for pattern in auto_upgrade_additional_patterns %}
+    "{{ pattern }}";
+{% endfor %}
+{% endif %}
 };
