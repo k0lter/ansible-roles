@@ -1,6 +1,11 @@
 #
 # sysfs: disk settings / tuning
 #
+{% if ansible_virtualization_type is defined and ansible_virtualization_type == 'xen' and ansible_virtualization_role == 'guest' %}
+{% for disk in ansible_devices %}
+block/{{ disk }}/queue/scheduler = noop
+{% endfor %}
+{% endif %}
 {% if sysfs_disk_settings %}
 {% for disk in ansible_devices -%}
 {% for key in sysfs_disk_settings %}

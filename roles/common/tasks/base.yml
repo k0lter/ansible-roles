@@ -107,7 +107,6 @@
       - 10-disks.conf
   notify:
     - Refresh sysfs configuration
-  when: sysfs_disk_settings
 
 - name: Install sudo configuration
   template: src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
