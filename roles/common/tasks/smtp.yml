@@ -1,19 +1,58 @@
-- name: Install postfix packages
-  apt: pkg={{ item }} install_recommends=no state=installed update_cache=yes
+- name: 'Install postfix packages'
+  apt:
+    pkg: '{{ item }}'
+    install_recommends: 'no'
+    state: 'installed'
+    update_cache: 'yes'
   with_items:
-    - postfix
-    - ca-certificates
-    - procmail
+    - 'postfix'
+    - 'ca-certificates'
+    - 'procmail'
   when: with_postfix
 
-- name: Install mail aliases file
-  template: src=aliases.j2 dest=/etc/aliases owner=root group=root mode=0644
+- name: 'Install mail aliases file'
+  template:
+    src: 'aliases.j2'
+    dest: '/etc/aliases'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Regenerate aliases cache
+    - 'Regenerate aliases cache'
   when: with_postfix or with_mail_aliases
 
-- name: Install postfix main configuration
-  template: src=postfix/main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root mode=0644
+- name: 'Install postfix main configuration'
+  template:
+    src: 'postfix/main.cf.j2'
+    dest: '/etc/postfix/main.cf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Restart postfix
+    - 'Restart postfix'
   when: with_postfix
+
+- name: 'Update postfix master config for slowsmtp transport'
+  blockinfile:
+    dest: '/etc/postfix/master.cf'
+    marker: '# ======= {mark} slowsmtp transport (managed by ansible) ======'
+    content: |
+        slowsmtp  unix  -       -       n       -       5       smtp
+            -o smtp_destination_concurrency_limit=3
+            -o slowsmtp_destination_rate_delay=1
+            -o syslog_name=${multi_instance_name:postfix}${multi_instance_name?$multi_instance_name}/slow
+  notify:
+    - 'Restart postfix'
+  when: with_postfix and with_postfix_slowsmtp
+
+- name: 'Install postfix slowsmtp transport map'
+  template:
+    src: 'postfix/transport_slowsmtp.j2'
+    dest: '/etc/postfix/transport_slowsmtp'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Rehash slowsmtp transport map'
+    - 'Restart postfix'
+  when: with_postfix and with_postfix_slowsmtp

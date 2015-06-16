@@ -54,12 +54,19 @@ myorigin = $myhostname
 mydomain = $myhostname
 mydestination = {{ ansible_fqdn }} {{ ansible_hostname }} localhost localhost.localdomain
 
+{% if smtp_relay_host is defined %}
+relayhost = {{ smtp_relay_host }}
+{% endif %}
+
 alias_maps = hash:/etc/aliases
 alias_database = $alias_maps
 
-{% if smtp_relay_host is defined -%}
-relayhost = {{ smtp_relay_host }}
-{%- endif %}
+{% if with_postfix_slowsmtp %}
+transport_maps =
+    hash:/etc/postfix/transport_slowsmtp
+slowsmtp_destination_recipient_limit = 20
+slowsmtp_destination_concurrency_limit = 2
+{% endif %}
 
 {% if smtp_relay_domains is defined %}
 relay_domains =
