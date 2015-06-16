@@ -1,6 +1,0 @@
-- include: common.yml
-- include: hypervisor.yml
-- include: webserver.yml
-- include: dbserver.yml
-- include: ftpserver.yml
-- include: monitoring.yml
