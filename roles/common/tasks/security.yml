@@ -54,6 +54,7 @@
     - svn
     - sympa
     - systemd
+    - zabbix-agentd
   when: with_logcheck
 
 - name: Update logcheck cron job
