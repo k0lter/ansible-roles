@@ -8,3 +8,6 @@
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: pam_unix\(pure-ftpd:auth\): authentication failure; logname=[^ ]* uid=[[:digit:]]+ euid=[[:digit:]]+ tty=pure-ftpd ruser=[^ ]* rhost=.*$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \(\?@[:.0-9]+\) \[INFO\] PAM_RHOST enabled. Getting the peer address$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \(\?@[:.0-9]+\) \[WARNING\] Authentication failed for user \[.*\]$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \(\?@[:.0-9]+\) \[WARNING\] Sorry, cleartext sessions are not accepted on this server\.#012Please reconnect using SSL/TLS security mechanisms\.$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \([?.[:alnum:]-]+@[._[:alnum:]-]+\) \[INFO\] Timeout - try typing a little faster next time$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: pam_listfile\(pure-ftpd:auth\): Refused user .+ for service pure-ftpd$
