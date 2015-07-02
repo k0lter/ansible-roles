@@ -45,7 +45,7 @@
     - pure-ftpd
     - pve-cluster
     - redir
-    - rpc.mountd
+    - rpc-mountd
     - rrdcached
     - rsyslog
     - smartd
