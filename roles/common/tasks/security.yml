@@ -53,6 +53,7 @@
     - sshd
     - svn
     - sympa
+    - systemd
   when: with_logcheck
 
 - name: Update logcheck cron job
