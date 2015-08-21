@@ -69,7 +69,9 @@ TraceEnable Off
 # else than declared by the content type in the HTTP headers.
 # Requires mod_headers to be enabled.
 #
-#Header set X-Content-Type-Options: "nosniff"
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options: "nosniff"
+</IfModule>
 
 #
 # Some browsers have a built-in XSS filter that will detect some cross site
@@ -79,11 +81,35 @@ TraceEnable Off
 # completely block access to the page instead.
 # Requires mod_headers to be enabled.
 #
-#Header set X-XSS-Protection: "1; mode=block"
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection: "1; mode=block"
+</IfModule>
 
 #
 # Setting this header will prevent other sites from embedding pages from this
 # site as frames. This defends against clickjacking attacks.
 # Requires mod_headers to be enabled.
 #
-#Header set X-Frame-Options: "sameorigin"
+<IfModule mod_headers.c>
+    Header set X-Frame-Options: "sameorigin"
+</IfModule>
+
+#
+# Various protections
+#  - stuff that should not be accessible publicly
+#  - PHP files that should be invoked
+#
+<DirectoryMatch "/atos/param/">
+    Deny from all
+    Satisfy all
+</DirectoryMatch>
+
+<LocationMatch "/wp-content/uploads/.*\.php.*">
+    Deny from all
+    Satisfy all
+</LocationMatch>
+
+<Location "/xmlrpc.php">
+    Deny from all
+    Satisfy all
+</Location>
