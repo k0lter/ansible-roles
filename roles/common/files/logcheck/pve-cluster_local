@@ -3,3 +3,4 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ pve(proxy|daemon)\[[[:digit:]]+\]: (worker [[:digit:]]+ (started|finished)|starting [[:digit:]]+ worker\(s\))$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ pvedaemon\[[[:digit:]]+\]: <\w+@pam> successful auth for user '\w+@pam'$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ pveproxy\[[[:digit:]]+\]: received reload request$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel: netlink: [[:digit:]]+ bytes leftover after parsing attributes\.$
