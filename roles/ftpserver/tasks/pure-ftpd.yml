@@ -18,6 +18,7 @@
     - { dest: 'NoChmod', regexp: '^(yes|no)', line: 'yes' }
     - { dest: 'PAMAuthentication', regexp: '^(yes|no)', line: 'yes' }
     - { dest: 'VerboseLog', regexp: '^(yes|no)', line: 'no' }
+    - { dest: 'MinUID', regexp: '^[0-9]+$', line: '34' } # Debian's uid(backup) = 34
   notify:
     - Restart pure-ftpd
   when: with_ftp
@@ -31,6 +32,16 @@
 - name: Clean up pure-ftpd internal DB
   raw: pure-pw list 2>/dev/null | sed -r 's/^(\S+)\s.*$/\1/' | while read u ; do pure-pw userdel "${u}" ; done
   when: with_ftp
+
+- name: Create FTP accounts home directory
+  file:
+    path: '{{item.home}}'
+    owner: '{{item.uid}}'
+    group: '{{item.gid}}'
+    mode: 0755
+    state: 'directory'
+  with_items: ftp_accounts
+  when: ftp_accounts and with_ftp
 
 - name: Add FTP accounts in pure-ftpd
   raw: printf "{{item.password}}\n{{item.password}}\n" | pure-pw useradd "{{item.user}}" -d "{{item.home}}" -u "{{item.uid}}" -g "{{item.gid}}"
