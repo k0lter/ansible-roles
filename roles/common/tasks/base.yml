@@ -61,6 +61,7 @@
     - sysstat
     - etckeeper
     - sharutils
+    - ncdu
 
 - name: Install additional packages
   apt: pkg={{ item }} install_recommends=no state=installed update_cache=yes
