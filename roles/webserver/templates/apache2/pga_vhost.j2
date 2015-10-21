@@ -4,7 +4,7 @@
 {% endif -%}
 # Apache vhost for phppgadmin
 
-<VirtualHost *:80>
+<VirtualHost {%if phppgadmin_vhostip %}{{ phppgadmin_vhostip }}{% else %}*{% endif %}:{{ phppgadmin_vhostport }}>
     ServerName {{ phppgadmin_vhostname }}
 
     DocumentRoot /usr/share/phppgadmin

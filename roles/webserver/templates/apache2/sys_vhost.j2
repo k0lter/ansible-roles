@@ -4,7 +4,7 @@
 {% endif -%}
 # Apache vhost for PHP system checks
 
-<VirtualHost *:80>
+<VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{{ phpsyscheck_vhostport }}>
     ServerName {{ phpsyscheck_vhostname }}
 
     DocumentRoot /etc/php5/syscheck.d

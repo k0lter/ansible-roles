@@ -5,6 +5,8 @@
 # Nginx vhost for phpmyadmin
 
 server {
+    listen {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}:{% endif %}{{ phpmyadmin_vhostport }};
+
     server_name {{ phpmyadmin_vhostname }};
 
     access_log  /var/log/nginx/pma.access.log;

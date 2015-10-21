@@ -5,6 +5,8 @@
 # Nginx vhost for PHP system checks
 
 server {
+    listen {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{{ phpsyscheck_vhostport }};
+
     server_name {{ phpsyscheck_vhostname }};
 
     access_log  /var/log/nginx/sys.access.log;

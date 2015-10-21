@@ -4,7 +4,7 @@
 {% endif -%}
 # Apache vhost for phpmyadmin
 
-<VirtualHost *:80>
+<VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{{ phpmyadmin_vhostport }}>
     ServerName {{ phpmyadmin_vhostname }}
 
     DocumentRoot /usr/share/phpmyadmin

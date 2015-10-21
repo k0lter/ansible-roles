@@ -5,6 +5,8 @@
 # Nginx vhost for phppgadmin
 
 server {
+    listen {%if phppgadmin_vhostip %}{{ phppgadmin_vhostip }}:{% endif %}{{ phppgadmin_vhostport }};
+
     server_name {{ phppgadmin_vhostname }};
 
     access_log  /var/log/nginx/pma.access.log;
