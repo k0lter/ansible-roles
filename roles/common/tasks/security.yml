@@ -99,7 +99,9 @@
       - Remount /proc
   when: with_hideproc and hideproc_gid != ''
 
-- name: Create Diffie-Helman parameters
-  command: openssl dhparam -2 -out /etc/ssl/private/dh{{ item }}.pem {{ item }} creates=/etc/ssl/private/dh{{ item }}.pem
+- name: 'Create Diffie-Helman parameters'
+  command: 'openssl dhparam -2 -out /etc/ssl/private/dh{{ item }}.pem {{ item }}'
+  args:
+    creates: '/etc/ssl/private/dh{{ item }}.pem'
   with_items:
     - 2048

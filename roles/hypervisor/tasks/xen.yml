@@ -1,19 +1,27 @@
-- name: Install Xen related packages
-  apt: pkg={{ item }} install_recommends=no state=installed update_cache=yes
+- name: 'Install Xen related packages'
+  apt:
+    pkg: '{{ item }}'
+    install_recommends: 'no'
+    state: 'installed'
+    update_cache: 'yes'
   with_items:
-    - bridge-utils
-    - xen-linux-system-amd64
-    - debootstrap
+    - 'xen-linux-system-amd64'
+    - 'bridge-utils'
+    - 'debootstrap'
   when: with_xen
 
-- name: Add GRUB options for Xen
-  lineinfile: dest=/etc/default/grub regexp="^GRUB_CMDLINE_XEN_DEFAULT=" insertafter="^GRUB_CMDLINE_LINUX=" line='GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M"'
+- name: 'Add GRUB options for Xen'
+  lineinfile:
+    dest: '/etc/default/grub'
+    regexp: '^GRUB_CMDLINE_XEN_DEFAULT='
+    insertafter: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M"'
   when: with_xen
 
-- name: Set Xen hypervisor to boot first
-  command: dpkg-divert --divert /etc/grub.d/09_linux_xen --rename /etc/grub.d/20_linux_xen creates=/etc/grub.d/09_linux_xen
+- name: 'Set Xen hypervisor to boot first'
+  command: 'dpkg-divert --divert /etc/grub.d/09_linux_xen --rename /etc/grub.d/20_linux_xen creates=/etc/grub.d/09_linux_xen'
   notify:
-    - Update GRUB
+    - 'Update GRUB'
   when: with_xen
 
 - name: Configure Xend (memory)
