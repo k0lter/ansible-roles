@@ -24,18 +24,21 @@
     - 'Update GRUB'
   when: with_xen
 
-- name: Configure Xend (memory)
-  lineinfile: dest=/etc/xen/xend-config.sxp regexp="^#?\(dom0-min-mem" line="(dom0-min-mem {{ xendom0_mem }})"
+- name: 'Configure Xend'
+  template: 
+    src: 'xen/xend-config.sxp.j2'
+    dest: '/etc/xen/xend-config.sxp'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   when: with_xen
 
-- name: Configure Xend (disable auto-ballooning)
-  lineinfile: dest=/etc/xen/xend-config.sxp regexp="^#?\(enable-dom0-ballooning" line="(enable-dom0-ballooning no)"
-  when: with_xen
-
-- name: Configure Xendomains init script (disable restore)
-  lineinfile: dest=/etc/default/xendomains regexp="^#?XENDOMAINS_RESTORE=" line="XENDOMAINS_RESTORE=false"
-  when: with_xen
-
-- name: Configure Xendomains init script (disable save)
-  lineinfile: dest=/etc/default/xendomains regexp="^#?XENDOMAINS_SAVE=" line="XENDOMAINS_SAVE="
+- name: 'Configure Xendomains init script (disable save and restore)'
+  lineinfile:
+    dest: '/etc/default/xendomains'
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+    - { regexp: '^#?XENDOMAINS_RESTORE=', line: 'XENDOMAINS_RESTORE=false' }
+    - { regexp: '^#?XENDOMAINS_SAVE=', line: 'XENDOMAINS_SAVE=' }
   when: with_xen
