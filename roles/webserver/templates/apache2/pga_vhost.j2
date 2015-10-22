@@ -23,6 +23,12 @@
         Require all granted
     </Directory>
 
+    <IfModule mod_php5.c>
+        php_admin_value max_execution_time 240
+        php_admin_value upload_max_filesize 128M
+        php_admin_value post_max_size 128M
+    </IfModule>
+
     LogLevel warn
     CustomLog ${APACHE_LOG_DIR}/pga.access.log combined
     ErrorLog ${APACHE_LOG_DIR}/pga.error.log

@@ -21,9 +21,10 @@ server {
     auth_basic_user_file /etc/nginx/auth_admin;
 {% endif %}
 
-    client_max_body_size 32m;
+    client_max_body_size 128m;
 
     location ~ \.php(/|$) {
         include fastcgi_pass_fpm;
+        fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M";
     }
 }
