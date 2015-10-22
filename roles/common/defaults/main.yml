@@ -67,4 +67,6 @@ dotfiles_repo: 'http://forge.openics.org/server-dotfiles-zsh.git'
 dotfiles_dest: '/srv/hosting-tools/shell'
 dotfiles_lcsshvars: 0
 
+ssl_certs: Null
+
 # vim: ft=yaml

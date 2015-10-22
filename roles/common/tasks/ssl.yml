@@ -1,0 +1,39 @@
+- name: 'Create ssl certificates directory for in /etc/ssl'
+  file:
+    path: '/etc/ssl/{{ item }}'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  with_items: ssl_certs
+  when: ssl_certs
+
+- name: 'Install ssl certificates (certificate)'
+  copy:
+    content: "{{lookup('file', 'data/ssl/' + item + '/' + item + '.crt')}}"
+    dest: '/etc/ssl/{{ item }}/{{ item }}.crt'
+    owner: 'root'
+    group: 'root'
+    mode: '0640'
+  with_items: ssl_certs
+  when: ssl_certs
+
+- name: 'Install ssl certificates (key)'
+  copy:
+    content: "{{lookup('file', 'data/ssl/' + item + '/' + item + '.key')}}"
+    dest: '/etc/ssl/{{ item }}/{{ item }}.key'
+    owner: 'root'
+    group: 'root'
+    mode: '0640'
+  with_items: ssl_certs
+  when: ssl_certs
+
+- name: 'Install ssl certificates (bundle)'
+  copy:
+    content: "{{lookup('file', 'data/ssl/' + item + '/bundle.crt')}}"
+    dest: '/etc/ssl/{{ item }}/bundle.crt'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: ssl_certs
+  when: ssl_certs
