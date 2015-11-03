@@ -57,7 +57,17 @@
     - 'Reload nginx'
   when: with_nginx
 
-- name: 'Create basic authentication file for admin (nginx)'
+- name: 'Install SSL vhost configuration for Nginx'
+  template:
+    src: 'nginx/vhost_ssl.j2'
+    dest: '/etc/nginx/vhost_ssl-{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: ssl_certs
+  when: with_nginx and ssl_certs
+
+- name: 'Create basic authentication file for admin (Nginx)'
   template:
     src: 'nginx/auth_admin.j2'
     dest: '/etc/nginx/auth_admin'

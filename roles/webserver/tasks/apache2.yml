@@ -1,59 +1,113 @@
-- name: Install apache2 packages
-  apt: pkg=apache2 state=installed update_cache=yes
+- name: 'Install Apache2 packages'
+  apt:
+    pkg: 'apache2'
+    state: 'installed'
+    update_cache: 'yes'
   when: with_apache2
 
-- name: Install apache2 basic security configuration (Debian < 8)
-  template: src=apache2/conf.d/security.j2 dest=/etc/apache2/conf.d/security owner=root group=root mode=0644
+- name: 'Install SSL vhost configuration for Apache'
+  template:
+    src: 'apache2/vhost_ssl.j2'
+    dest: '/etc/apache2/vhost_ssl-{{ item }}.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: ssl_certs
+  when: with_apache2 and ssl_certs
+
+- name: 'Install Apache2 basic security configuration (Debian < 8)'
+  template:
+    src: 'apache2/conf.d/security.j2'
+    dest: '/etc/apache2/conf.d/security'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_apache2 and ansible_lsb.major_release|int < 8
 
-- name: Install apache2 basic security configuration (Debian >= 8)
-  template: src=apache2/conf.d/security.j2 dest=/etc/apache2/conf-available/security.conf owner=root group=root mode=0644
+- name: 'Install Apache2 basic security configuration (Debian >= 8)'
+  template:
+    src: 'apache2/conf.d/security.j2'
+    dest: '/etc/apache2/conf-available/security.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_apache2 and ansible_lsb.major_release|int >= 8
 
-- name: Create basic authentication file for admin (apache2)
-  template: src=apache2/auth_admin.j2 dest=/etc/apache2/auth_admin owner=root group=www-data mode=0640
+- name: 'Create basic authentication file for admin (Apache2)'
+  template:
+    src: 'apache2/auth_admin.j2'
+    dest: '/etc/apache2/auth_admin'
+    owner: 'root'
+    group: 'www-data'
+    mode: '0640'
   when: with_apache2
 
-- name: Install PHPMyAdmin virtual host for apache2 (sites-available)
-  template: src=apache2/pma_vhost.j2 dest=/etc/apache2/sites-available/pma.conf owner=root group=root mode=0644
+- name: 'Install PHPMyAdmin virtual host for Apache2 (sites-available)'
+  template:
+    src: 'apache2/pma_vhost.j2'
+    dest: '/etc/apache2/sites-available/pma.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_phpmyadmin and with_apache2
 
-- name: Install PHPMyAdmin virtual host for apache2 (sites-enabled)
-  file: src=/etc/apache2/sites-available/pma.conf path=/etc/apache2/sites-enabled/pma.conf state=link
+- name: 'Install PHPMyAdmin virtual host for Apache2 (sites-enabled)'
+  file:
+    src: '/etc/apache2/sites-available/pma.conf'
+    path: '/etc/apache2/sites-enabled/pma.conf'
+    state: 'link'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_phpmyadmin and with_apache2
 
-- name: Install PHPPgAdmin virtual host for apache2 (sites-available)
-  template: src=apache2/pga_vhost.j2 dest=/etc/apache2/sites-available/pga.conf owner=root group=root mode=0644
+- name: "Install PHPPgAdmin virtual host for Apache2 (sites-available)"
+  template:
+    src: 'apache2/pga_vhost.j2'
+    dest: '/etc/apache2/sites-available/pga.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_phppgadmin and with_apache2
 
-- name: Install PHPPgAdmin virtual host for apache2 (sites-enabled)
-  file: src=/etc/apache2/sites-available/pga.conf path=/etc/apache2/sites-enabled/pga.conf state=link
+- name: 'Install PHPPgAdmin virtual host for Apache2 (sites-enabled)'
+  file:
+    src: '/etc/apache2/sites-available/pga.conf'
+    path: '/etc/apache2/sites-enabled/pga.conf'
+    state: 'link'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_phppgadmin and with_apache2
 
-- name: Install PHP system checks virtual host for apache2 (sites-available)
-  template: src=apache2/sys_vhost.j2 dest=/etc/apache2/sites-available/sys.conf owner=root group=root mode=0644
+- name: 'Install PHP system checks virtual host for Apache2 (sites-available)'
+  template:
+    src: 'apache2/sys_vhost.j2'
+    dest: '/etc/apache2/sites-available/sys.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_php and with_apache2
 
-- name: Install PHP system checks virtual host for apache2 (sites-enabled)
-  file: src=/etc/apache2/sites-available/sys.conf path=/etc/apache2/sites-enabled/sys.conf state=link
+- name: 'Install PHP system checks virtual host for Apache2 (sites-enabled)'
+  file:
+    src: '/etc/apache2/sites-available/sys.conf'
+    path: '/etc/apache2/sites-enabled/sys.conf'
+    state: 'link'
   notify:
-    - Reload apache2
+    - 'Reload apache2'
   when: with_php and with_apache2
 
-- name: Ensure apache2 is running
-  service: name=apache2 state=started
+- name: 'Ensure apache2 is running'
+  service:
+    name: 'apache2'
+    state: 'started'
   when: with_apache2
