@@ -11,3 +11,4 @@
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \(\?@[:.0-9]+\) \[WARNING\] Sorry, cleartext sessions are not accepted on this server\.#012Please reconnect using SSL/TLS security mechanisms\.$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \([?.[:alnum:]-]+@[._[:alnum:]-]+\) \[INFO\] Timeout - try typing a little faster next time$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: pam_listfile\(pure-ftpd:auth\): Refused user .+ for service pure-ftpd$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ pure-ftpd: \([?.[:alnum:]-]+@[?._[:alnum:]-]+\) \[ERROR\] Unable to identify the local socket: Transport endpoint is not connected$

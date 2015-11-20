@@ -1,8 +1,7 @@
-^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: (error: )?Received disconnect from [-:\.[:alnum:]]+: [[:digit:]]+: (([\.[:alnum:]]+: Auth fail|ok|Goodbye|Bye|Unable to connect using the available authentication methods|) \[preauth\]|disconnected by user)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: (error: )?Received disconnect from [-:\.[:alnum:]]+: [[:digit:]]+: (([\.[:alnum:]]+: Auth fail|ok|Goodbye|Bye|Unable to connect using the available authentication methods|) \[preauth\]|disconnected by user|Normal Shutdown, Thank you for playing \[preauth\]|.*: reject HostKey: [-:\.[:alnum:]]+ \[preauth\]|disconnect \[preauth\])$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: subsystem request for sftp by user .+$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Accepted publickey for [-:\.[:alnum:]]+ from [-:\.[:alnum:]]+ port [[:digit:]]+ ssh2(|: RSA [:0-9a-f]+)$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: fatal: (Read from socket|Write) failed: Connection reset by peer( \[preauth\]|)$
-^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Received disconnect from [-:\.[:alnum:]]+: [[:digit:]]+: .*: reject HostKey: [-:\.[:alnum:]]+ \[preauth\]$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Disconnecting: Too many authentication failures for (invalid user |)[-:\.[:alnum:]]+ from [-:\.[:alnum:]]+ port [[:digit:]]+ ssh2 \[preauth\]$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Disconnecting: Change of username or service not allowed: \([[:alnum:]]+,ssh-connection\) -> \([[:alnum:]]+,ssh-connection\) \[preauth\]$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: error: AuthorizedKeysCommand .+ returned status [[:digit:]]+$

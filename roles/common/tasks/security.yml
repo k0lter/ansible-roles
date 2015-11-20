@@ -29,6 +29,7 @@
     - ansible
     - bind
     - dhclient
+    - dnsmasq
     - dovecot
     - dropbear
     - git-daemon
