@@ -2,5 +2,6 @@
 - include: firewall.yml
 - include: security.yml
 - include: smtp.yml
+- include: dkim.yml
 - include: ssh.yml
 - include: smartd.yml

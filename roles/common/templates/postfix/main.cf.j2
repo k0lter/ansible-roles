@@ -111,3 +111,10 @@ smtpd_sender_restrictions =
     permit_mynetworks,
     reject_non_fqdn_sender,
     reject_unknown_sender_domain
+
+{% if with_opendkim is defined and with_opendkim %}
+# DKIM support
+milter_default_action = accept
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891
+{% endif %}

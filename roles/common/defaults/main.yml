@@ -69,4 +69,7 @@ dotfiles_lcsshvars: 0
 
 ssl_certs: Null
 
+dkim_domains: Null
+with_opendkim: False
+
 # vim: ft=yaml
