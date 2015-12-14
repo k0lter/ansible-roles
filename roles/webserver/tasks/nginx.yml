@@ -16,6 +16,17 @@
     - 'Restart nginx'
   when: with_nginx
 
+- name: 'Install custom mime types for nginx'
+  template:
+    src: 'nginx/mime.types.custom.j2'
+    dest: '/etc/nginx/mime.types.custom'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Restart nginx'
+  when: with_nginx
+
 - name: 'Install nginx configuration'
   template:
     src: 'nginx/nginx.conf.j2'
