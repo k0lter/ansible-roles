@@ -177,6 +177,13 @@ http {
 
     ### Extended configuration ###
 
+{% if nginx_http_config %}
+    # Custom settings
+{%for param in nginx_http_config %}
+    {{ param }} {{ nginx_http_config[param] }};
+{% endfor %}
+{% endif %}
+
     # More configuration parameters
     include /etc/nginx/conf.d/*.conf;
 

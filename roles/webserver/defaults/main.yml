@@ -9,6 +9,7 @@ with_nginx: False
 # nginx_workers ~= $(getconf _NPROCESSORS_ONLN)
 nginx_workers: 2
 nginx_ssl_strengthened: False
+nginx_http_config: Null
 
 with_modphp5: False
 
