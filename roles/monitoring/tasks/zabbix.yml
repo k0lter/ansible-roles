@@ -1,16 +1,24 @@
-- name: Install Zabbix agent
-  apt: pkg={{ item }} state=installed update_cache=yes
+- name: 'Install Zabbix agent'
+  apt:
+    pkg: '{{ item }}'
+    state: 'installed'
+    update_cache: 'yes'
   with_items:
-    - zabbix-agent
+    - 'zabbix-agent'
   when: with_zabbix_agent
 
-- name: Install Zabbix agent config file
-  template: src='zabbix/agent.conf.j2' dest='/etc/zabbix/zabbix_agentd.conf' owner=root group=root mode=0600
+- name: 'Install Zabbix agent config file'
+  template:
+    src: 'zabbix/agent.conf.j2'
+    dest: '/etc/zabbix/zabbix_agentd.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
   when: with_zabbix_agent
   notify:
-    - Restart zabbix agent
+    - 'Restart zabbix agent'
 
-- name: Create zabbix plugins configuration directory
+- name: 'Create zabbix plugins configuration directory'
   file:
     path: '/etc/zabbix/zabbix_plugins.conf.d'
     owner: 'root'
@@ -19,7 +27,7 @@
     state: 'directory'
   when: with_zabbix_agent and zabbix_plugins_config
 
-- name: Install zabbix plugins configuration (ssl, web availability, web metrics)
+- name: 'Install zabbix plugins configuration (ssl, web availability)'
   template:
     src: 'zabbix/plugins/{{ item }}.j2'
     dest: '/etc/zabbix/zabbix_plugins.conf.d/{{ item }}.yml'
@@ -28,6 +36,5 @@
     mode: '0644'
   with_items:
     - 'ssl-discovery'
-    - 'web-metrics-discovery'
     - 'web-availability-discovery'
   when: with_zabbix_agent and zabbix_plugins_config

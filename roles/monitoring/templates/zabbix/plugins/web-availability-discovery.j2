@@ -2,7 +2,7 @@
 {% from 'templates/ansible/prolog.j2' import prolog with context %}
 {{ prolog() }}
 {% endif -%}
-{% if zabbix_plugins_config.discovery.web.availability is defined %}
+{% if zabbix_plugins_config.discovery.web is defined %}
 {% for key in zabbix_plugins_config.discovery.web.availability %}
 {{ key }}:
     url: '{{ zabbix_plugins_config.discovery.web.availability[key]['url'] }}'
