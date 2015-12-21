@@ -1,2 +1,4 @@
-- name: Restart pure-ftpd
-  service: name=pure-ftpd state=restarted
+- name: 'Restart pure-ftpd'
+  service:
+    name: 'pure-ftpd'
+    state: 'restarted'

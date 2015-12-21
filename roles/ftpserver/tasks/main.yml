@@ -1,1 +1,2 @@
-- include: pure-ftpd.yml
+- include: 'common.yml'
+- include: 'pure-ftpd.yml'

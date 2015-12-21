@@ -1,0 +1,2 @@
+- name: 'Load kernel modules for ftp server'
+  raw: egrep -v  '^(\s*#|$)' /etc/modules-load.d/ftpd.conf | xargs --no-run-if-empty --max-args 1 modprobe
