@@ -6,4 +6,6 @@ with_xen: False
 # memory amount in MB
 xendom0_mem: 1024
 
+with_ganeti: False
+
 # vim: ft=yaml

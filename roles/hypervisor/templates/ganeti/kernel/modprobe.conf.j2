@@ -1,0 +1,10 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+
+#
+# Options kernel modules while using ganeti
+#
+
+options drbd minor_count=255 usermode_helper=/bin/true

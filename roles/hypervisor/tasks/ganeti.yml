@@ -1,0 +1,63 @@
+- name: 'Install Ganeti related packages'
+  apt:
+    pkg: '{{ item }}'
+    install_recommends: 'no'
+    state: 'installed'
+    update_cache: 'yes'
+  with_items:
+    - 'ganeti'
+    - 'ganeti-instance-debootstrap'
+    - 'drbd-utils'
+  when: with_ganeti
+
+- name: 'Install ganeti instances templates for debootstrap'
+  template:
+    src: 'ganeti/instance-debootstrap/{{ item }}.conf.j2'
+    dest: '/etc/ganeti/instance-debootstrap/variants/{{ item }}.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'jessie'
+  when: with_ganeti
+
+- name: 'Enable ganeti instances templates for debootstrap'
+  lineinfile:
+    dest: '/etc/ganeti/instance-debootstrap/variants.list'
+    regexp: '^{{ item }}$'
+    line: '{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'jessie'
+  when: with_ganeti
+
+- name: 'Exclude DRBD devices from lvm devices while using ganeti'
+  blockinfile:
+    dest: '/etc/lvm/lvm.conf'
+    marker: '    # ======= {mark} Exclude DRBD devices while using ganeti (managed by ansible) ======'
+    content: '    filter = ["r|/dev/drbd[0-9]+|"]'
+    insertbefore: '^\s*# Exclude the cdrom drive'
+  when: with_ganeti
+
+- name: 'Add options for kernel modules while using ganeti'
+  template:
+    src: 'ganeti/kernel/modprobe.conf.j2'
+    dest: '/etc/modprobe.d/ganeti.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Rebuild initramfs'
+  when: with_ganeti
+
+- name: 'Add kernel modules to load while using ganeti'
+  template:
+    src: 'ganeti/kernel/modules.conf.j2'
+    dest: '/etc/modules-load.d/ganeti.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: with_ganeti
+

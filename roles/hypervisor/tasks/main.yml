@@ -1,1 +1,2 @@
-- include: xen.yml
+- include: 'xen.yml'
+- include: 'ganeti.yml'
