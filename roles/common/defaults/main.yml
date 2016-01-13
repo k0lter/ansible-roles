@@ -15,7 +15,7 @@ timezone_city: 'Paris'
 hosts_fqdn: True
 hosts_static_lookup: Null
 
-debian_mirror: 'ftp://ftp.fr.debian.org/debian'
+debian_mirror: 'http://httpredir.debian.org/debian'
 
 apt_keys: Null
 apt_repositories: Null
