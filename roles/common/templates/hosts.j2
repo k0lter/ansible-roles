@@ -4,12 +4,17 @@
 {% endif -%}
 
 127.0.0.1 localhost.localdomain localhost
-{% if ansible_default_ipv4.address is defined %}
+{% if hosts_fqdn and ansible_default_ipv4.address is defined %}
 {{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}
 {% endif %}
-{% if ansible_default_ipv6.address is defined %}
+{% if hosts_fqdn and ansible_default_ipv6.address is defined %}
 {{ ansible_default_ipv6.address }} {{ ansible_fqdn }} {{ ansible_hostname }}
 {% endif %}
+{% if hosts_static_lookup %}
+{% for h in hosts_static_lookup %}
+{{ h }}
+{% endfor %}
+{%endif %}
 
 # The following lines are desirable for IPv6 capable hosts
 ::1             localhost       ip6-localhost   ip6-loopback
