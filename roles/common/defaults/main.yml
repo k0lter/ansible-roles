@@ -66,7 +66,7 @@ with_ovh: False
 sysfs_disk_settings: False
 
 with_dotfiles: False
-dotfiles_repo: 'http://forge.openics.org/server-dotfiles-zsh.git'
+dotfiles_repo: 'https://git.openics.org/kolter/dotfiles-sys.git'
 dotfiles_dest: '/srv/hosting-tools/shell'
 dotfiles_lcsshvars: 0
 
