@@ -15,7 +15,7 @@
     dest: '/etc/default/grub'
     regexp: '^GRUB_CMDLINE_XEN_DEFAULT='
     insertafter: '^GRUB_CMDLINE_LINUX='
-    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M"'
+    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M dom0_max_vcpus=1 dom0_vcpus_pin"'
   when: with_xen
 
 - name: 'Set Xen hypervisor to boot first'
