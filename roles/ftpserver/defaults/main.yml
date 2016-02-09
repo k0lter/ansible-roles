@@ -3,6 +3,8 @@
 #
 
 with_ftp: False
+with_ftp_tls: False
+ftp_tls_domain: Null
 ftp_accounts: Null
 
 # vim: ft=yaml
