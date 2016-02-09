@@ -3,6 +3,7 @@
 #
 
 with_mysql: False
+with_mariadb: False
 with_mysql_backup: True
 mysql_root_password: Null
 

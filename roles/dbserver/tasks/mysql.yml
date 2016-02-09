@@ -5,21 +5,28 @@
     - mysql-client
   when: with_mysql
 
-- name: Install MySQL backup related packages (automysqlbackup)
+- name: Install MariaDB server related packages
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - mariadb-server
+    - mariadb-client
+  when: with_mariadb
+
+- name: Install MySQL or MariaDB backup related packages (automysqlbackup)
   apt: pkg=automysqlbackup state=installed update_cache=yes
-  when: with_mysql and with_mysql_backup
+  when: (with_mysql or with_mariadb) and with_mysql_backup
 
 - name: Fix automysqlbackup to handle events properly
   lineinfile:
     dest: /usr/sbin/automysqlbackup
     regexp: "^OPT="
     line: 'OPT="--quote-names --events" # OPT string for use with mysqldump ( see man mysqldump )'
-  when: with_mysql and with_mysql_backup
+  when: (with_mysql or with_mariadb) and with_mysql_backup
 
-- name: Change MySQL root default password
+- name: Change MySQL or MariaDB root default password
   raw: if ! echo "SELECT VERSION();" | mysql -u root --password='{{ mysql_root_password }}' >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('{{ mysql_root_password }}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
-  when: with_mysql and mysql_root_password
+  when: (with_mysql or with_mariadb) and mysql_root_password
 
-- name: Ensure MySQL is running
+- name: Ensure MySQL or MariaDB is running
   service: name=mysql state=started
-  when: with_mysql
+  when: with_mysql or with_mariadb
