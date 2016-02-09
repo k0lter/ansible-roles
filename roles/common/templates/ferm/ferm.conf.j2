@@ -32,6 +32,7 @@ table filter {
         }
 {% endfor %}
 {% endif %}
+        #LOG log-prefix "ferm INPUT REJECT: " log-level warning;
     }
 
     chain OUTPUT {
@@ -50,6 +51,7 @@ table filter {
 {% endif %}
 {% endfor %}
 {% endif %}
+        #LOG log-prefix "ferm OUTPUT REJECT: " log-level warning;
     }
 
     chain FORWARD {
@@ -58,6 +60,8 @@ table filter {
         # connection tracking
         mod state state INVALID DROP;
         mod state state (ESTABLISHED RELATED) ACCEPT;
+
+        #LOG log-prefix "ferm FORWARD REJECT: " log-level warning;
     }
 }
 
@@ -77,6 +81,8 @@ domain ip6 table filter {
 
         # standard ports we allow from the outside
         proto (udp tcp) dport $PORTS ACCEPT;
+
+        #LOG log-prefix "ferm (ip6) INPUT REJECT: " log-level warning;
     }
 
     chain OUTPUT {
@@ -85,6 +91,8 @@ domain ip6 table filter {
         # connection tracking
         #mod state state INVALID DROP;
         mod state state (ESTABLISHED RELATED) ACCEPT;
+
+        #LOG log-prefix "ferm (ip6) OUTPUT REJECT: " log-level warning;
     }
 
     chain FORWARD {
@@ -93,5 +101,7 @@ domain ip6 table filter {
         # connection tracking
         mod state state INVALID DROP;
         mod state state (ESTABLISHED RELATED) ACCEPT;
+
+        #LOG log-prefix "ferm (ip6) FOWARD REJECT: " log-level warning;
     }
 }
