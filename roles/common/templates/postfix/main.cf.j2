@@ -126,3 +126,9 @@ milter_default_action = accept
 smtpd_milters = inet:localhost:8891
 non_smtpd_milters = inet:localhost:8891
 {% endif %}
+{% if postfix_config is defined %}
+# Additionnal configuration
+{% for key in postfix_config %}
+{{ key }} = {{ postfix_config[key] }}
+{% endfor %}
+{% endif %}
