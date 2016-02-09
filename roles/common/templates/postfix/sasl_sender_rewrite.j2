@@ -1,0 +1,5 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+/.*/    {{ postfix_external_smtp_username }}

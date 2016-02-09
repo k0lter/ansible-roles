@@ -56,6 +56,14 @@ mydestination = {{ ansible_fqdn }} {{ ansible_hostname }} localhost localhost.lo
 
 {% if smtp_relay_host is defined %}
 relayhost = {{ smtp_relay_host }}
+{% elif with_postfix_external_smtp %}
+relayhost = [{{ postfix_external_smtp_host }}]:{{ postfix_external_smtp_port }}
+smtp_sasl_auth_enable = yes
+smtp_sasl_security_options = noanonymous
+smtp_sasl_password_maps = hash:/etc/postfix/sasl/credentials
+smtpd_sasl_local_domain = {{ postfix_external_smtp_host_localdomain }}
+smtp_sasl_mechanism_filter = login plain
+sender_canonical_maps = regexp:/etc/postfix/sasl/sender_rewrite
 {% endif %}
 
 alias_maps = hash:/etc/aliases

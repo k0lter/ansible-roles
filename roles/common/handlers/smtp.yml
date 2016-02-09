@@ -1,10 +1,11 @@
 - name: 'Regenerate aliases cache'
   command: 'newaliases'
 
-- name: 'Restart postfix'
-  service:
-    name: 'postfix'
-    state: 'restarted'
+- name: 'Reload postfix'
+  command: 'postfix reload'
 
 - name: 'Rehash slowsmtp transport map'
   command: 'postmap /etc/postfix/transport_slowsmtp'
+
+- name: 'Rehash sasl credentials map'
+  command: 'postmap /etc/postfix/sasl/credentials'

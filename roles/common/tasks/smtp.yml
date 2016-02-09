@@ -8,6 +8,7 @@
     - 'postfix'
     - 'ca-certificates'
     - 'procmail'
+    - 'libsasl2-modules'
   when: with_postfix
 
 - name: 'Install mail aliases file'
@@ -29,7 +30,7 @@
     group: 'root'
     mode: '0644'
   notify:
-    - 'Restart postfix'
+    - 'Reload postfix'
   when: with_postfix
 
 - name: 'Update postfix master config for slowsmtp transport'
@@ -41,7 +42,7 @@
             -o smtp_destination_concurrency_limit=3
             -o slowsmtp_destination_rate_delay=1
   notify:
-    - 'Restart postfix'
+    - 'Reload postfix'
   when: with_postfix and with_postfix_slowsmtp
 
 - name: 'Install postfix slowsmtp transport map'
@@ -53,5 +54,28 @@
     mode: '0644'
   notify:
     - 'Rehash slowsmtp transport map'
-    - 'Restart postfix'
+    - 'Reload postfix'
   when: with_postfix and with_postfix_slowsmtp
+
+- name: 'Install postfix sasl credentials map'
+  template:
+    src: 'postfix/sasl_credentials.j2'
+    dest: '/etc/postfix/sasl/credentials'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  notify:
+    - 'Rehash sasl credentials map'
+    - 'Reload postfix'
+  when: with_postfix and with_postfix_external_smtp
+
+- name: 'Install postfix sasl sender rewrite map'
+  template:
+    src: 'postfix/sasl_sender_rewrite.j2'
+    dest: '/etc/postfix/sasl/sender_rewrite'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  notify:
+    - 'Reload postfix'
+  when: with_postfix and with_postfix_external_smtp
