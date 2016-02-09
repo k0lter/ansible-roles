@@ -50,6 +50,17 @@
     - 'Restart opendkim'
   when: with_opendkim
 
+- name: 'Install opendkim InternalHosts'
+  template:
+    src: 'opendkim/InternalHosts.j2'
+    dest: '/etc/opendkim/InternalHosts'
+    owner: 'root'
+    group: 'opendkim'
+    mode: '0640'
+  notify:
+    - 'Restart opendkim'
+  when: with_opendkim
+
 - name: 'Install DKIM private keys'
   copy:
     content: "{{lookup('file', 'data/dkim/' + item + '.pem')}}"
