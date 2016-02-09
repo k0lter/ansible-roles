@@ -1,4 +1,4 @@
 SSLEngine On
-SSLCertificateFile /etc/ssl/{{ item }}/{{ item }}.crt
-SSLCertificateKeyFile /etc/ssl/{{ item }}/{{ item }}.key
-SSLCertificateChainFile /etc/ssl/{{ item }}/bundle.crt
+SSLCertificateFile /etc/ssl/local/certs/{{ item }}/cert.pem
+SSLCertificateKeyFile /etc/ssl/local/certs/{{ item }}/privkey.pem
+SSLCertificateChainFile /etc/ssl/local/certs/{{ item }}/chain.pem

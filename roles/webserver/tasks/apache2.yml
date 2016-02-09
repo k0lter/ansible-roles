@@ -13,6 +13,8 @@
     group: 'root'
     mode: '0644'
   with_items: ssl_certs
+  notify:
+    - 'Reload apache2'
   when: with_apache2 and ssl_certs
 
 - name: 'Install Apache2 basic security configuration (Debian < 8)'
