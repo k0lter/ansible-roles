@@ -2,3 +2,4 @@
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ rsyslogd: \[origin software="rsyslogd" swVersion="[0-9.]+" x-pid="[0-9]+" x-info="http://www.rsyslog.com"\] restart$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ rsyslogd\-?[[:digit:]]+: action 'action [[:digit:]]+' resumed \(module 'builtin:ompipe'\) \[try http://www.rsyslog.com/e/[[:digit:]]+ \]$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ rsyslogd\-?[[:digit:]]+: action 'action [[:digit:]]+' suspended, next retry is .+ \[try http://www.rsyslog.com/e/[[:digit:]]+ \]$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ rsyslogd: /dev/xconsole$

@@ -11,3 +11,4 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (openvpn|ovpn-[._[:alnum:]-]+)\[[[:digit:]]+\]: UDPv4 link remote: \[AF_INET\].+:.+$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (openvpn|ovpn-[._[:alnum:]-]+)\[[[:digit:]]+\]: TLS: Initial packet from \[AF_INET\].+:.+, sid=.+ .+$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (openvpn|ovpn-[._[:alnum:]-]+)\[[[:digit:]]+\]: \[server\] Peer Connection Initiated with \[AF_INET\].+:.+$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (openvpn|ovpn-[._[:alnum:]-]+)\[[[:digit:]]+\]: Extracted DHCP router address: .+$

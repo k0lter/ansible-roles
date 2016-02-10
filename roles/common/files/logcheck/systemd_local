@@ -1,2 +1,1 @@
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ systemd\[[[:digit:]]+\]: Start(ed|ing) Cleanup of Temporary Directories\.(\.\.)?$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ systemd\[[[:digit:]]+\]: (Start|Stop|Reload)(ed|p?ing) LSB: .+\.(\.\.)?$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ systemd\[[[:digit:]]+\]: (Start|Stopp?|Reload)(ed|ing) (LSB: )?.+\.(\.\.)?$

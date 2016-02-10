@@ -27,12 +27,14 @@
   with_items:
     - amavisd-new
     - ansible
+    - apache2
     - bind
     - dhclient
     - dnsmasq
     - dovecot
     - dropbear
     - git-daemon
+    - gogs
     - ipmi
     - irqbalance
     - kernel
