@@ -1,1 +1,2 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ named\[[[:digit:]]+\]: DNS format error from [.:[:xdigit:]]+#[[:digit:]]+ resolving [^[:space:]]+ for client [.:[:xdigit:]]+#[[:digit:]]+: (invalid response|reply has no answer|non-improving referral)$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ named\[[[:digit:]]+\]:\s+ validating @0x[[:xdigit:]]+: .* no valid signature found$

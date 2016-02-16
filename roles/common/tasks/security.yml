@@ -33,6 +33,7 @@
     - dnsmasq
     - dovecot
     - dropbear
+    - ferm
     - git-daemon
     - gogs
     - ipmi
