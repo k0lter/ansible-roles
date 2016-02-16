@@ -37,11 +37,11 @@
     - Restart munin-node
   when: with_munin_node
 
-- name: Autoconfigure munin-node plugins
-  munin_node_autoconf: families=auto,manual,contrib excludes=apc_nis,apt,apt_all,port_,ipmi_fans,ipmi_power,ipmi_temp,ntp_,ircu,ntp_kernel_err,ntp_kernel_pll_freq,ntp_kernel_pll_off,ntp_offset,ntp_states
-  notify:
-    - Restart munin-node
-  when: with_munin_node
+#- name: Autoconfigure munin-node plugins
+#  munin_node_autoconf: families=auto,manual,contrib excludes=apc_nis,apt,apt_all,port_,ipmi_fans,ipmi_power,ipmi_temp,ntp_,ircu,ntp_kernel_err,ntp_kernel_pll_freq,ntp_kernel_pll_off,ntp_offset,ntp_states
+#  notify:
+#    - Restart munin-node
+#  when: with_munin_node
 
 - name: Install nginx virtual host for munin (sites-available)
   template: src=munin/nginx_vhost.j2 dest=/etc/nginx/sites-available/munin owner=root group=root mode=0644
