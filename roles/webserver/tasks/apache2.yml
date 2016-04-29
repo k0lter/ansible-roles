@@ -5,6 +5,15 @@
     update_cache: 'yes'
   when: with_apache2
 
+- name: 'Install logrotate configuration for Apache'
+  template:
+    src: 'logrotate/apache2.j2'
+    dest: '/etc/logrotate.d/apache2'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: with_apache2
+
 - name: 'Install SSL vhost configuration for Apache'
   template:
     src: 'apache2/vhost_ssl.j2'
