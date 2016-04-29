@@ -10,6 +10,9 @@ with_nginx: False
 nginx_workers: 2
 nginx_ssl_strengthened: False
 nginx_http_config: Null
+nginx_security_xframeoptions: True
+nginx_security_xxssprotection: True
+nginx_security_xcontenttypeoptions: True
 
 with_modphp5: False
 
