@@ -5,6 +5,15 @@
     update_cache: 'yes'
   when: with_nginx
 
+- name: 'Install logrotate configuration for nginx'
+  template:
+    src: 'logrotate/nginx.j2'
+    dest: '/etc/logrotate.d/nginx'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: with_nginx
+
 - name: 'Install nginx default file configuration'
   template:
     src: 'nginx/default.j2'
