@@ -9,11 +9,10 @@
     - php-mime-type
     - php5-pgsql
     - php5-sqlite
-  when: with_php
 
 - name: Create PHP log directory
   file: path=/var/log/php state=directory owner=root group=root mode=0755
-  when: with_php and with_fpm
+  when: with_fpm
 
 - name: Install PHP configuration for syslog
   template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
@@ -22,7 +21,7 @@
     - { src: 'logrotate/php-errors.j2', dest: '/etc/logrotate.d/php-errors' }
   notify:
       - Reload rsyslog for php
-  when: with_php and with_fpm
+  when: with_fpm
 
 - name: Install local PHP configuration overrides for php5-cli (Debian >= 8)
   template: src=php/php-config-cli.ini.j2 dest=/etc/php5/cli/conf.d/99-local-config.ini owner=root group=root mode=0644
@@ -42,11 +41,9 @@
 
 - name: Create system checks directory /etc/php5/syscheck.d
   file: path=/etc/php5/syscheck.d owner=root group=root mode=0755 state=directory
-  when: with_php
 
 - name: Install phpinfo system check
   template: src=php/phpinfo.php dest=/etc/php5/syscheck.d/index.php owner=root group=root mode=0644
-  when: with_php
 
 - name: Install PHP APC extension
   apt: pkg=php-apc state=installed update_cache=yes
@@ -58,11 +55,11 @@
 
 - name: Install MySQL extension for PHP (native driver)
   apt: pkg=php5-mysqlnd state=installed update_cache=yes
-  when: with_php and not with_php_mysql_legacy
+  when: not with_php_mysql_legacy
 
 - name: Install MySQL extension for PHP (old driver)
   apt: pkg=php5-mysql state=installed update_cache=yes
-  when: with_php and with_php_mysql_legacy
+  when: with_php_mysql_legacy
 
 - name: Install PHPMyAdmin
   apt: pkg=phpmyadmin state=installed update_cache=yes

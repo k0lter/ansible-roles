@@ -9,7 +9,6 @@
     - 'ca-certificates'
     - 'procmail'
     - 'libsasl2-modules'
-  when: with_postfix
 
 - name: 'Install mail aliases file'
   template:
@@ -20,7 +19,7 @@
     mode: '0644'
   notify:
     - 'Regenerate aliases cache'
-  when: with_postfix or with_mail_aliases
+  when: with_mail_aliases
 
 - name: 'Install postfix main configuration'
   template:
@@ -31,7 +30,6 @@
     mode: '0644'
   notify:
     - 'Reload postfix'
-  when: with_postfix
 
 - name: 'Update postfix master config for slowsmtp transport'
   blockinfile:
@@ -43,7 +41,7 @@
             -o slowsmtp_destination_rate_delay=1
   notify:
     - 'Reload postfix'
-  when: with_postfix and with_postfix_slowsmtp
+  when: with_postfix_slowsmtp
 
 - name: 'Install postfix slowsmtp transport map'
   template:
@@ -55,7 +53,7 @@
   notify:
     - 'Rehash slowsmtp transport map'
     - 'Reload postfix'
-  when: with_postfix and with_postfix_slowsmtp
+  when: with_postfix_slowsmtp
 
 - name: 'Install postfix sasl credentials map'
   template:
@@ -67,7 +65,7 @@
   notify:
     - 'Rehash sasl credentials map'
     - 'Reload postfix'
-  when: with_postfix and with_postfix_external_smtp
+  when: with_postfix_external_smtp
 
 - name: 'Install postfix sasl sender rewrite map'
   template:
@@ -78,4 +76,4 @@
     mode: '0600'
   notify:
     - 'Reload postfix'
-  when: with_postfix and with_postfix_external_smtp
+  when: with_postfix_external_smtp

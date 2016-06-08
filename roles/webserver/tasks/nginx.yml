@@ -3,7 +3,6 @@
     pkg: 'nginx'
     state: 'installed'
     update_cache: 'yes'
-  when: with_nginx
 
 - name: 'Install logrotate configuration for nginx'
   template:
@@ -12,7 +11,6 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_nginx
 
 - name: 'Install nginx default file configuration'
   template:
@@ -23,7 +21,6 @@
     mode: '0644'
   notify:
     - 'Restart nginx'
-  when: with_nginx
 
 - name: 'Install custom mime types for nginx'
   template:
@@ -34,7 +31,6 @@
     mode: '0644'
   notify:
     - 'Restart nginx'
-  when: with_nginx
 
 - name: 'Install nginx configuration'
   template:
@@ -45,7 +41,6 @@
     mode: '0644'
   notify:
     - 'Restart nginx'
-  when: with_nginx
 
 - name: 'Install additional nginx configuration params (conf.d/)'
   template:
@@ -58,7 +53,6 @@
     - 'status'
   notify:
     - 'Reload nginx'
-  when: with_nginx
 
 - name: 'Install additional nginx configuration params (vhost_*)'
   template:
@@ -75,7 +69,6 @@
     - 'security'
   notify:
     - 'Reload nginx'
-  when: with_nginx
 
 - name: 'Install SSL vhost configuration for Nginx'
   template:
@@ -87,7 +80,7 @@
   with_items: '{{ ssl_certs }}'
   notify:
     - 'Reload nginx'
-  when: with_nginx and ssl_certs
+  when: ssl_certs
 
 - name: 'Create basic authentication file for admin (Nginx)'
   template:
@@ -96,7 +89,6 @@
     owner: 'root'
     group: 'www-data'
     mode: '0640'
-  when: with_nginx
 
 - name: 'Install PHPMyAdmin virtual host for nginx (sites-available)'
   template:
@@ -107,7 +99,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin and with_nginx
+  when: with_phpmyadmin
 
 - name: 'Install PHPMyAdmin virtual host for nginx (sites-enabled)'
   file:
@@ -116,7 +108,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin and with_nginx
+  when: with_phpmyadmin
 
 - name: 'Install PHPPgAdmin virtual host for nginx (sites-available)'
   template:
@@ -127,7 +119,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_phppgadmin and with_nginx
+  when: with_phppgadmin
 
 - name: 'Install PHPPgAdmin virtual host for nginx (sites-enabled)'
   file:
@@ -136,7 +128,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phppgadmin and with_nginx
+  when: with_phppgadmin
 
 - name: 'Install PHP system checks virtual host for nginx (sites-available)'
   template:
@@ -147,7 +139,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_php and with_nginx
+  when: with_php
 
 - name: 'Install PHP system checks virtual host for nginx (sites-enabled)'
   file:
@@ -156,10 +148,9 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_php and with_nginx
+  when: with_php
 
 - name: 'Ensure nginx is running'
   service:
     name: 'nginx'
     state: 'started'
-  when: with_nginx

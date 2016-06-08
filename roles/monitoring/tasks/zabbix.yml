@@ -5,7 +5,6 @@
     update_cache: 'yes'
   with_items:
     - 'zabbix-agent'
-  when: with_zabbix_agent
 
 - name: 'Install Zabbix agent config file'
   template:
@@ -14,7 +13,6 @@
     owner: 'root'
     group: 'root'
     mode: '0600'
-  when: with_zabbix_agent
   notify:
     - 'Restart zabbix agent'
 
@@ -25,7 +23,7 @@
     group: 'root'
     mode: '0755'
     state: 'directory'
-  when: with_zabbix_agent and zabbix_plugins_config
+  when: zabbix_plugins_config
 
 - name: 'Install zabbix plugins configuration (ssl, web availability)'
   template:
@@ -37,4 +35,4 @@
   with_items:
     - 'ssl-discovery'
     - 'web-availability-discovery'
-  when: with_zabbix_agent and zabbix_plugins_config
+  when: zabbix_plugins_config

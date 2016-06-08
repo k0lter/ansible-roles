@@ -6,7 +6,6 @@
     update_cache: 'yes'
   with_items:
     - 'opendkim'
-  when: with_opendkim
 
 - name: 'Install opendkim main configuration'
   template:
@@ -17,7 +16,6 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
-  when: with_opendkim
 
 - name: 'Create opendkim config directory'
   file:
@@ -26,7 +24,6 @@
     owner: 'root'
     group: 'opendkim'
     mode: '0750'
-  when: with_opendkim
 
 - name: 'Install opendkim KeyTable'
   template:
@@ -37,7 +34,6 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
-  when: with_opendkim
 
 - name: 'Install opendkim SigningTable'
   template:
@@ -48,7 +44,6 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
-  when: with_opendkim
 
 - name: 'Install opendkim InternalHosts'
   template:
@@ -59,7 +54,6 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
-  when: with_opendkim
 
 - name: 'Install DKIM private keys'
   copy:

@@ -3,7 +3,6 @@
     pkg: 'apache2'
     state: 'installed'
     update_cache: 'yes'
-  when: with_apache2
 
 - name: 'Install logrotate configuration for Apache'
   template:
@@ -12,7 +11,6 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_apache2
 
 - name: 'Install SSL vhost configuration for Apache'
   template:
@@ -24,7 +22,7 @@
   with_items: '{{ ssl_certs }}'
   notify:
     - 'Reload apache2'
-  when: with_apache2 and ssl_certs
+  when: ssl_certs
 
 - name: 'Install Apache2 basic security configuration (Debian < 8)'
   template:
@@ -35,7 +33,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_apache2 and ansible_lsb.major_release|int < 8
+  when: ansible_lsb.major_release|int < 8
 
 - name: 'Install Apache2 basic security configuration (Debian >= 8)'
   template:
@@ -46,7 +44,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_apache2 and ansible_lsb.major_release|int >= 8
+  when: ansible_lsb.major_release|int >= 8
 
 - name: 'Create basic authentication file for admin (Apache2)'
   template:
@@ -55,7 +53,6 @@
     owner: 'root'
     group: 'www-data'
     mode: '0640'
-  when: with_apache2
 
 - name: 'Install PHPMyAdmin virtual host for Apache2 (sites-available)'
   template:
@@ -66,7 +63,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_phpmyadmin and with_apache2
+  when: with_phpmyadmin
 
 - name: 'Install PHPMyAdmin virtual host for Apache2 (sites-enabled)'
   file:
@@ -75,7 +72,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phpmyadmin and with_apache2
+  when: with_phpmyadmin
 
 - name: "Install PHPPgAdmin virtual host for Apache2 (sites-available)"
   template:
@@ -86,7 +83,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_phppgadmin and with_apache2
+  when: with_phppgadmin
 
 - name: 'Install PHPPgAdmin virtual host for Apache2 (sites-enabled)'
   file:
@@ -95,7 +92,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phppgadmin and with_apache2
+  when: with_phppgadmin
 
 - name: 'Install PHP system checks virtual host for Apache2 (sites-available)'
   template:
@@ -106,7 +103,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_php and with_apache2
+  when: with_php
 
 - name: 'Install PHP system checks virtual host for Apache2 (sites-enabled)'
   file:
@@ -115,10 +112,9 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_php and with_apache2
+  when: with_php
 
 - name: 'Ensure apache2 is running'
   service:
     name: 'apache2'
     state: 'started'
-  when: with_apache2

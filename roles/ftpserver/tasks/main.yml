@@ -1,2 +1,4 @@
 - include: 'common.yml'
+  when: with_ftp
 - include: 'pure-ftpd.yml'
+  when: with_ftp

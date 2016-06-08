@@ -1,7 +1,5 @@
 - name: Install dotfiles
   git: repo={{ dotfiles_repo }} dest={{ dotfiles_dest }} recursive=yes accept_hostkey=yes force=yes
-  when: with_dotfiles
 
 - name: Enable sourcing of dotfiles
   lineinfile: dest=/etc/zsh/zshrc regexp='source {{ dotfiles_dest }}' line='[[ -f {{ dotfiles_dest }}/zsh/zshrc ]] && export LC_SSH_VARS={{ dotfiles_lcsshvars}} && source {{ dotfiles_dest }}/zsh/zshrc'
-  when: with_dotfiles

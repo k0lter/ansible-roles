@@ -4,7 +4,6 @@
       - 01-ovh-network.conf
   notify:
     - Apply kernel configuration (proc)
-  when: with_ovh
 
 - name: Install kernel configuration for OVH dedicated servers (sys)
   template: src=kernel/sysfs.d/{{ item }}.j2 dest=/etc/sysfs.d/{{ item }} owner=root group=root mode=0644
@@ -12,4 +11,3 @@
       - 01-ovh-network.conf
   notify:
     - Refresh sysfs configuration
-  when: with_ovh

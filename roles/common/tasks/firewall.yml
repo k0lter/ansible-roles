@@ -3,10 +3,8 @@
   with_items:
     - linux-image-{{ facter_architecture }}
     - ferm
-  when: with_firewall
 
 - name: Install firewall configuration (ferm.conf)
   template: src=ferm/ferm.conf.j2 dest=/etc/ferm/ferm.conf owner=root group=root mode=0644
   notify:
     - Apply firewall rules (ferm)
-  when: with_firewall
