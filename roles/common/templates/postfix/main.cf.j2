@@ -49,10 +49,14 @@ smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 smtp_tls_session_cache_timeout = 3600
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
+{% if postfix_fqdn is defined %}
+myhostname = {{ postfix_fqdn }}
+{% else %}
 myhostname = {{ ansible_fqdn }}
+{% endif %}
 myorigin = $myhostname
 mydomain = $myhostname
-mydestination = {{ ansible_fqdn }} {{ ansible_hostname }} localhost localhost.localdomain
+mydestination = $myhostname {% if postfix_hostname is defined %}{{ postfix_hostname }}{% else %}{{ ansible_hostname }}{% endif %} localhost localhost.localdomain
 
 {% if smtp_relay_host is defined %}
 relayhost = {{ smtp_relay_host }}
