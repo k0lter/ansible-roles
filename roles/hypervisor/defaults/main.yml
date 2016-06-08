@@ -5,6 +5,7 @@
 with_xen: False
 # memory amount in MB
 xendom0_mem: 1024
+xen_grub_opts: ''
 
 with_ganeti: False
 
