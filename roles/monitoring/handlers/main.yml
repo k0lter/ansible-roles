@@ -1,6 +1,3 @@
 - include: munin.yml
-  when: with_munin or with_munin_node
 - include: mon.yml
-  when: with_mon
 - include: zabbix.yml
-  when: with_zabbix_agent
