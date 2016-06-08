@@ -84,7 +84,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   notify:
     - 'Reload nginx'
   when: with_nginx and ssl_certs

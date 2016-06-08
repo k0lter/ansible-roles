@@ -5,7 +5,7 @@
     owner: 'root'
     group: 'root'
     mode: '0755'
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   when: ssl_certs
 
 - name: 'Install ssl certificates (certificate)'
@@ -16,7 +16,7 @@
     group: 'root'
     mode: '0640'
   register: ssl_cert_result
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   when: ssl_certs
 
 - name: 'Install ssl certificates (private key)'
@@ -27,7 +27,7 @@
     group: 'root'
     mode: '0640'
   register: ssl_key_result
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   when: ssl_certs
 
 - name: 'Install ssl certificates (chain)'
@@ -38,29 +38,29 @@
     group: 'root'
     mode: '0644'
   register: ssl_chain_result
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   when: ssl_certs
 
 - name: 'Gathering info about ssl full chain (certificate + chain)'
   stat:
     path: '/etc/ssl/local/certs/{{ item }}/fullchain.pem'
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   register: ssl_fullchain_stats
   when: ssl_certs
 
 - name: 'Gathering info about ssl bundle (key + fullchain)'
   stat:
     path: '/etc/ssl/local/certs/{{ item }}/bundle.pem'
-  with_items: ssl_certs
+  with_items: '{{ ssl_certs }}'
   register: ssl_bundle_stats
   when: ssl_certs
 
 - name: 'Create ssl certificates full chain (certificate + chain)'
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/fullchain.pem'
-  with_items: ssl_fullchain_stats.results
+  with_items: '{{ ssl_fullchain_stats.results }}'
   when: ssl_certs and (not item.stat.exists or ssl_cert_result|changed or ssl_chain_result|changed)
 
 - name: 'Create ssl certificates bundle (key + certificate + bundle)'
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/privkey.pem' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/bundle.pem'
-  with_items: ssl_bundle_stats.results
+  with_items: '{{ ssl_bundle_stats.results }}'
   when: ssl_certs and (not item.stat.exists or ssl_key_result|changed or ssl_cert_result|changed or ssl_chain_result|changed)

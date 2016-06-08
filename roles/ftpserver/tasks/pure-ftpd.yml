@@ -78,12 +78,12 @@
     group: '{{item.gid}}'
     mode: 0755
     state: 'directory'
-  with_items: ftp_accounts
+  with_items: '{{ ftp_accounts }}'
   when: ftp_accounts and with_ftp
 
 - name: 'Add FTP accounts in pure-ftpd'
   raw: printf "{{item.password}}\n{{item.password}}\n" | pure-pw useradd "{{item.user}}" -d "{{item.home}}" -u "{{item.uid}}" -g "{{item.gid}}"
-  with_items: ftp_accounts
+  with_items: '{{ ftp_accounts }}'
   when: ftp_accounts and with_ftp
 
 - name: 'Rebuild pure-ftpd internal DB'
