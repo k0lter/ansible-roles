@@ -6,114 +6,78 @@
 #  Configuration file for ferm(1).
 #
 
-@def $PORTS = ({{ firewall_public | join(' ') }}); # Services running worldwide
+# Detecting network interface assiociated with default route
+@def $NETDEV = `ip route list | sed -r -n 's/^default\s+via\s+.*\s+dev\s+([^\s]+)$/\1/p'`;
+# Detecting list of bridge network interfaces
+@def $BRIDGES = `ip link show up | sed -r -n 's/^[0-9]:\s+((xen|)br[^:]+):\s+.*$/\1/p' | xargs`;
 
-table filter {
-    chain INPUT {
-        policy DROP;
-
-        # connection tracking
-        mod state state INVALID DROP;
-        mod state state (ESTABLISHED RELATED) ACCEPT;
-
-        # allow local packet
-        interface lo ACCEPT;
-
-        # respond to ping
-        proto icmp icmp-type echo-request ACCEPT;
-
-        # standard ports we allow from the outside
-        proto (udp tcp) dport $PORTS ACCEPT;
-{% if firewall_private is defined %}
-        # Private networks configuration
-{% for fwconf in firewall_private %}
-        interface {{ fwconf.interface }}{% if fwconf.networks is defined %} saddr ({{ fwconf.networks | join(' ') }}){% endif %} {
-            proto (udp tcp) dport ({{ fwconf.ports | join(' ') }}) ACCEPT;
-        }
-{% endfor %}
-{% endif %}
-{% if firewall_debug %}
-        LOG log-prefix "ferm INPUT REJECT: " log-level warning;
-{% endif %}
-    }
-
-    chain OUTPUT {
-        policy ACCEPT;
-
-        # connection tracking
-        #mod state state INVALID DROP;
-        mod state state (ESTABLISHED RELATED) ACCEPT;
-{% if firewall_private is defined %}
-{% for fwconf in firewall_private %}
-{% if fwconf.users is defined %}
-
-        # Private networks configuration
-        mod owner uid-owner ({{ fwconf.users | join(' ') }}) outerface {{ fwconf.interface }} ACCEPT;
-        outerface {{ fwconf.interface }} DROP;
-{% endif %}
-{% endfor %}
-{% endif %}
-{% if firewall_debug %}
-        LOG log-prefix "ferm OUTPUT REJECT: " log-level warning;
-{% endif %}
-    }
-
-    chain FORWARD {
-        policy DROP;
-
-        # connection tracking
-        mod state state INVALID DROP;
-        mod state state (ESTABLISHED RELATED) ACCEPT;
-
-{% if firewall_debug %}
-        LOG log-prefix "ferm FORWARD REJECT: " log-level warning;
-{% endif %}
+# Default policies
+domain (ip ip6) {
+    table filter {
+        chain (INPUT FORWARD) policy DROP;
+        chain OUTPUT policy ACCEPT;
     }
 }
 
-domain ip6 table filter {
-    chain INPUT {
-        policy DROP;
+# Allow all on lo interface
+domain (ip ip6) table filter {
+    chain INPUT interface lo ACCEPT;
+    chain OUTPUT outerface lo ACCEPT;
+}
 
-        # connection tracking
-        mod state state INVALID DROP;
-        mod state state (ESTABLISHED RELATED) ACCEPT;
+# Allow ipv6 protocol specifics
+domain ip table filter chain (INPUT OUTPUT) protocol (ipv6 ipv6-icmp) ACCEPT;
 
-        # allow local packet
-        interface lo ACCEPT;
+# Allow icmp-echo
+domain (ip ip6) table filter chain (INPUT OUTPUT) protocol icmp icmp-type echo-request ACCEPT;
 
-        # allow ICMP (for neighbor solicitation, like ARP for IPv4)
-        proto ipv6-icmp ACCEPT;
+# Drop invalid packets
+domain (ip ip6) table filter chain INPUT mod state state INVALID DROP;
 
-        # standard ports we allow from the outside
-        proto (udp tcp) dport $PORTS ACCEPT;
+# Established/related connections
+domain (ip ip6) table filter chain (INPUT OUTPUT) mod state state (ESTABLISHED RELATED) ACCEPT;
 
-{% if firewall_debug %}
-        LOG log-prefix "ferm (ip6) INPUT REJECT: " log-level warning;
+domain (ip ip6) {
+    table filter {
+        chain INPUT {
+            # standard ports we allow from the outside
+            @if @not(@eq(@length(NETDEV),0)) {
+                interface ($NETDEV) {
+                    proto (udp tcp) dport ({{ firewall_public | join(' ') }}) ACCEPT;
+                }
+            }
+{% if firewall_private is defined %}
+{% for fwconf in firewall_private %}
+            interface {{ fwconf.interface }}{% if fwconf.networks is defined %} saddr ({{ fwconf.networks | join(' ') }}){% endif %} {
+                proto (udp tcp) dport ({{ fwconf.ports | join(' ') }}) ACCEPT;
+            }
+{% endfor %}
 {% endif %}
-    }
-
-    chain OUTPUT {
-        policy ACCEPT;
-
-        # connection tracking
-        #mod state state INVALID DROP;
-        mod state state (ESTABLISHED RELATED) ACCEPT;
-
-{% if firewall_debug %}
-        LOG log-prefix "ferm (ip6) OUTPUT REJECT: " log-level warning;
+            {% if not firewall_debug %}#{% endif %}LOG log-prefix "ferm INPUT REJECT: " log-level warning;
+            REJECT;
+        }
+{% if firewall_private is defined %}
+        chain OUTPUT {
+{% for fwconf in firewall_private %}
+{% if fwconf.users is defined %}
+            outerface {{ fwconf.interface }} {
+                mod owner uid-owner ({{ fwconf.users | join(' ') }}) ACCEPT;
+                {% if not firewall_debug %}#{% endif %}LOG log-prefix "ferm OUTPUT REJECT: " log-level warning;
+                REJECT;
+            }
 {% endif %}
-    }
-
-    chain FORWARD {
-        policy DROP;
-
-        # connection tracking
-        mod state state INVALID DROP;
-        mod state state (ESTABLISHED RELATED) ACCEPT;
-
-{% if firewall_debug %}
-        LOG log-prefix "ferm (ip6) FOWARD REJECT: " log-level warning;
+{% endfor %}
+        }
 {% endif %}
+        chain FORWARD {
+            @if @not(@eq(@length(BRIDGES),0)) {
+                interface ($BRIDGES) {
+                    ACCEPT;
+                }
+            } @else {
+                {% if not firewall_debug %}#{% endif %}LOG log-prefix "ferm FORWARD REJECT: " log-level warning;
+                REJECT;
+            }
+        }
     }
 }
