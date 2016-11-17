@@ -46,7 +46,7 @@
   when: apt_repositories
 
 - name: 'Install base packages'
-  apt: pkg={{ item }} install_recommends=no state=installed update_cache=yes
+  apt: pkg={{ item }} install_recommends=no state=installed
   with_items:
     - 'apticron'
     - 'locales-all'
@@ -74,12 +74,12 @@
     - 'ncdu'
 
 - name: 'Install additional packages'
-  apt: pkg={{ item }} install_recommends=no state=installed update_cache=yes
+  apt: pkg={{ item }} install_recommends=no state=installed
   with_items: '{{ apt_additional_packages }}'
   when: apt_additional_packages
 
 - name: 'Install ntp daemon'
-  apt: pkg=ntp install_recommends=no state=installed update_cache=yes
+  apt: pkg=ntp install_recommends=no state=installed
   when: with_ntp
 
 - name: 'Configure default locale and timezone'

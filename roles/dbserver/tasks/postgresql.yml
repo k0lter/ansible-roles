@@ -1,11 +1,11 @@
 - name: Install PostgreSQL server related packages
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed
   with_items:
     - postgresql
     - postgresql-client
 
 - name: Install PostgreSQL backup related packages (autopostgresqlbackup)
-  apt: pkg=autopostgresqlbackup state=installed update_cache=yes
+  apt: pkg=autopostgresqlbackup state=installed
   when: with_postgresql_backup
 
 - name: Ensure PostgreSQL server is running

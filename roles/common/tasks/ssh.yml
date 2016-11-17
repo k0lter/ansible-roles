@@ -1,5 +1,5 @@
 - name: Install ssh packages
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed
   with_items:
     - openssh-server
     - openssh-client

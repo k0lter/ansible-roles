@@ -3,7 +3,6 @@
     pkg: '{{ item }}'
     install_recommends: 'no'
     state: 'installed'
-    update_cache: 'yes'
   with_items:
     - 'ganeti'
     - 'ganeti-instance-debootstrap'

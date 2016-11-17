@@ -1,5 +1,5 @@
 - name: Install common PHP dependencies
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed
   with_items:
     - php5-cli
     - php5-curl
@@ -28,7 +28,7 @@
   when: with_php and ansible_lsb.major_release|int >= 8
 
 - name: Install mod_php5 packages for apache2
-  apt: pkg=libapache2-mod-php5 state=installed update_cache=yes
+  apt: pkg=libapache2-mod-php5 state=installed
   when: with_modphp5
 
 - name: Install local PHP configuration (Debian < 8)
@@ -46,7 +46,7 @@
   template: src=php/phpinfo.php dest=/etc/php5/syscheck.d/index.php owner=root group=root mode=0644
 
 - name: Install PHP APC extension
-  apt: pkg=php-apc state=installed update_cache=yes
+  apt: pkg=php-apc state=installed
   when: with_php_apc
 
 - name: Install php-apc system check
@@ -54,23 +54,23 @@
   when: with_php_apc
 
 - name: Install MySQL extension for PHP (native driver)
-  apt: pkg=php5-mysqlnd state=installed update_cache=yes
+  apt: pkg=php5-mysqlnd state=installed
   when: not with_php_mysql_legacy
 
 - name: Install MySQL extension for PHP (old driver)
-  apt: pkg=php5-mysql state=installed update_cache=yes
+  apt: pkg=php5-mysql state=installed
   when: with_php_mysql_legacy
 
 - name: Install PHPMyAdmin
-  apt: pkg=phpmyadmin state=installed update_cache=yes
+  apt: pkg=phpmyadmin state=installed
   when: with_phpmyadmin
 
 - name: Install PHPPgAdmin
-  apt: pkg=phppgadmin state=installed update_cache=yes
+  apt: pkg=phppgadmin state=installed
   when: with_phppgadmin
 
 - name: Install php5-fpm package
-  apt: pkg=php5-fpm state=installed update_cache=yes
+  apt: pkg=php5-fpm state=installed
   when: with_fpm
 
 - name: Install php5-fpm init script config file

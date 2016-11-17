@@ -2,7 +2,6 @@
   apt:
     pkg: '{{ item }}'
     state: 'installed'
-    update_cache: 'yes'
   with_items:
     - 'linux-image-{{ facter_architecture }}'
     - 'ferm'

@@ -1,19 +1,19 @@
 - name: Install MySQL server related packages
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed
   with_items:
     - mysql-server
     - mysql-client
   when: with_mysql
 
 - name: Install MariaDB server related packages
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed
   with_items:
     - mariadb-server
     - mariadb-client
   when: with_mariadb
 
 - name: Install MySQL or MariaDB backup related packages (automysqlbackup)
-  apt: pkg=automysqlbackup state=installed update_cache=yes
+  apt: pkg=automysqlbackup state=installed
   when: with_mysql_backup
 
 - name: Fix automysqlbackup to handle events properly

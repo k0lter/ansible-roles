@@ -2,7 +2,6 @@
   apt:
     pkg: 'nginx'
     state: 'installed'
-    update_cache: 'yes'
 
 - name: 'Install logrotate configuration for nginx'
   template:

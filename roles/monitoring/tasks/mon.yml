@@ -1,5 +1,5 @@
 - name: Install mon packages
-  apt: pkg=mon state=installed update_cache=yes
+  apt: pkg=mon state=installed
 
 - name: Create need directory for mon configuration
   file: path=/etc/mon/mon.d state=directory owner=root group=root mode=0755

@@ -2,7 +2,6 @@
   apt:
     pkg: 'unattended-upgrades'
     state: 'installed'
-    update_cache: 'yes'
   when: with_auto_upgrade
 
 - name: 'Reconfigure unattended-upgrades package'
@@ -31,7 +30,6 @@
   apt:
     pkg: '{{ item }}'
     state: 'installed'
-    update_cache: 'yes'
   with_items:
     - 'logcheck'
     - 'logcheck-database'
@@ -94,7 +92,6 @@
   apt:
     pkg: '{{ item }}'
     state: 'installed'
-    update_cache: 'yes'
   with_items:
     - 'lsof'
     - 'unhide'

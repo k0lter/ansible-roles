@@ -1,5 +1,5 @@
 - name: Install smartmontools package
-  apt: pkg=smartmontools state=installed update_cache=yes
+  apt: pkg=smartmontools state=installed
 
 - name: Install smartd configuration
   template: src=smartd/smartd.conf.j2 dest=/etc/smartd.conf owner=root group=root mode=0644

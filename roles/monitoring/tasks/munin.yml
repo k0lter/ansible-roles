@@ -1,5 +1,5 @@
 - name: Install munin packages
-  apt: pkg=munin state=installed update_cache=yes
+  apt: pkg=munin state=installed
   when: with_munin
 
 - name: Install munin configuration
@@ -7,7 +7,7 @@
   when: with_munin
 
 - name: Install munin-node packages
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed
   with_items:
     - munin-node
     - munin-plugins-extra
