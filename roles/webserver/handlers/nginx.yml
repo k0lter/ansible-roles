@@ -1,5 +1,5 @@
 - name: Reload nginx
-  service: name=nginx state=reloaded
+  shell: nginx -t && nginx -s reload
 
 - name: Restart nginx
   service: name=nginx state=restarted

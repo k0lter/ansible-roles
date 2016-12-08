@@ -1,5 +1,5 @@
 - name: Reload apache2
-  service: name=apache2 state=reloaded
+  shell: apache2ctl configtest && apache2ctl graceful
 
 - name: Restart apache2
   service: name=apache2 state=restarted
