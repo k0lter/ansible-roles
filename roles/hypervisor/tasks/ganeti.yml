@@ -7,6 +7,7 @@
     - 'ganeti'
     - 'ganeti-instance-debootstrap'
     - 'drbd-utils'
+    - 'dnsutils'
   when: with_ganeti
 
 - name: 'Install ganeti instances templates for debootstrap'
