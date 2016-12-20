@@ -65,6 +65,7 @@
 
 - name: 'Clean up pure-ftpd internal DB'
   raw: pure-pw list 2>/dev/null | sed -r 's/^(\S+)\s.*$/\1/' | while read u ; do pure-pw userdel "${u}" ; done
+  changed_when: False
 
 - name: 'Create FTP accounts home directory'
   file:
@@ -79,10 +80,12 @@
 - name: 'Add FTP accounts in pure-ftpd'
   raw: printf "{{item.password}}\n{{item.password}}\n" | pure-pw useradd "{{item.user}}" -d "{{item.home}}" -u "{{item.uid}}" -g "{{item.gid}}"
   with_items: '{{ ftp_accounts }}'
+  changed_when: False
   when: ftp_accounts and with_ftp
 
 - name: 'Rebuild pure-ftpd internal DB'
   raw: pure-pw mkdb 2>/dev/null
+  changed_when: False
 
 - name: 'Ensure pure-ftpd is running'
   service:
