@@ -1,0 +1,1 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ influxd\[[[:digit:]]+\]: \[retention\] [/[:digit:]]+ [:[:digit:]]+ retention policy shard deletion check commencing$
