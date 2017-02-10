@@ -8,6 +8,7 @@
     - 'ca-certificates'
     - 'procmail'
     - 'libsasl2-modules'
+  when: with_postfix
 
 - name: 'Install mail aliases file'
   template:
@@ -29,6 +30,7 @@
     mode: '0644'
   notify:
     - 'Reload postfix'
+  when: with_postfix
 
 - name: 'Update postfix master config for slowsmtp transport'
   blockinfile:
