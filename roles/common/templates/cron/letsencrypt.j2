@@ -1,0 +1,13 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+# /etc/cron.d/letsencrypt-local:
+# Sign/renew non-existant/changed/expiring certificates generated with Let's
+# Encrypt
+
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+MAILTO=root
+
+@daily      root    dehydrated --cron 2>&1 1>/dev/null | grep -v 'WARNING.*Extra configuration directory.*exists, but no configuration found'

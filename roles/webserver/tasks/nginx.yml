@@ -81,6 +81,29 @@
     - 'Reload nginx'
   when: ssl_certs
 
+- name: 'Install SSL vhost configuration for Nginx (Lets Encrypt certificates)'
+  template:
+    src: 'nginx/vhost_ssl_auto.j2'
+    dest: '/etc/nginx/vhost_ssl_auto-{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: '{{ ssl_certs_auto }}'
+  notify:
+    - 'Reload nginx'
+  when: ssl_certs_auto
+
+- name: 'Install Let Encrypt configuration for Nginx'
+  template:
+    src: 'nginx/letsencrypt.j2'
+    dest: '/etc/nginx/letsencrypt'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload nginx'
+  when: ssl_certs_auto
+
 - name: 'Create basic authentication file for admin (Nginx)'
   template:
     src: 'nginx/auth_admin.j2'

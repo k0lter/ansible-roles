@@ -58,3 +58,43 @@
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/privkey.pem' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/bundle.pem'
   with_items: '{{ ssl_bundle_stats.results }}'
   when: not item.stat.exists or ssl_key_result|changed or ssl_cert_result|changed or ssl_chain_result|changed
+
+- name: 'Install Lets Encrypt client'
+  apt:
+    pkg: 'dehydrated'
+    state: 'installed'
+  when: ssl_certs_auto
+
+- name: 'Install Lets Encrypt domains configuration'
+  template:
+    src: 'ssl/letsencrypt_domains.j2'
+    dest: '/etc/dehydrated/domains.txt'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: ssl_certs_auto
+
+- name: 'List Lets Encrypt SSL installed certificates'
+  shell: find /var/lib/dehydrated/certs -iname privkey.pem | cut -d / -f6
+  register: ssl_certs_auto_installed
+  changed_when: False
+  ignore_errors: True
+  when: ssl_certs_auto
+
+- name: 'List Lets Encrypt SSL certificates to be generated'
+  shell: egrep -v '^#' /etc/dehydrated/domains.txt | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem" || echo "${c}" ; done
+  register: ssl_certs_auto_missing
+  ignore_errors: True
+  changed_when: ssl_certs_auto_missing.stdout_lines != []
+  notify:
+    - 'Generate Lets Encrypt SSL certificates'
+  when: ssl_certs_auto
+
+- name: 'Install Lets Encrypt cron job'
+  template:
+    src: 'cron/letsencrypt.j2'
+    dest: '/etc/cron.d/letsencrypt-local'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: ssl_certs_auto

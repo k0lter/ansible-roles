@@ -78,6 +78,7 @@ dotfiles_dest: '/srv/hosting-tools/shell'
 dotfiles_lcsshvars: 0
 
 ssl_certs: Null
+ssl_certs_auto: Null
 
 dkim_domains: Null
 with_opendkim: False

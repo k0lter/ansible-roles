@@ -23,6 +23,18 @@
     - 'Reload apache2'
   when: ssl_certs
 
+- name: 'Install SSL vhost configuration for Apache (Lets Encrypt certificates)'
+  template:
+    src: 'apache2/vhost_ssl_auto.j2'
+    dest: '/etc/apache2/vhost_ssl_auto-{{ item }}.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: '{{ ssl_certs_auto }}'
+  notify:
+    - 'Reload apache2'
+  when: ssl_certs_auto
+
 - name: 'Install Apache2 basic security configuration (Debian < 8)'
   template:
     src: 'apache2/conf.d/security.j2'
@@ -44,6 +56,26 @@
   notify:
     - 'Reload apache2'
   when: ansible_lsb.major_release|int >= 8
+
+- name: 'Install Lets Encrypt configuration for Apache2 (conf-available)'
+  template:
+    src: 'apache2/letsencrypt.j2'
+    dest: '/etc/apache2/conf-available/letsencrypt.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload apache2'
+  when: ssl_certs_auto
+
+- name: 'Install Lets Encrypt configuration for Apache2 (conf-enabled)'
+  file:
+    src: '/etc/apache2/conf-available/letsencrypt.conf'
+    path: '/etc/apache2/conf-enabled/letsencrypt.conf'
+    state: 'link'
+  notify:
+    - 'Reload apache2'
+  when: ssl_certs_auto
 
 - name: 'Create basic authentication file for admin (Apache2)'
   template:
