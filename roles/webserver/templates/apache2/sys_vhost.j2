@@ -4,9 +4,12 @@
 {% endif -%}
 # Apache vhost for PHP system checks
 
-<VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{{ phpsyscheck_vhostport }}>
+<VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{%if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}80{% endif %}>
     ServerName {{ phpsyscheck_vhostname }}
 
+{% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    RedirectMatch permanent (.*) https://{{ phpsyscheck_vhostname }}$1
+{% else %}
     DocumentRoot /etc/php5/syscheck.d
     DirectoryIndex index.php
 
@@ -27,5 +30,37 @@
     LogLevel warn
     CustomLog ${APACHE_LOG_DIR}/sys.access.log combined
     ErrorLog ${APACHE_LOG_DIR}/sys.error.log
-
+{% endif %}
 </VirtualHost>
+{% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+<VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{%if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}443{% endif %}>
+    ServerName {{ phpsyscheck_vhostname }}
+
+    Include vhost_ssl_auto-{{ phpsyscheck_vhostname }}.conf
+
+    DocumentRoot /etc/php5/syscheck.d
+    DirectoryIndex index.php
+
+{% if http_auth_phpmyadmin %}
+    <Location />
+        AuthType basic
+        AuthName "Restricted Access"
+        AuthUserFile /etc/apache2/auth_admin
+        Require valid-user
+    </Location>
+{% endif %}
+
+    <Directory /etc/php5/syscheck.d>
+        Options None
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/sys.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/sys.error.log
+</VirtualHost>
+{% endif %}
+

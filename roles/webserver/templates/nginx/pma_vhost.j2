@@ -5,11 +5,51 @@
 # Nginx vhost for phpmyadmin
 
 server {
-    listen {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}:{% endif %}{{ phpmyadmin_vhostport }};
+{% if phpmyadmin_vhostip or phpmyadmin_vhostport %}
+    listen {% if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% endif %}{% if phpmyadmin_vhostip and phpmyadmin_vhostport %}:{% endif %}{% if phpmyadmin_vhostport %}{{ phpmyadmin_vhostport }}{% endif %};
+{% endif %}
 
     server_name {{ phpmyadmin_vhostname }};
 
-    access_log  /var/log/nginx/pma.access.log;
+    access_log  /var/log/nginx/pma.access.log main;
+    error_log   /var/log/nginx/pma.error.log;
+
+{% if phpmyadmin_ssl %}
+    include letsencrypt_sh;
+{% endif %}
+
+{% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    location / {
+        return 301 https://{{ phpmyadmin_vhostname }}$request_uri;
+    }
+{% else %}
+    root /usr/share/phpmyadmin;
+    index index.php;
+    try_files $uri $uri/ /index.php;
+
+{% if http_auth_phpmyadmin %}
+    auth_basic "Restricted Access";
+    auth_basic_user_file /etc/nginx/auth_admin;
+{% endif %}
+
+    client_max_body_size 128m;
+
+    location ~ \.php(/|$) {
+        include fastcgi_pass_fpm;
+        fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M";
+    }
+{% endif %}
+}
+{% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+server {
+    listen {% if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}:{% endif %}{% if phpmyadmin_vhostport %}{{ phpmyadmin_vhostport }}{% else %}443{% endif %} ssl;
+
+    server_name {{ phpmyadmin_vhostname }};
+
+    include vhost_ssl_auto-{{ phpmyadmin_vhostname }};
+
+    access_log  /var/log/nginx/pma.access.log main;
     error_log   /var/log/nginx/pma.error.log;
 
     root /usr/share/phpmyadmin;
@@ -28,3 +68,4 @@ server {
         fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M";
     }
 }
+{% endif %}

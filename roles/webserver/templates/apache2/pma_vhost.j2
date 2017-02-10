@@ -4,8 +4,43 @@
 {% endif -%}
 # Apache vhost for phpmyadmin
 
-<VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{{ phpmyadmin_vhostport }}>
+<VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{%if phpmyadmin_vhostport %}{{ phpmyadmin_vhostport }}{% else %}80{% endif %}>
     ServerName {{ phpmyadmin_vhostname }}
+
+{% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    RedirectMatch permanent (.*) https://{{ phpmyadmin_vhostname }}$1
+{% else %}
+    DocumentRoot /usr/share/phpmyadmin
+    DirectoryIndex index.php
+
+{% if http_auth_phpmyadmin %}
+    <Location />
+        AuthType basic
+        AuthName "Restricted Access"
+        AuthUserFile /etc/apache2/auth_admin
+        Require valid-user
+    </Location>
+{% endif %}
+
+    Include /etc/phpmyadmin/apache.conf
+
+    <IfModule mod_php5.c>
+        php_admin_value max_execution_time 240
+        php_admin_value upload_max_filesize 128M
+        php_admin_value post_max_size 128M
+    </IfModule>
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/pma.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/pma.error.log
+{% endif %}
+</VirtualHost>
+{% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+<VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{%if phpmyadmin_vhostport %}{{ phpmyadmin_vhostport }}{% else %}443{% endif %}>
+    ServerName {{ phpmyadmin_vhostname }}
+
+    Include vhost_ssl_auto-{{ phpmyadmin_vhostname }}.conf
 
     DocumentRoot /usr/share/phpmyadmin
     DirectoryIndex index.php
@@ -30,5 +65,5 @@
     LogLevel warn
     CustomLog ${APACHE_LOG_DIR}/pma.access.log combined
     ErrorLog ${APACHE_LOG_DIR}/pma.error.log
-
 </VirtualHost>
+{% endif %}

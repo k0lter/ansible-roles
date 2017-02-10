@@ -5,11 +5,46 @@
 # Nginx vhost for PHP system checks
 
 server {
-    listen {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{{ phpsyscheck_vhostport }};
+{% if phpsyscheck_vhostip or phpsyscheck_vhostport %}
+    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% endif %}{% if phpsyscheck_vhostip and phpsyscheck_vhostport %}:{% endif %}{% if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% endif %};
+{% endif %}
 
     server_name {{ phpsyscheck_vhostname }};
 
-    access_log  /var/log/nginx/sys.access.log;
+    access_log  /var/log/nginx/sys.access.log main;
+    error_log   /var/log/nginx/sys.error.log;
+
+{% if phpsyscheck_ssl %}
+    include letsencrypt_sh;
+{% endif %}
+
+{% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    location / {
+        return 301 https://{{ phpsyscheck_vhostname }}$request_uri;
+    }
+{% else %}
+    root /etc/php5/syscheck.d;
+    index index.php;
+    try_files $uri $uri/ /index.php;
+
+    auth_basic "Restricted Access";
+    auth_basic_user_file /etc/nginx/auth_admin;
+
+    location ~ \.php(/|$) {
+        include fastcgi_pass_fpm;
+    }
+{% endif %}
+}
+{% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+server {
+    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{% if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}443{% endif %} ssl;
+
+    server_name {{ phpsyscheck_vhostname }};
+
+    include vhost_ssl_auto-{{ phpsyscheck_vhostname }};
+
+    access_log  /var/log/nginx/sys.access.log main;
     error_log   /var/log/nginx/sys.error.log;
 
     root /etc/php5/syscheck.d;
@@ -23,3 +58,4 @@ server {
         include fastcgi_pass_fpm;
     }
 }
+{% endif %}
