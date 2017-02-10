@@ -54,6 +54,7 @@
     - 'ferm'
     - 'git-daemon'
     - 'gogs'
+    - 'influxd'
     - 'ipmi'
     - 'irqbalance'
     - 'kernel'
