@@ -1,6 +1,6 @@
 - include: base.yml
 - include: ssl.yml
-  when: ssl_certs
+  when: ssl_certs or ssl_certs_auto
 - include: dotfiles.yml
   when: with_dotfiles
 - include: dns.yml

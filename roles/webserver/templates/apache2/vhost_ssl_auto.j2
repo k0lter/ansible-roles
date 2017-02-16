@@ -1,4 +1,4 @@
 SSLEngine On
-SSLCertificateFile /var/lib/dehydrated/certs/{{ item }}/cert.pem
-SSLCertificateKeyFile /var/lib/dehydrated/certs/{{ item }}/privkey.pem
-SSLCertificateChainFile /var/lib/dehydrated/certs/{{ item }}/chain.pem
+SSLCertificateFile /var/lib/dehydrated/certs/{{ item.split(' ')[0] }}/cert.pem
+SSLCertificateKeyFile /var/lib/dehydrated/certs/{{ item.split(' ')[0] }}/privkey.pem
+SSLCertificateChainFile /var/lib/dehydrated/certs/{{ item.split(' ')[0] }}/chain.pem

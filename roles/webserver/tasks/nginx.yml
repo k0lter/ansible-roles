@@ -84,7 +84,7 @@
 - name: 'Install SSL vhost configuration for Nginx (Lets Encrypt certificates)'
   template:
     src: 'nginx/vhost_ssl_auto.j2'
-    dest: '/etc/nginx/vhost_ssl_auto-{{ item }}'
+    dest: '/etc/nginx/vhost_ssl_auto-{{ item.split(" ")[0] }}'
     owner: 'root'
     group: 'root'
     mode: '0644'
