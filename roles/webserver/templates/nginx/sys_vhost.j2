@@ -15,7 +15,7 @@ server {
     error_log   /var/log/nginx/sys.error.log;
 
 {% if phpsyscheck_ssl %}
-    include letsencrypt_sh;
+    include letsencrypt;
 {% endif %}
 
 {% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}

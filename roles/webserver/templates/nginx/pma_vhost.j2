@@ -15,7 +15,7 @@ server {
     error_log   /var/log/nginx/pma.error.log;
 
 {% if phpmyadmin_ssl %}
-    include letsencrypt_sh;
+    include letsencrypt;
 {% endif %}
 
 {% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
