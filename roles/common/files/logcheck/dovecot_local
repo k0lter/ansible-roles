@@ -2,7 +2,7 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (pop3|imap|managesieve)\(.*\): (Connection closed|Disconnected: Logged out) in=[0-9]+ out=[0-9]+$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (dovecot: )?(imap|pop3|managesieve)-login: (Disconnected|Aborted login) \((disconnected before greeting, waited|no auth attempts in) [0-9]+ secs\): user=<>, rip=[A-F0-9:\.]+, lip=[A-F0-9:\.]+, ((secured|TLS), )?session=<.*>$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: auth: Warning: auth client [0-9]+ disconnected with [0-9]+ pending requests: (Connection reset by peer|EOF)$
-^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (imap|pop3|managesieve)-login: (Disconnected|Aborted login) \((disconnected before auth was ready, waited|(no auth|auth failed, [0-9]+) attempts in) [0-9]+ secs\): user=<.*>,( method=.+,)? rip=[A-Z0-9:\.]+, lip=[A-Z0-9:\.]+,( secured,)?( TLS: Disconnected,)? session=<.*>$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (imap|pop3|managesieve)-login: (Disconnected|Aborted login) \((disconnected before auth was ready, waited|(no auth|auth failed, [0-9]+) attempts in) [0-9]+ secs\): user=<.*>,( method=.+,)? rip=[A-Z0-9:\.]+, lip=[A-Z0-9:\.]+,( secured,)?( TLS( handshaking)?: Disconnected,)? session=<.*>$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: auth-worker\([0-9]+\): mysql\(.+\): Connected to database .+$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ dovecot: (imap|pop3|managesieve)\(.+\): (Disconnected(:| for inactivity|: Logged out|: Disconnected in IDLE)|Connection closed(:|: Connection reset by peer)) in=[0-9]+ out=[0-9]+$
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ dovecot: lda\(.+\): msgid=<.+>: saved mail to .+$
