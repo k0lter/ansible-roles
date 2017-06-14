@@ -3,6 +3,7 @@
 {{ prolog() }}
 {% endif -%}
 127.0.0.1
+::1
 {% if dkim_internal_hosts is defined %}
 {% for host in dkim_internal_hosts %}
 {{ host }}
