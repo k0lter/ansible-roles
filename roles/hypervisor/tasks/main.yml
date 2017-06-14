@@ -1,2 +1,4 @@
 - include: 'xen.yml'
+  tags: [hypervisor,xen]
 - include: 'ganeti.yml'
+  tags: [hypervisor,ganeti]

@@ -1,4 +1,6 @@
 - include: 'common.yml'
+  tags: [ftp]
   when: with_ftp
 - include: 'pure-ftpd.yml'
+  tags: [ftp,pure-ftpd]
   when: with_ftp

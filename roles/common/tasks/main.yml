@@ -1,18 +1,27 @@
 - include: base.yml
+  tags: [base]
 - include: ssl.yml
+  tags: [ssl]
   when: ssl_certs or ssl_certs_auto
 - include: dotfiles.yml
   when: with_dotfiles
 - include: dns.yml
+  tags: [dns]
 - include: firewall.yml
+  tags: [firewall]
   when: with_firewall
 - include: ovh.yml
   when: with_ovh
 - include: security.yml
+  tags: [security]
 - include: smtp.yml
+  tags: [smtp]
   when: with_postfix or with_mail_aliases
 - include: dkim.yml
+  tags: [dkim]
   when: with_opendkim
 - include: ssh.yml
+  tags: [ssh]
 - include: smartd.yml
+  tags: [smartd]
   when: with_smartd

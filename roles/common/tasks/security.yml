@@ -79,6 +79,8 @@
     - 'systemd'
     - 'zabbix-agentd'
   when: with_logcheck
+  tags:
+      - 'logcheck'
 
 - name: 'Update logcheck cron job'
   template:
