@@ -1,0 +1,14 @@
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ gammu-smsd\[[[:digit:]]+\]: Message without SMSC, assuming you want to use the one from phone
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ gammu-smsd\[[[:digit:]]+\]: Transmitted .+ \(part: [0-9]+\) to [0-9]+, message reference 0x[0-9]+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ gammu-smsd\[[[:digit:]]+\]: Renamed .+ to .+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: checks: CheckSecurity=[0-9]+, CheckBattery=[0-9]+, CheckSignal=[0-9]+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: CommTimeout=[0-9]+, SendTimeout=[0-9]+, ReceiveFrequency=[0-9]+, ResetFrequency=[0-9]+, HardResetFrequency=[0-9]+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: Configuring Gammu SMSD\.\.\.$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: Created outbox message .+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: deliveryreport = no$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: phoneid =$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: Sent SMS moved to .+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: SHM token: 0x[a-f0-9]+ \([-0-9]+\)$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: SMS with errors moved to .+$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: Using (FILES) service$
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ python-gammu\[[[:digit:]]+\]: Warning: No PIN code in .+ file$

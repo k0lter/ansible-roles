@@ -52,6 +52,7 @@
     - 'dovecot'
     - 'dropbear'
     - 'ferm'
+    - 'gammu'
     - 'git-daemon'
     - 'gogs'
     - 'influxd'
