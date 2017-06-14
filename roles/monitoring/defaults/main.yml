@@ -4,19 +4,6 @@
 
 with_mon: False
 
-with_munin: False
-with_munin_node: False
-
-munin_master_vhostname: localhost
-
-with_munin_http_auth: False
-
-munin_masters:
-  - 127.0.0.1/32
-munin_nodes:
-  - node: localhost
-    address: 127.0.0.1
-
 with_zabbix_agent: False
 zabbix_remote_server: 'zabbix.domain.tld'
 zabbix_plugins_config: Null
