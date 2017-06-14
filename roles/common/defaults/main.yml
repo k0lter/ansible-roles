@@ -15,6 +15,8 @@ timezone_city: 'Paris'
 hosts_fqdn: True
 hosts_static_lookup: Null
 
+ipv6_disabled: False
+
 debian_mirror: 'http://httpredir.debian.org/debian'
 
 apt_keys: Null

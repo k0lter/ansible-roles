@@ -98,9 +98,12 @@
 - name: 'Install kernel configuration (proc)'
   template: src=kernel/sysctl.d/{{ item }}.j2 dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   with_items:
+      - '05-ipv6.conf'
       - '10-increase-file-descriptors.conf'
   notify:
     - 'Apply kernel configuration (proc)'
+  tags:
+      - 'ipv6'
 
 - name: 'Create sysfs configuration directory - /etc/sysfs.d'
   file: path=/etc/sysfs.d state=directory owner=root group=root mode=0755
