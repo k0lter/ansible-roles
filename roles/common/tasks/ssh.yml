@@ -1,16 +1,36 @@
-- name: Install ssh packages
-  apt: pkg={{ item }} state=installed
+- name: "Install ssh packages"
+  apt:
+    pkg: '{{ item }}'
+    state: 'installed'
   with_items:
-    - openssh-server
-    - openssh-client
+    - 'openssh-server'
+    - 'openssh-client'
   when: with_ssh
 
-- name: Install sshd configuration
-  template: src=ssh/sshd_config.j2 dest=/etc/ssh/sshd_config owner=root group=root mode=0644
+- name: 'Install sshd configuration (Debian <= 8)'
+  template:
+    src: 'ssh/sshd_config.legacy.j2'
+    dest: '/etc/ssh/sshd_config'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   notify:
     - Restart ssh
-  when: with_ssh
+  when: with_ssh and ansible_lsb.major_release|int <= 8
 
-- name: Ensure ssh is running
-  service: name=ssh state=started
+- name: 'Install sshd configuration (Debian >= 9)'
+  template:
+    src: 'ssh/sshd_config.j2'
+    dest: '/etc/ssh/sshd_config'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  notify:
+    - Restart ssh
+  when: with_ssh and ansible_lsb.major_release|int >= 9
+
+- name: 'Ensure ssh is running'
+  service:
+    name: 'ssh'
+    state: 'started'
   when: with_ssh

@@ -59,6 +59,7 @@ postfix_external_smtp_password: 'mypass'
 postfix_external_sender_rewrite_regexp: '.*'
 
 with_ssh: True
+ssh_strengthened: True
 ssh_ports:
   - 22
 ssh_usedns: True
