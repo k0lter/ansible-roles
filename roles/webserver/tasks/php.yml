@@ -42,12 +42,27 @@
 - name: Create system checks directory /etc/php5/syscheck.d
   file: path=/etc/php5/syscheck.d owner=root group=root mode=0755 state=directory
 
-- name: Install phpinfo system check
-  template: src=php/phpinfo.php dest=/etc/php5/syscheck.d/index.php owner=root group=root mode=0644
+- name: 'Create system checks directory /etc/phpsyscheck'
+  file:
+    path: '/etc/phpsyscheck'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: 0755
 
-- name: Install PHP APC extension
-  apt: pkg=php-apc state=installed
-  when: with_php_apc
+- name: 'Install phpinfo system check'
+  template:
+    src: 'php/phpinfo.php'
+    dest: '/etc/phpsyscheck/index.php'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+
+- name: 'Install PHP APC extension (Debian <= 8)'
+  apt:
+    pkg: 'php-apc'
+    state: 'installed'
+  when: with_php_apc and ansible_lsb.major_release|int <= 8
 
 - name: Install php-apc system check
   template: src=php/apc.php dest=/etc/php5/syscheck.d/apc.php owner=root group=root mode=0644

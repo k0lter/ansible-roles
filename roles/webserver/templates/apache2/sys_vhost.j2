@@ -10,7 +10,7 @@
 {% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
     RedirectMatch permanent (.*) https://{{ phpsyscheck_vhostname }}$1
 {% else %}
-    DocumentRoot /etc/php5/syscheck.d
+    DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php
 
     <Location />
@@ -20,7 +20,7 @@
         Require valid-user
     </Location>
 
-    <Directory /etc/php5/syscheck.d>
+    <Directory /etc/phpsyscheck>
         Options None
         AllowOverride None
         Order allow,deny
@@ -39,7 +39,7 @@
 
     Include vhost_ssl_auto-{{ phpsyscheck_vhostname }}.conf
 
-    DocumentRoot /etc/php5/syscheck.d
+    DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php
 
 {% if http_auth_phpmyadmin %}
@@ -51,7 +51,7 @@
     </Location>
 {% endif %}
 
-    <Directory /etc/php5/syscheck.d>
+    <Directory /etc/phpsyscheck>
         Options None
         AllowOverride None
         Order allow,deny

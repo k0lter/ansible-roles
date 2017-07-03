@@ -23,7 +23,7 @@ server {
         return 301 https://{{ phpsyscheck_vhostname }}$request_uri;
     }
 {% else %}
-    root /etc/php5/syscheck.d;
+    root /etc/phpsyscheck;
     index index.php;
     try_files $uri $uri/ /index.php;
 
@@ -47,7 +47,7 @@ server {
     access_log  /var/log/nginx/sys.access.log main;
     error_log   /var/log/nginx/sys.error.log;
 
-    root /etc/php5/syscheck.d;
+    root /etc/phpsyscheck;
     index index.php;
     try_files $uri $uri/ /index.php;
 
