@@ -48,6 +48,7 @@
 - name: 'Install base packages'
   apt: pkg={{ item }} install_recommends=no state=installed
   with_items:
+    - 'apt-transport-https'
     - 'apticron'
     - 'locales-all'
     - 'locales'
