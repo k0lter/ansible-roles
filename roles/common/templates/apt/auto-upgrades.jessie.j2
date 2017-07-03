@@ -14,10 +14,10 @@ Unattended-Upgrade::Origins-Pattern {
     // Note that this will silently match a different release after
     // migration to the specified archive (e.g. testing becomes the
     // new stable).
-    "o=Debian,a=stable";
-    "o=Debian,a=stable-updates";
-//  "o=Debian,a=stable-proposed-updates";
-    "origin=Debian,archive=stable,label=Debian-Security";
+    "o=Debian,a=jessie";
+    "o=Debian,a=jessie-updates";
+//  "o=Debian,a=jessie-proposed-updates";
+    "origin=Debian,archive=jessie,label=Debian-Security";
 {% if auto_upgrade_additional_patterns %}
 {% for pattern in auto_upgrade_additional_patterns %}
     "{{ pattern }}";
