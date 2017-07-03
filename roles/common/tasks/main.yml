@@ -1,10 +1,11 @@
 - include: base.yml
   tags: [base]
+- include: dotfiles.yml
+  when: with_dotfiles
+  tags: [base]
 - include: ssl.yml
   tags: [ssl]
   when: ssl_certs or ssl_certs_auto
-- include: dotfiles.yml
-  when: with_dotfiles
 - include: dns.yml
   tags: [dns]
 - include: firewall.yml
