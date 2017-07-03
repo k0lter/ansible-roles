@@ -1,0 +1,12 @@
+{% if ansible_prolog -%}
+{% from 'templates/ansible/prolog.j2' import prolog with context %}
+{{ prolog() }}
+{% endif -%}
+uid = {{ rsyncd_uid }}
+gid = {{ rsyncd_gid }}
+use chroot = yes
+max connections = {{ rsyncd_max_connections }}
+log file = /var/log/rsyncd.log
+
+&include /etc/rsync.d
+
