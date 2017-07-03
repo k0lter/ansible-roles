@@ -6,8 +6,7 @@ with_apache2: False
 apache2_ssl_strengthened: False
 
 with_nginx: False
-# nginx_workers ~= $(getconf _NPROCESSORS_ONLN)
-nginx_workers: 2
+nginx_workers: 'auto'
 nginx_ssl_strengthened: False
 nginx_http_config: Null
 nginx_security_xframeoptions: True
@@ -15,6 +14,7 @@ nginx_security_xxssprotection: True
 nginx_security_xcontenttypeoptions: True
 
 with_modphp5: False
+with_modphp: False
 
 with_fpm: False
 fpm_pool_count: 1
@@ -27,6 +27,7 @@ fpm_min_spare_servers: 1
 fpm_max_spare_servers: 3
 
 with_php: False
+php_version: '7.0'
 with_php_mysql_legacy: False
 
 phpsyscheck_vhostname: 'sys.localhost'
@@ -66,4 +67,4 @@ http_auth_admin_password: Null
 http_auth_user_name: Null
 http_auth_user_password: Null
 
-# vim: ft=yaml
+# vim: ft=ansible

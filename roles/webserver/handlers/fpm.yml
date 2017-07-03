@@ -1,5 +1,9 @@
-- name: Reload php5-fpm
-  service: name=php5-fpm state=reloaded
+- name: 'Reload FPM for PHP 5'
+  service:
+    name: 'php5-fpm'
+    state: 'reloaded'
 
-- name: Restart php5-fpm
-  service: name=php5-fpm state=restarted
+- name: 'Reload FPM for PHP'
+  service:
+    name: 'php{{ php_version }}-fpm'
+    state: 'reloaded'

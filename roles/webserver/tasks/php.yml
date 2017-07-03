@@ -1,46 +1,113 @@
-- name: Install common PHP dependencies
-  apt: pkg={{ item }} state=installed
+- name: 'Install common PHP dependencies (Debian <= 8)'
+  apt:
+    pkg: '{{ item }}'
+    state: 'installed'
   with_items:
-    - php5-cli
-    - php5-curl
-    - php5-gd
-    - php5-intl
-    - php5-mcrypt
-    - php-mime-type
-    - php5-pgsql
-    - php5-sqlite
+    - 'php5-cli'
+    - 'php5-curl'
+    - 'php5-gd'
+    - 'php5-intl'
+    - 'php5-mcrypt'
+    - 'php-mime-type'
+    - 'php5-pgsql'
+    - 'php5-sqlite'
+  when: with_php and ansible_lsb.major_release|int <= 8
 
-- name: Create PHP log directory
-  file: path=/var/log/php state=directory owner=root group=root mode=0755
+- name: 'Install common PHP dependencies (Debian >= 9)'
+  apt:
+    pkg: '{{ item }}'
+    state: 'installed'
+  with_items:
+    - 'php{{ php_version }}-cli'
+    - 'php{{ php_version }}-curl'
+    - 'php{{ php_version }}-gd'
+    - 'php{{ php_version }}-intl'
+    - 'php{{ php_version }}-mcrypt'
+    - 'php{{ php_version }}-mysql'
+    - 'php{{ php_version }}-pgsql'
+    - 'php{{ php_version }}-sqlite3'
+    - 'php-mime-type'
+  when: with_php and ansible_lsb.major_release|int >= 9
+
+- name: 'Create PHP log directory'
+  file:
+    path: '/var/log/php'
+    state: directory
+    owner: 'root'
+    group: 'root'
+    mode: 0755
   when: with_fpm
 
-- name: Install PHP configuration for syslog
-  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+- name: 'Install PHP configuration for syslog'
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   with_items:
     - { src: 'rsyslog/php-errors.conf.j2', dest: '/etc/rsyslog.d/php-errors.conf' }
     - { src: 'logrotate/php-errors.j2', dest: '/etc/logrotate.d/php-errors' }
   notify:
-      - Reload rsyslog for php
+      - 'Reload rsyslog for php'
   when: with_fpm
 
-- name: Install local PHP configuration overrides for php5-cli (Debian >= 8)
-  template: src=php/php-config-cli.ini.j2 dest=/etc/php5/cli/conf.d/99-local-config.ini owner=root group=root mode=0644
-  when: with_php and ansible_lsb.major_release|int >= 8
+- name: 'Install local PHP configuration overrides for php5-cli (Debian 8)'
+  template:
+    src: 'php/php-config-cli.ini.j2'
+    dest: '/etc/php5/cli/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  when: with_php and ansible_lsb.major_release|int == 8
 
-- name: Install mod_php5 packages for apache2
-  apt: pkg=libapache2-mod-php5 state=installed
+- name: 'Install local PHP configuration overrides for php{{ php_version }}-cli (Debian >= 9)'
+  template:
+    src: 'php/php-config-cli.ini.j2'
+    dest: '/etc/php/{{php_version }}/cli/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  when: with_php and ansible_lsb.major_release|int >= 9
+
+- name: 'Install Apache2 module for php5'
+  apt:
+    pkg: 'libapache2-mod-php5'
+    state: 'installed'
   when: with_modphp5
 
-- name: Install local PHP configuration (Debian < 8)
-  template: src=php/php-config-web.ini.j2 dest=/etc/php5/conf.d/99-local-config.ini owner=root group=root mode=0644
+- name: 'Install Apache2 module for php{{ php_version }}'
+  apt:
+    pkg: 'libapache2-mod-php{{php_version}}'
+    state: 'installed'
+  when: with_modphp
+
+- name: 'Install local PHP configuration (Debian < 8)'
+  template:
+    src: 'php/php-config-web.ini.j2'
+    dest: '/etc/php5/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   when: with_modphp5 and ansible_lsb.major_release|int < 8
 
-- name: Install local PHP apache2 configuration (Debian >= 8)
-  template: src=php/php-config-web.ini.j2 dest=/etc/php5/apache2/conf.d/99-local-config.ini owner=root group=root mode=0644
-  when: with_modphp5 and ansible_lsb.major_release|int >= 8
+- name: 'Install local PHP configuration for Apache 2 (Debian 8)'
+  template:
+    src: 'php/php-config-web.ini.j2'
+    dest: '/etc/php5/apache2/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  when: with_modphp5 and ansible_lsb.major_release|int == 8
 
-- name: Create system checks directory /etc/php5/syscheck.d
-  file: path=/etc/php5/syscheck.d owner=root group=root mode=0755 state=directory
+- name: 'Install local PHP configuration for Apache 2 (Debian >= 9)'
+  template:
+    src: 'php/php-config-web.ini.j2'
+    dest: '/etc/php/{{ php_version }}/apache2/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  when: with_modphp5 and ansible_lsb.major_release|int >= 9
 
 - name: 'Create system checks directory /etc/phpsyscheck'
   file:
@@ -64,38 +131,63 @@
     state: 'installed'
   when: with_php_apc and ansible_lsb.major_release|int <= 8
 
-- name: Install php-apc system check
-  template: src=php/apc.php dest=/etc/php5/syscheck.d/apc.php owner=root group=root mode=0644
+- name: 'Install PHP APC extension (Debian >= 9)'
+  apt:
+    pkg: 'php-apcu'
+    state: 'installed'
+  when: with_php_apc and ansible_lsb.major_release|int >= 9
+
+- name: 'Install php-apc system check'
+  template:
+    src: 'php/apc.php'
+    dest: '/etc/phpsyscheck/apc.php'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   when: with_php_apc
 
-- name: Install MySQL extension for PHP (native driver)
-  apt: pkg=php5-mysqlnd state=installed
-  when: not with_php_mysql_legacy
+- name: 'Install MySQL extension for PHP - native driver (Debian 8)'
+  apt:
+    pkg: 'php5-mysqlnd'
+    state: 'installed'
+  when: not with_php_mysql_legacy and ansible_lsb.major_release|int == 8
 
-- name: Install MySQL extension for PHP (old driver)
-  apt: pkg=php5-mysql state=installed
+- name: 'Install MySQL extension for PHP (old driver)'
+  apt:
+    pkg: 'php5-mysql'
+    state: 'installed'
   when: with_php_mysql_legacy
 
-- name: Install PHPMyAdmin
-  apt: pkg=phpmyadmin state=installed
+- name: 'Install PHPMyAdmin'
+  apt:
+    pkg: 'phpmyadmin'
+    state: 'installed'
   when: with_phpmyadmin
 
-- name: Install PHPPgAdmin
-  apt: pkg=phppgadmin state=installed
+- name: 'Install PHPPgAdmin'
+  apt:
+    pkg: 'phppgadmin'
+    state: 'installed'
   when: with_phppgadmin
 
-- name: Install php5-fpm package
-  apt: pkg=php5-fpm state=installed
-  when: with_fpm
+- name: 'Install FPM for PHP 5 (Debian <= 8)'
+  apt:
+    pkg: 'php5-fpm'
+    state: 'installed'
+  when: with_fpm and ansible_lsb.major_release|int < 8
 
-- name: Install php5-fpm init script config file
-  template: src=fpm/default.j2 dest=/etc/default/php5-fpm owner=root group=root mode=0644
-  notify:
-      - Restart php5-fpm
-  when: with_fpm
+- name: 'Install FPM for PHP {{ php_version }} (Debian >= 9)'
+  apt:
+    pkg: 'php{{ php_version }}-fpm'
+    state: 'installed'
+  when: with_fpm and ansible_lsb.major_release|int >= 9
 
-- name: Configure php5-fpm
-  lineinfile: dest=/etc/php5/fpm/php-fpm.conf regexp="^{{item.key}}\s*=.*$" line="{{item.key}} = {{item.value}}" insertafter="^;{{item.key}}"
+- name: 'Configure FPM for PHP 5 (Debian <= 8)'
+  lineinfile:
+    dest: '/etc/php5/fpm/php-fpm.conf'
+    regexp: '^{{item.key}}\s*=.*$'
+    line: '{{item.key}} = {{item.value}}'
+    insertafter: '^;{{item.key}}'
   with_items:
     - { key: 'error_log', value: 'syslog' }
     - { key: 'log_level', value: 'warning' }
@@ -104,30 +196,96 @@
     - { key: 'rlimit_files', value: '262144' }
     - { key: 'events.mechanism', value: 'epoll' }
     - { key: 'include', value: '/etc/php5/fpm/pool.d/local-pool.cnf' }
-  when: with_fpm
+  when: with_fpm and ansible_lsb.major_release|int < 8
 
-- name: Install php5-fpm pools configuration file
-  template: src=fpm/php-fpm-pools.conf.j2 dest=/etc/php5/fpm/pool.d/local-pool.cnf owner=root group=root mode=0644
+- name: 'Configure FPM for PHP {{ php_version }} (Debian >= 9)'
+  lineinfile:
+    dest: '/etc/php/{{ php_version }}/fpm/php-fpm.conf'
+    regexp: '^{{item.key}}\s*=.*$'
+    line: '{{item.key}} = {{item.value}}'
+    insertafter: '^;{{item.key}}'
+  with_items:
+    - { key: 'error_log', value: 'syslog' }
+    - { key: 'log_level', value: 'warning' }
+    - { key: 'emergency_restart_threshold', value: '100' }
+    - { key: 'emergency_restart_interval', value: '5s' }
+    - { key: 'rlimit_files', value: '262144' }
+    - { key: 'events.mechanism', value: 'epoll' }
+    - { key: 'include', value: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf' }
+  when: with_fpm and ansible_lsb.major_release|int < 8
+
+- name: 'Install FPM pools configuration for PHP 5 (Debian <= 8)'
+  template:
+    src: 'fpm/php5-fpm-pools.conf.j2'
+    dest: '/etc/php5/fpm/pool.d/local-pool.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   notify:
-      - Restart php5-fpm
-  when: with_fpm
+      - 'Reload FPM for PHP 5'
+  when: with_fpm and ansible_lsb.major_release|int <= 8
 
-- name: Install local PHP configuration overrides for php5-fpm (Debian >= 8)
-  template: src=php/php-config-web.ini.j2 dest=/etc/php5/fpm/conf.d/99-local-config.ini owner=root group=root mode=0644
-  when: with_fpm and ansible_lsb.major_release|int >= 8
-
-- name: Install nginx config files for php5-fpm (fpm servers pool)
-  template: src=fpm/nginx/fpm-pool.conf.j2 dest=/etc/nginx/conf.d/fpm-pool.conf owner=root group=root mode=0644
+- name: 'Install FPM pools configuration for PHP {{ php_version }} (Debian > 9)'
+  template:
+    src: 'fpm/php-fpm-pools.conf.j2'
+    dest: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   notify:
-      - Reload nginx
+      - 'Reload FPM for PHP'
+  when: with_fpm and ansible_lsb.major_release|int >= 9
+
+- name: 'Install local PHP configuration overrides for php5-fpm (Debian 8)'
+  template:
+    src: 'php/php-config-web.ini.j2'
+    dest: '/etc/php5/fpm/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  when: with_fpm and ansible_lsb.major_release|int == 8
+
+- name: 'Install local PHP configuration overrides for php{{ php_version }}-fpm (Debian >= 9)'
+  template:
+    src: 'php/php-config-web.ini.j2'
+    dest: '/etc/php/{{ php_version }}/fpm/conf.d/99-local-config.ini'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  when: with_fpm and ansible_lsb.major_release|int >= 9
+
+- name: 'Install Nginx config files for PHP FPM (fpm servers pool)'
+  template:
+    src: 'fpm/nginx/fpm-pool.conf.j2'
+    dest: '/etc/nginx/conf.d/fpm-pool.conf'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  notify:
+      - 'Reload nginx'
   when: with_fpm and with_nginx
 
-- name: Install nginx config files for php5-fpm (fpm fastcgi config)
-  template: src=fpm/nginx/fastcgi_pass_fpm.j2 dest=/etc/nginx/fastcgi_pass_fpm owner=root group=root mode=0644
+- name: 'Install Nginx config files for PHP FPM (fpm fastcgi config)'
+  template:
+    src: 'fpm/nginx/fastcgi_pass_fpm.j2'
+    dest: '/etc/nginx/fastcgi_pass_fpm'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
   notify:
-      - Reload nginx
+      - 'Reload nginx'
   when: with_fpm and with_nginx
 
-- name: Ensure php5-fpm is running
-  service: name=php5-fpm state=started
-  when: with_fpm
+- name: 'Ensure FPM for PHP 5 is running (Debian <= 8)'
+  service:
+    name: 'php5-fpm'
+    state: 'started'
+  when: with_fpm and ansible_lsb.major_release|int <= 8
+
+- name: 'Ensure FPM for PHP {{ php_version }} is running (Debian >= 9)'
+  service:
+    name: 'php{{ php_version }}-fpm'
+    state: 'started'
+  when: with_fpm and ansible_lsb.major_release|int >= 9
+
+# vim: ft=ansible
