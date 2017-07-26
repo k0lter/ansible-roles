@@ -9,6 +9,11 @@
 # line of that file to be used as the name.  The Debian default
 # is /etc/mailname.
 
+{% if ansible_lsb.major_release|int >= 9 %}
+# Compatibility level
+compatibility_level = 3
+{% endif %}
+
 smtpd_banner = $myhostname ESMTP $mail_name
 biff = no
 
