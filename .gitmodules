@@ -1,3 +1,6 @@
 [submodule "3rdparty/blockinfile"]
 	path = 3rdparty/blockinfile
 	url = https://github.com/yaegashi/ansible-role-blockinfile.git
+[submodule "3rdparty/ansible-callback-condensed"]
+	path = 3rdparty/ansible-callback-condensed
+	url = https://git.openics.org/kolter/ansible-callback-condensed.git
