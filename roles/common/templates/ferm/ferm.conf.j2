@@ -7,7 +7,7 @@
 #
 
 # Detecting network interface assiociated with default route
-@def $NETDEV = `ip route list | sed -r -n 's/^default\s+via\s+.*\s+dev\s+([^\s]+)$/\1/p'`;
+@def $NETDEV = `ip route list | sed -r -n 's/^default\s+via\s+.*\s+dev\s+([a-z0-9]+).*$/\1/p'`;
 # Detecting list of bridge network interfaces
 @def $BRIDGES = `ip link show up | sed -r -n 's/^[0-9]:\s+((xen|)br[^:]+):\s+.*$/\1/p' | xargs`;
 
