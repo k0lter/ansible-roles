@@ -19,6 +19,7 @@
     mode: '0644'
   with_items:
     - 'jessie'
+    - 'stretch'
   when: with_ganeti
 
 - name: 'Enable ganeti instances templates for debootstrap'
@@ -31,6 +32,7 @@
     mode: '0644'
   with_items:
     - 'jessie'
+    - 'stretch'
   when: with_ganeti
 
 - name: 'Exclude DRBD devices from lvm devices while using ganeti'
