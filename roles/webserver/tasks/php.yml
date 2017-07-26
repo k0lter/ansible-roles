@@ -26,7 +26,6 @@
     - 'php{{ php_version }}-mysql'
     - 'php{{ php_version }}-pgsql'
     - 'php{{ php_version }}-sqlite3'
-    - 'php-mime-type'
   when: with_php and ansible_lsb.major_release|int >= 9
 
 - name: 'Create PHP log directory'
@@ -174,7 +173,7 @@
   apt:
     pkg: 'php5-fpm'
     state: 'installed'
-  when: with_fpm and ansible_lsb.major_release|int < 8
+  when: with_fpm and ansible_lsb.major_release|int <= 8
 
 - name: 'Install FPM for PHP {{ php_version }} (Debian >= 9)'
   apt:
@@ -196,7 +195,9 @@
     - { key: 'rlimit_files', value: '262144' }
     - { key: 'events.mechanism', value: 'epoll' }
     - { key: 'include', value: '/etc/php5/fpm/pool.d/local-pool.cnf' }
-  when: with_fpm and ansible_lsb.major_release|int < 8
+  notify:
+      - 'Reload FPM for PHP 5'
+  when: with_fpm and ansible_lsb.major_release|int <= 8
 
 - name: 'Configure FPM for PHP {{ php_version }} (Debian >= 9)'
   lineinfile:
@@ -212,7 +213,9 @@
     - { key: 'rlimit_files', value: '262144' }
     - { key: 'events.mechanism', value: 'epoll' }
     - { key: 'include', value: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf' }
-  when: with_fpm and ansible_lsb.major_release|int < 8
+  notify:
+      - 'Reload FPM for PHP'
+  when: with_fpm and ansible_lsb.major_release|int >= 9
 
 - name: 'Install FPM pools configuration for PHP 5 (Debian <= 8)'
   template:
