@@ -88,7 +88,7 @@
   when: ssl_certs_auto
 
 - name: 'List Lets Encrypt SSL certificates to be generated'
-  shell: egrep -v '^#' /etc/dehydrated/domains.txt | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem" || echo "${c}" ; done
+  shell: egrep -v '^#' /etc/dehydrated/domains.txt | cut -d ' ' -f 1 | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem" || echo "${c}" ; done
   register: ssl_certs_auto_missing
   ignore_errors: True
   changed_when: ssl_certs_auto_missing.stdout_lines != []
