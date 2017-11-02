@@ -5,6 +5,7 @@
     state: 'installed'
   with_items:
     - 'xen-linux-system-amd64'
+    - 'grub-xen-host'
     - 'bridge-utils'
     - 'debootstrap'
   when: with_xen
