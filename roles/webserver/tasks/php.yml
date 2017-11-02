@@ -73,12 +73,16 @@
   apt:
     pkg: 'libapache2-mod-php5'
     state: 'installed'
+  notify:
+      - 'Reload apache2'
   when: with_modphp5
 
 - name: 'Install Apache2 module for php{{ php_version }}'
   apt:
     pkg: 'libapache2-mod-php{{php_version}}'
     state: 'installed'
+  notify:
+      - 'Reload apache2'
   when: with_modphp
 
 - name: 'Install local PHP configuration (Debian < 8)'
@@ -88,6 +92,8 @@
     owner: 'root'
     group: 'root'
     mode: 0644
+  notify:
+      - 'Reload apache2'
   when: with_modphp5 and ansible_lsb.major_release|int < 8
 
 - name: 'Install local PHP configuration for Apache 2 (Debian 8)'
@@ -97,6 +103,8 @@
     owner: 'root'
     group: 'root'
     mode: 0644
+  notify:
+      - 'Reload apache2'
   when: with_modphp5 and ansible_lsb.major_release|int == 8
 
 - name: 'Install local PHP configuration for Apache 2 (Debian >= 9)'
@@ -106,7 +114,9 @@
     owner: 'root'
     group: 'root'
     mode: 0644
-  when: with_modphp5 and ansible_lsb.major_release|int >= 9
+  notify:
+      - 'Reload apache2'
+  when: with_modphp and ansible_lsb.major_release|int >= 9
 
 - name: 'Create system checks directory /etc/phpsyscheck'
   file:
