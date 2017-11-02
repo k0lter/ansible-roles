@@ -116,6 +116,15 @@ TraceEnable Off
 </IfModule>
 
 #
+# Prevent at least directory listing from everywhere
+#
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+
+#
 # Various protections
 #  - stuff that should not be accessible publicly
 #  - PHP files that should be invoked
