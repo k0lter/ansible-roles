@@ -69,6 +69,7 @@
   apt:
     pkg: 'dehydrated'
     state: 'installed'
+    default_release: '{{ ansible_lsb.codename }}-backports'
   when: ssl_certs_auto
 
 - name: 'Install Lets Encrypt domains configuration'
