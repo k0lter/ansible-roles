@@ -4,9 +4,6 @@
 - name: Reconfigure timezone
   raw: rm -f /etc/timezone ; dpkg-reconfigure --frontend noninteractive tzdata
 
-- name: Reload apt cache
-  command: apt-get update
-
 - name: Apply kernel configuration (proc)
   service: name=procps state=restarted
 

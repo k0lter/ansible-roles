@@ -8,8 +8,12 @@
 
 - name: 'Write /etc/apt/sources.list'
   template: src=apt/sources.{{ ansible_lsb.codename }}.list.j2 dest=/etc/apt/sources.list owner=root group=root mode=0644
-  notify:
-    - 'Reload apt cache'
+  register: apt_sources
+
+- name: 'Refresh apt cache'
+  apt:
+    update_cache: yes
+  when: apt_sources.changed
 
 - name: 'Remove deprecated apt options files'
   file:
