@@ -107,6 +107,6 @@
   when: ssl_certs_auto
 
 - name: 'Register and accept Lets Encrypt terms of service'
-  shell: if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then echo dehydrated --register --accept-terms ; fi
+  shell: if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then dehydrated --register --accept-terms ; fi
   changed_when: False
   when: ssl_certs_auto
