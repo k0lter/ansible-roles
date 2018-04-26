@@ -64,6 +64,7 @@
     - 'noip2'
     - 'ntp'
     - 'openvpn'
+    - 'opendkim'
     - 'php'
     - 'postfix'
     - 'pure-ftpd'

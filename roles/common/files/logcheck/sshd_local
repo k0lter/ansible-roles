@@ -11,3 +11,5 @@
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd: .+: ssh key successfully retrieved for uid '\w+'$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Postponed publickey for .+ from [-:\.[:alnum:]]+ port [[:digit:]]+ ssh2 \[preauth\]$
 ^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Received disconnect from [-:\.[:alnum:]]+: [[:digit:]]+: (Closed due to user request\.) \[preauth\]$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: error: Received disconnect from [-:\.[:alnum:]]+: [0-9]+: No more user authentication methods available\. \[preauth\]$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ sshd\[[[:digit:]]+\]: Connection closed by [-:\.[:alnum:]]+ port [0-9]+ \[preauth\]$
