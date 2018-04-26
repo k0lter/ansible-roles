@@ -40,6 +40,7 @@ with_ntp: True
 
 with_firewall: False
 firewall_debug: False
+firewall_interface: Null
 firewall_public:
   - 'ssh'
   - 'http'

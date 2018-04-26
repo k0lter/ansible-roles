@@ -7,7 +7,11 @@
 #
 
 # Detecting network interface assiociated with default route
+{% if firewall_interface is defined and firewall_interface %}
+@def $NETDEV = {{ firewall_interface }};
+{% else %}
 @def $NETDEV = `ip route list | sed -r -n 's/^default\s+via\s+.*\s+dev\s+([a-z0-9]+).*$/\1/p'`;
+{% endif %}
 # Detecting list of bridge network interfaces
 @def $BRIDGES = `ip link show up | sed -r -n 's/^[0-9]:\s+((xen|)br[^:]+):\s+.*$/\1/p' | xargs`;
 
