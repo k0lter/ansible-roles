@@ -40,7 +40,7 @@
     dest: '/etc/lvm/lvm.conf'
     marker: '    # ======= {mark} Exclude DRBD devices while using ganeti (managed by ansible) ======'
     content: '    filter = ["r|/dev/drbd[0-9]+|"]'
-    insertbefore: '^\s*# Exclude the cdrom drive'
+    insertafter: '^\s*devices\s+{'
   when: with_ganeti
 
 - name: 'Add options for kernel modules while using ganeti'
