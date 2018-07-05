@@ -7,8 +7,10 @@
 <VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{%if phpmyadmin_vhostport %}{{ phpmyadmin_vhostport }}{% else %}80{% endif %}>
     ServerName {{ phpmyadmin_vhostname }}
 
+    Include conf-available/letsencrypt.conf
+
 {% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
-    RedirectMatch permanent (.*) https://{{ phpmyadmin_vhostname }}$1
+    RedirectMatch 301 ^(?!/\.well-known/acme-challenge/).* https://{{ phpmyadmin_vhostname }}$0
 {% else %}
     DocumentRoot /usr/share/phpmyadmin
     DirectoryIndex index.php

@@ -7,8 +7,10 @@
 <VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{%if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}80{% endif %}>
     ServerName {{ phpsyscheck_vhostname }}
 
+    Include conf-available/letsencrypt.conf
+
 {% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
-    RedirectMatch permanent (.*) https://{{ phpsyscheck_vhostname }}$1
+    RedirectMatch 301 ^(?!/\.well-known/acme-challenge/).* https://{{ phpsyscheck_vhostname }}$0
 {% else %}
     DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php

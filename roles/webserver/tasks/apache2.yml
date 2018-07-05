@@ -68,15 +68,6 @@
     - 'Reload apache2'
   when: ssl_certs_auto
 
-- name: 'Install Lets Encrypt configuration for Apache2 (conf-enabled)'
-  file:
-    src: '/etc/apache2/conf-available/letsencrypt.conf'
-    path: '/etc/apache2/conf-enabled/letsencrypt.conf'
-    state: 'link'
-  notify:
-    - 'Reload apache2'
-  when: ssl_certs_auto
-
 - name: 'Create basic authentication file for admin (Apache2)'
   template:
     src: 'apache2/auth_admin.j2'
