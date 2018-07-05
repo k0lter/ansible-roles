@@ -66,13 +66,18 @@ mydestination = $myhostname {% if postfix_hostname is defined %}{{ postfix_hostn
 {% if smtp_relay_host is defined %}
 relayhost = {{ smtp_relay_host }}
 {% elif with_postfix_external_smtp %}
-relayhost = [{{ postfix_external_smtp_host }}]:{{ postfix_external_smtp_port }}
 smtp_sasl_auth_enable = yes
 smtp_sasl_security_options = noanonymous
 smtp_sasl_password_maps = hash:/etc/postfix/sasl/credentials
-smtpd_sasl_local_domain = {{ postfix_external_smtp_host_localdomain }}
 smtp_sasl_mechanism_filter = login plain
+smtp_sender_dependent_authentication = yes
+sender_dependent_relayhost_maps = hash:/etc/postfix/sasl/sender_relay
+{% if postfix_external_smtp_host_localdomain %}
+smtpd_sasl_local_domain = {{ postfix_external_smtp_host_localdomain }}
+{% endif %}
+{% if postfix_external_sender_rewrite %}
 sender_canonical_maps = regexp:/etc/postfix/sasl/sender_rewrite
+{% endif %}
 {% endif %}
 
 alias_maps = hash:/etc/aliases

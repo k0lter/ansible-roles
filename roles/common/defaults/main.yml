@@ -57,6 +57,8 @@ postfix_external_smtp_host: 'localhost'
 postfix_external_smtp_port: 587
 postfix_external_smtp_username: 'myuser'
 postfix_external_smtp_password: 'mypass'
+postfix_external_smtp_host_localdomain: Null
+postfix_external_sender_rewrite: False
 postfix_external_sender_rewrite_regexp: '.*'
 
 with_ssh: True

@@ -1,4 +1,4 @@
-- name: 'Install postfix packages'
+- name: 'Install Postfix packages'
   apt:
     pkg: '{{ item }}'
     install_recommends: 'no'
@@ -21,7 +21,7 @@
     - 'Regenerate aliases cache'
   when: with_mail_aliases
 
-- name: 'Install postfix main configuration'
+- name: 'Install Postfix main configuration'
   template:
     src: 'postfix/main.cf.j2'
     dest: '/etc/postfix/main.cf'
@@ -29,10 +29,10 @@
     group: 'root'
     mode: '0644'
   notify:
-    - 'Reload postfix'
+    - 'Reload Postfix'
   when: with_postfix
 
-- name: 'Update postfix master config for slowsmtp transport'
+- name: 'Update Postfix master config for slowsmtp transport'
   blockinfile:
     dest: '/etc/postfix/master.cf'
     marker: '# ======= {mark} slowsmtp transport (managed by ansible) ======'
@@ -41,10 +41,10 @@
             -o smtp_destination_concurrency_limit=3
             -o slowsmtp_destination_rate_delay=1
   notify:
-    - 'Reload postfix'
+    - 'Reload Postfix'
   when: with_postfix_slowsmtp
 
-- name: 'Install postfix slowsmtp transport map'
+- name: 'Install Postfix slowsmtp transport map'
   template:
     src: 'postfix/transport_slowsmtp.j2'
     dest: '/etc/postfix/transport_slowsmtp'
@@ -53,10 +53,22 @@
     mode: '0644'
   notify:
     - 'Rehash slowsmtp transport map'
-    - 'Reload postfix'
+    - 'Reload Postfix'
   when: with_postfix_slowsmtp
 
-- name: 'Install postfix sasl credentials map'
+- name: 'Install Postfix SASL sender relay map'
+  template:
+    src: 'postfix/sasl_sender_relay.j2'
+    dest: '/etc/postfix/sasl/sender_relay'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  notify:
+    - 'Rehash SASL sender relay map'
+    - 'Reload Postfix'
+  when: with_postfix_external_smtp
+
+- name: 'Install Postfix SASL credentials map'
   template:
     src: 'postfix/sasl_credentials.j2'
     dest: '/etc/postfix/sasl/credentials'
@@ -64,11 +76,11 @@
     group: 'root'
     mode: '0600'
   notify:
-    - 'Rehash sasl credentials map'
-    - 'Reload postfix'
+    - 'Rehash SASL credentials map'
+    - 'Reload Postfix'
   when: with_postfix_external_smtp
 
-- name: 'Install postfix sasl sender rewrite map'
+- name: 'Install Postfix SASL sender rewrite map'
   template:
     src: 'postfix/sasl_sender_rewrite.j2'
     dest: '/etc/postfix/sasl/sender_rewrite'
@@ -76,5 +88,5 @@
     group: 'root'
     mode: '0600'
   notify:
-    - 'Reload postfix'
-  when: with_postfix_external_smtp
+    - 'Reload Postfix'
+  when: with_postfix_external_smtp and postfix_external_sender_rewrite
