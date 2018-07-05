@@ -6,7 +6,7 @@
 # Protect hidden files and directories
 #
 
-location ~* (?:^|/)\. {
+location ~* (?:^|/)\.(?!well-known) {
     deny all;
 }
 
