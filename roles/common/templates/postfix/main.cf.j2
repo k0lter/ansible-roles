@@ -75,7 +75,7 @@ sender_dependent_relayhost_maps = hash:/etc/postfix/sasl/sender_relay
 {% if postfix_external_smtp_host_localdomain %}
 smtpd_sasl_local_domain = {{ postfix_external_smtp_host_localdomain }}
 {% endif %}
-{% if postfix_external_sender_rewrite %}
+{% if postfix_external_sender_rewrites %}
 sender_canonical_maps = regexp:/etc/postfix/sasl/sender_rewrite
 {% endif %}
 {% endif %}

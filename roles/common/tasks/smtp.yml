@@ -89,4 +89,4 @@
     mode: '0600'
   notify:
     - 'Reload Postfix'
-  when: with_postfix_external_smtp and postfix_external_sender_rewrite
+  when: with_postfix_external_smtp and postfix_external_sender_rewrites

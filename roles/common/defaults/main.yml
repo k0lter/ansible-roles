@@ -53,13 +53,10 @@ with_postfix: False
 with_postfix_slowsmtp: False
 with_mail_aliases: False
 with_postfix_external_smtp: False
-postfix_external_smtp_host: 'localhost'
-postfix_external_smtp_port: 587
-postfix_external_smtp_username: 'myuser'
-postfix_external_smtp_password: 'mypass'
 postfix_external_smtp_host_localdomain: Null
-postfix_external_sender_rewrite: False
-postfix_external_sender_rewrite_regexp: '.*'
+postfix_external_smtp_credentials: Null
+postfix_external_smtp_relays: Null
+postfix_external_sender_rewrites: Null
 
 with_ssh: True
 ssh_strengthened: True

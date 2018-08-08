@@ -2,4 +2,8 @@
 {% from 'templates/ansible/prolog.j2' import prolog with context %}
 {{ prolog() }}
 {% endif -%}
-/{{ postfix_external_sender_rewrite_regexp }}/    {{ postfix_external_smtp_username }}
+{% if postfix_external_sender_rewrites %}
+{% for rewrite in postfix_external_sender_rewrites %}
+{{ rewrite.regexp }} {{ rewrite.email }}
+{% endfor %}
+{% endif %}
