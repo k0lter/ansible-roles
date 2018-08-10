@@ -1,4 +1,4 @@
-- include: 'rsyncd.yml'
+- include_tasks: 'rsyncd.yml'
   tags: [rsync]
   when: with_rsyncd
 

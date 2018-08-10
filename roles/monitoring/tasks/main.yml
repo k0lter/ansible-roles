@@ -1,6 +1,6 @@
-- include: mon.yml
+- include_tasks: mon.yml
   tags: [monitoring,mon]
   when: with_mon
-- include: zabbix.yml
+- include_tasks: zabbix.yml
   tags: [monitoring,zabbix]
   when: with_zabbix_agent

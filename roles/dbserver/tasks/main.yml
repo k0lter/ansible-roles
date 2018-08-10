@@ -1,6 +1,6 @@
-- include: mysql.yml
+- include_tasks: mysql.yml
   tags: [sql,mysql]
   when: with_mysql or with_mariadb
-- include: postgresql.yml
+- include_tasks: postgresql.yml
   tags: [sql,postgresql]
   when: with_postgresql

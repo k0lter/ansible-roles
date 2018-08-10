@@ -1,7 +1,7 @@
 - name: 'Install auto upgrades package'
   apt:
     pkg: 'unattended-upgrades'
-    state: 'installed'
+    state: 'present'
   when: with_auto_upgrade
 
 - name: 'Reconfigure unattended-upgrades package'
@@ -29,7 +29,7 @@
 - name: 'Install logcheck packages'
   apt:
     pkg: '{{ item }}'
-    state: 'installed'
+    state: 'present'
   with_items:
     - 'logcheck'
     - 'logcheck-database'
@@ -96,7 +96,7 @@
 - name: 'Install rkhunter related packages'
   apt:
     pkg: '{{ item }}'
-    state: 'installed'
+    state: 'present'
   with_items:
     - 'lsof'
     - 'unhide'

@@ -2,7 +2,7 @@
   apt:
     pkg: '{{ item }}'
     install_recommends: 'no'
-    state: 'installed'
+    state: 'present'
   with_items:
     - 'opendkim'
 

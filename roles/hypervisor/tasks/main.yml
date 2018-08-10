@@ -1,4 +1,4 @@
-- include: 'xen.yml'
+- include_tasks: 'xen.yml'
   tags: [hypervisor,xen]
-- include: 'ganeti.yml'
+- include_tasks: 'ganeti.yml'
   tags: [hypervisor,ganeti]

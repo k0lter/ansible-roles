@@ -68,7 +68,7 @@
 - name: 'Install Lets Encrypt client'
   apt:
     pkg: 'dehydrated'
-    state: 'installed'
+    state: 'present'
     default_release: '{{ ansible_lsb.codename }}-backports'
   when: ssl_certs_auto
 

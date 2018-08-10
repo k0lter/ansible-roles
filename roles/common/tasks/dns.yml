@@ -5,7 +5,7 @@
   when: with_dnscache
 
 - name: Install unbound (dnscache) packages
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - unbound
   when: with_dnscache

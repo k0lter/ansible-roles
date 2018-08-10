@@ -1,7 +1,7 @@
 - name: 'Install firewall package (ferm)'
   apt:
     pkg: '{{ item }}'
-    state: 'installed'
+    state: 'present'
   with_items:
     - 'linux-image-{{ facter_architecture }}'
     - 'ferm'
