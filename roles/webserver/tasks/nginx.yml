@@ -111,6 +111,7 @@
     owner: 'root'
     group: 'www-data'
     mode: '0640'
+  when: http_auth_admin_password is defined and http_auth_admin_password
 
 - name: 'Install PHPMyAdmin virtual host for nginx (sites-available)'
   template:
