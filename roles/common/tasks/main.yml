@@ -11,8 +11,6 @@
 - include_tasks: firewall.yml
   tags: [firewall]
   when: with_firewall
-- include_tasks: ovh.yml
-  when: with_ovh
 - include_tasks: security.yml
   tags: [security]
 - include_tasks: smtp.yml
