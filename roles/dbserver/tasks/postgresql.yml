@@ -4,7 +4,7 @@
     - postgresql
     - postgresql-client
 
-- name: Install PostgreSQL backup related packages (autopostgresqlbackup)
+- name: Install AutoPostgreSQLBackup package
   apt: pkg=autopostgresqlbackup state=present
   when: with_postgresql_backup
 
