@@ -15,13 +15,6 @@
     update_cache: yes
   when: apt_sources.changed
 
-- name: 'Remove deprecated apt options files'
-  file:
-    path: '/etc/apt/apt.conf.d/{{ item }}'
-    state: 'absent'
-  with_items:
-    - '90local'
-
 - name: 'Write /etc/apt/apt.conf.d configuration files'
   template:
     src: 'apt/apt-{{ item }}.j2'
