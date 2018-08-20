@@ -57,8 +57,6 @@
     - 'locales-all'
     - 'locales'
     - 'lsb-release'
-    - 'toilet'
-    - 'toilet-fonts'
     - 'facter'
     - 'zsh'
     - 'git-core'
