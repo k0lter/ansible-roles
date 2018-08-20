@@ -1,6 +1,3 @@
-- name: Reconfigure locales
-  command: dpkg-reconfigure --frontend noninteractive locales
-
 - name: Reconfigure timezone
   raw: rm -f /etc/timezone ; dpkg-reconfigure --frontend noninteractive tzdata
 

@@ -87,14 +87,17 @@
   apt: pkg=ntp install_recommends=no state=present
   when: with_ntp
 
-- name: 'Configure default locale and timezone'
+- name: 'Configure default locale ({{ locale }})'
+  command: update-locale 'LANG={{ locale }}'
+  changed_when: False
+  when: locale is defined and locale != ''
+
+- name: 'Configure default timezone'
   debconf: name="{{item.name}}" question="{{item.question}}" value="{{item.value}}" vtype="{{item.vtype}}"
   with_items:
-    - { name: 'locales', question: 'locales/default_environment_locale', value: '{{ locale }}', vtype: 'select' }
     - { name: 'tzdata', question: 'tzdata/Areas', value: '{{ timezone_area }}', vtype: 'select' }
     - { name: 'tzdata', question: 'tzdata/Zones/{{ timezone_area }}', value: '{{ timezone_city }}', vtype: 'select' }
   notify:
-    - 'Reconfigure locales'
     - 'Reconfigure timezone'
 
 - name: 'Override logrotate configuration for rsyslog'
