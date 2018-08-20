@@ -12,6 +12,8 @@ locale: 'en_US.UTF-8'
 timezone_area: 'Europe'
 timezone_city: 'Paris'
 
+with_hosts: False
+with_hostsdeny: False
 hosts_fqdn: True
 hosts_static_lookup: Null
 

@@ -1,10 +1,10 @@
 - name: 'Install hosts file'
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
-  notify:
-    - 'Update motd'
+  when: with_hosts
 
 - name: 'Install hosts.deny file'
   template: src=hosts.deny.j2 dest=/etc/hosts.deny owner=root group=root mode=0644
+  when: with_hostsdeny
 
 - name: 'Write /etc/apt/sources.list'
   template: src=apt/sources.{{ ansible_lsb.codename }}.list.j2 dest=/etc/apt/sources.list owner=root group=root mode=0644
