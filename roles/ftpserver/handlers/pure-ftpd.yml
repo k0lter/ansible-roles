@@ -2,3 +2,5 @@
   service:
     name: 'pure-ftpd'
     state: 'restarted'
+
+# vim: ft=yaml.ansible

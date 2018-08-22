@@ -1,37 +1,65 @@
-- name: Install MySQL server related packages
-  apt: pkg={{ item }} state=present
+- name: 'Install MySQL server related packages'
+  apt:
+    pkg: '{{ item }}'
+    state: 'present'
   with_items:
-    - mysql-server
-    - mysql-client
+    - 'mysql-server'
+    - 'mysql-client'
   when: with_mysql
+  tags:
+    - 'mysql'
+    - 'sql'
 
-- name: Install MariaDB server related packages
-  apt: pkg={{ item }} state=present
+- name: 'Install MariaDB server related packages'
+  apt:
+    pkg: '{{ item }}'
+    state: 'present'
   with_items:
-    - mariadb-server
-    - mariadb-client
+    - 'mariadb-server'
+    - 'mariadb-client'
   when: with_mariadb
+  tags:
+    - 'mysql'
+    - 'sql'
 
-- name: Install MySQL or MariaDB backup related packages (automysqlbackup)
-  apt: pkg=automysqlbackup state=present
+- name: 'Install MySQL or MariaDB backup related packages (automysqlbackup)'
+  apt:
+    pkg: 'automysqlbackup'
+    state: 'present'
   when: with_mysql_backup
+  tags:
+    - 'mysql'
+    - 'sql'
 
-- name: Fix automysqlbackup to handle events properly
+- name: 'Fix automysqlbackup to handle events properly'
   lineinfile:
-    dest: /usr/sbin/automysqlbackup
-    regexp: "^OPT="
+    dest: '/usr/sbin/automysqlbackup'
+    regexp: '^OPT='
     line: 'OPT="--quote-names --events" # OPT string for use with mysqldump ( see man mysqldump )'
   when: with_mysql_backup
+  tags:
+    - 'mysql'
+    - 'sql'
 
-- name: Change MySQL or MariaDB root default password
+- name: 'Change MySQL or MariaDB root default password'
   raw: if ! echo "SELECT VERSION();" | mysql -u root --password='{{ mysql_root_password }}' >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('{{ mysql_root_password }}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
   changed_when: False
   when: mysql_root_password != ''
+  tags:
+    - 'mysql'
+    - 'sql'
 
-- name: Add MySQL or MariaDB admin account
+- name: 'Add MySQL or MariaDB admin account'
   raw: if ! echo "SELECT VERSION();" | mysql -u admin --password='{{ mysql_admin_password }}' >/dev/null 2>&1 ; then echo "CREATE USER 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}'; GRANT ALL PRIVILEGES ON * . * TO 'admin'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
   changed_when: False
   when: mysql_admin_password != ''
+  tags:
+    - 'mysql'
+    - 'sql'
 
-- name: Ensure MySQL or MariaDB is running
-  service: name=mysql state=started
+- name: 'Ensure MySQL or MariaDB is running'
+  service:
+    name: mysql
+    state: started
+
+# vim: ft=yaml.ansible

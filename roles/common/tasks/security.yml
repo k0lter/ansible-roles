@@ -3,6 +3,8 @@
     pkg: 'unattended-upgrades'
     state: 'present'
   when: with_auto_upgrade
+  tags:
+    - 'security'
 
 - name: 'Reconfigure unattended-upgrades package'
   debconf:
@@ -13,6 +15,8 @@
   notify:
     - 'Reconfigure unattended-upgrades'
   when: with_auto_upgrade
+  tags:
+    - 'security'
 
 - name: 'Update unattended-upgrades configuration'
   template:
@@ -25,6 +29,8 @@
     - 'apt/auto-upgrades.{{ ansible_lsb.codename }}.j2'
     - 'apt/auto-upgrades.j2'
   when: with_auto_upgrade
+  tags:
+    - 'security'
 
 - name: 'Install logcheck packages'
   apt:
@@ -34,6 +40,8 @@
     - 'logcheck'
     - 'logcheck-database'
   when: with_logcheck
+  tags:
+    - 'security'
 
 - name: 'Install local configuration files for logcheck'
   copy:
@@ -82,7 +90,8 @@
     - 'zabbix-agentd'
   when: with_logcheck
   tags:
-      - 'logcheck'
+    - 'security'
+    - 'logcheck'
 
 - name: 'Update logcheck cron job'
   template:
@@ -92,6 +101,9 @@
     group: 'root'
     mode: '0644'
   when: with_logcheck
+  tags:
+    - 'security'
+    - 'logcheck'
 
 - name: 'Install rkhunter related packages'
   apt:
@@ -102,6 +114,8 @@
     - 'unhide'
     - 'rkhunter'
   when: with_rkhunter
+  tags:
+    - 'security'
 
 - name: 'Reconfigure rkhunter package'
   debconf:
@@ -116,26 +130,49 @@
   notify:
     - 'Reconfigure rkhunter'
   when: with_rkhunter
+  tags:
+    - 'security'
 
-- name: Update rkhunter configuration
-  template: src=rkhunter/{{ ansible_lsb.codename }}.conf.j2 dest=/etc/rkhunter.conf owner=root group=root mode=0644
+- name: 'Update rkhunter configuration'
+  template:
+    src: 'rkhunter/{{ ansible_lsb.codename }}.conf.j2'
+    dest: '/etc/rkhunter.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   when: with_rkhunter
+  tags:
+    - 'security'
 
-- name: Update chkrootkit configuration
+- name: 'Update chkrootkit configuration'
   template: src=chkrootkit/chkrootkit.conf.j2 dest=/etc/chkrootkit.conf owner=root group=root mode=0644
   when: with_chkrootkit
+  tags:
+    - 'security'
 
-- name: Update fstab to hide pids from /proc
-  lineinfile: dest=/etc/fstab regexp='(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$' line='\1defaults,hidepid=2\3' backrefs=yes
+- name: 'Update fstab to hide pids from /proc'
+  lineinfile:
+    dest: '/etc/fstab'
+    regexp: '(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$'
+    line: '\1defaults,hidepid=2\3'
+    backrefs: 'yes'
   notify:
-      - Remount /proc
+      - 'Remount /proc'
   when: with_hideproc and hideproc_gid == ''
+  tags:
+    - 'security'
 
-- name: Update fstab to hide pids from /proc with group id (gid)
-  lineinfile: dest=/etc/fstab regexp='(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$' line='\1defaults,hidepid=2,gid={{hideproc_gid}}\3' backrefs=yes
+- name: 'Update fstab to hide pids from /proc with group id (gid)'
+  lineinfile:
+    dest: '/etc/fstab'
+    regexp: '(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$'
+    line: '\1defaults,hidepid=2,gid={{hideproc_gid}}\3'
+    backrefs: 'yes'
   notify:
-      - Remount /proc
+      - 'Remount /proc'
   when: with_hideproc and hideproc_gid != ''
+  tags:
+    - 'security'
 
 - name: 'Create Diffie-Helman parameters'
   command: 'openssl dhparam -2 -out /etc/ssl/private/dh{{ item }}.pem {{ item }}'
@@ -143,3 +180,7 @@
     creates: '/etc/ssl/private/dh{{ item }}.pem'
   with_items:
     - '2048'
+  tags:
+    - 'security'
+
+# vim: ft=yaml.ansible

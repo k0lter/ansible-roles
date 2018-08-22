@@ -1,5 +1,9 @@
-- name: Reload apache2
+- name: 'Reload apache2'
   shell: apache2ctl configtest && apache2ctl graceful
 
-- name: Restart apache2
-  service: name=apache2 state=restarted
+- name: 'Restart apache2'
+  service:
+    name: 'apache2'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

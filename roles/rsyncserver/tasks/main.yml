@@ -1,5 +1,6 @@
 - include_tasks: 'rsyncd.yml'
-  tags: [rsync]
   when: with_rsyncd
+  tags:
+    - 'rsyncd'
 
-# vim: ft=ansible
+# vim: ft=yaml.ansible

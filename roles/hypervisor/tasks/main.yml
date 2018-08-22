@@ -1,4 +1,12 @@
 - include_tasks: 'xen.yml'
-  tags: [hypervisor,xen]
+  when: with_xen
+  tags:
+    - 'hypervisor'
+    - 'xen'
 - include_tasks: 'ganeti.yml'
-  tags: [hypervisor,ganeti]
+  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
+
+# vim: ft=yaml.ansible

@@ -2,6 +2,9 @@
   apt:
     pkg: 'apache2'
     state: 'present'
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install logrotate configuration for Apache'
   template:
@@ -10,6 +13,9 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install SSL vhost configuration for Apache'
   template:
@@ -22,6 +28,9 @@
   notify:
     - 'Reload apache2'
   when: ssl_certs
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install SSL vhost configuration for Apache (Lets Encrypt certificates)'
   template:
@@ -34,6 +43,9 @@
   notify:
     - 'Reload apache2'
   when: ssl_certs_auto
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install Apache2 basic security configuration (Debian < 8)'
   template:
@@ -45,6 +57,9 @@
   notify:
     - 'Reload apache2'
   when: ansible_lsb.major_release|int < 8
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install Apache2 basic security configuration (Debian >= 8)'
   template:
@@ -56,6 +71,9 @@
   notify:
     - 'Reload apache2'
   when: ansible_lsb.major_release|int >= 8
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install Lets Encrypt configuration for Apache2 (conf-available)'
   template:
@@ -67,6 +85,9 @@
   notify:
     - 'Reload apache2'
   when: ssl_certs_auto
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Create basic authentication file for admin (Apache2)'
   template:
@@ -76,6 +97,9 @@
     group: 'www-data'
     mode: '0640'
   when: http_auth_admin_password is defined and http_auth_admin_password
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install PHPMyAdmin virtual host for Apache2 (sites-available)'
   template:
@@ -87,6 +111,9 @@
   notify:
     - 'Reload apache2'
   when: with_phpmyadmin
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install PHPMyAdmin virtual host for Apache2 (sites-enabled)'
   file:
@@ -96,6 +123,9 @@
   notify:
     - 'Reload apache2'
   when: with_phpmyadmin
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: "Install PHPPgAdmin virtual host for Apache2 (sites-available)"
   template:
@@ -107,6 +137,9 @@
   notify:
     - 'Reload apache2'
   when: with_phppgadmin
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install PHPPgAdmin virtual host for Apache2 (sites-enabled)'
   file:
@@ -116,6 +149,9 @@
   notify:
     - 'Reload apache2'
   when: with_phppgadmin
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install PHP system checks virtual host for Apache2 (sites-available)'
   template:
@@ -127,6 +163,9 @@
   notify:
     - 'Reload apache2'
   when: with_php
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Install PHP system checks virtual host for Apache2 (sites-enabled)'
   file:
@@ -136,8 +175,16 @@
   notify:
     - 'Reload apache2'
   when: with_php
+  tags:
+    - 'web'
+    - 'apache2'
 
 - name: 'Ensure apache2 is running'
   service:
     name: 'apache2'
     state: 'started'
+  tags:
+    - 'web'
+    - 'apache2'
+
+# vim: ft=yaml.ansible

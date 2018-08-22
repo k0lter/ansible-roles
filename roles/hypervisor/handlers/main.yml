@@ -1,2 +1,4 @@
 - include: 'xen.yml'
 - include: 'ganeti.yml'
+
+# vim: ft=yaml.ansible

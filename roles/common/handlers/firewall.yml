@@ -2,3 +2,5 @@
   service:
     name: 'ferm'
     state: 'reloaded'
+
+# vim: ft=yaml.ansible

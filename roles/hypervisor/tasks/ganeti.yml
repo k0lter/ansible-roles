@@ -8,7 +8,9 @@
     - 'ganeti-instance-debootstrap'
     - 'drbd-utils'
     - 'dnsutils'
-  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
 
 - name: 'Install ganeti instances templates for debootstrap'
   template:
@@ -20,7 +22,9 @@
   with_items:
     - 'jessie'
     - 'stretch'
-  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
 
 - name: 'Enable ganeti instances templates for debootstrap'
   lineinfile:
@@ -33,7 +37,9 @@
   with_items:
     - 'jessie'
     - 'stretch'
-  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
 
 - name: 'Exclude DRBD devices from lvm devices while using ganeti'
   blockinfile:
@@ -41,7 +47,9 @@
     marker: '    # ======= {mark} Exclude DRBD devices while using ganeti (managed by ansible) ======'
     content: '    filter = ["r|/dev/drbd[0-9]+|"]'
     insertafter: '^\s*devices\s+{'
-  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
 
 - name: 'Add options for kernel modules while using ganeti'
   template:
@@ -52,7 +60,9 @@
     mode: '0644'
   notify:
     - 'Rebuild initramfs'
-  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
 
 - name: 'Add kernel modules to load while using ganeti'
   template:
@@ -61,5 +71,8 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_ganeti
+  tags:
+    - 'hypervisor'
+    - 'ganeti'
 
+# vim: ft=yaml.ansible

@@ -1,13 +1,19 @@
-- name: Reconfigure timezone
+- name: 'Reconfigure timezone'
   raw: rm -f /etc/timezone ; dpkg-reconfigure --frontend noninteractive tzdata
 
-- name: Apply kernel configuration (proc)
-  service: name=procps state=restarted
+- name: 'Apply kernel configuration (proc)'
+  service:
+    name: 'procps'
+    state: 'restarted'
 
-- name: Apply kernel configuration (sys)
-  service: name=sysfsutils state=restarted
+- name: 'Apply kernel configuration (sys)'
+  service:
+    name: 'sysfsutils'
+    state: 'restarted'
 
-- name: Refresh sysfs configuration
+- name: 'Refresh sysfs configuration'
   shell: cat /etc/sysfs.d/* > /etc/sysfs.conf
   notify:
-    - Apply kernel configuration (sys)
+    - 'Apply kernel configuration (sys)'
+
+# vim: ft=yaml.ansible

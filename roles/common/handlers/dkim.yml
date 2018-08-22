@@ -2,3 +2,5 @@
   service:
     name: 'opendkim'
     state: 'restarted'
+
+# vim: ft=yaml.ansible

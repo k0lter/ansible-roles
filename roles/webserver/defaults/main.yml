@@ -67,4 +67,4 @@ http_auth_admin_password: Null
 http_auth_user_name: Null
 http_auth_user_password: Null
 
-# vim: ft=ansible
+# vim: ft=yaml.ansible

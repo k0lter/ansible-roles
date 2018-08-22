@@ -12,6 +12,9 @@
     - 'php5-pgsql'
     - 'php5-sqlite'
   when: with_php and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install common PHP dependencies (Debian >= 9)'
   apt:
@@ -27,6 +30,9 @@
     - 'php{{ php_version }}-pgsql'
     - 'php{{ php_version }}-sqlite3'
   when: with_php and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Create PHP log directory'
   file:
@@ -34,8 +40,11 @@
     state: directory
     owner: 'root'
     group: 'root'
-    mode: 0755
+    mode: '0755'
   when: with_fpm
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install PHP configuration for syslog'
   template:
@@ -43,13 +52,17 @@
     dest: '{{ item.dest }}'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   with_items:
     - { src: 'rsyslog/php-errors.conf.j2', dest: '/etc/rsyslog.d/php-errors.conf' }
     - { src: 'logrotate/php-errors.j2', dest: '/etc/logrotate.d/php-errors' }
   notify:
       - 'Reload rsyslog for php'
   when: with_fpm
+  tags:
+    - 'web'
+    - 'php'
+
 
 - name: 'Install local PHP configuration overrides for php5-cli (Debian 8)'
   template:
@@ -57,8 +70,11 @@
     dest: '/etc/php5/cli/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   when: with_php and ansible_lsb.major_release|int == 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install local PHP configuration overrides for php{{ php_version }}-cli (Debian >= 9)'
   template:
@@ -66,8 +82,11 @@
     dest: '/etc/php/{{php_version }}/cli/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   when: with_php and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install Apache2 module for php5'
   apt:
@@ -76,6 +95,9 @@
   notify:
       - 'Reload apache2'
   when: with_modphp5
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install Apache2 module for php{{ php_version }}'
   apt:
@@ -84,6 +106,9 @@
   notify:
       - 'Reload apache2'
   when: with_modphp
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install local PHP configuration (Debian < 8)'
   template:
@@ -91,10 +116,13 @@
     dest: '/etc/php5/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload apache2'
   when: with_modphp5 and ansible_lsb.major_release|int < 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install local PHP configuration for Apache 2 (Debian 8)'
   template:
@@ -102,10 +130,13 @@
     dest: '/etc/php5/apache2/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload apache2'
   when: with_modphp5 and ansible_lsb.major_release|int == 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install local PHP configuration for Apache 2 (Debian >= 9)'
   template:
@@ -113,10 +144,13 @@
     dest: '/etc/php/{{ php_version }}/apache2/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload apache2'
   when: with_modphp and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Create system checks directory /etc/phpsyscheck'
   file:
@@ -124,7 +158,10 @@
     state: 'directory'
     owner: 'root'
     group: 'root'
-    mode: 0755
+    mode: '0755'
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install phpinfo system check'
   template:
@@ -132,19 +169,25 @@
     dest: '/etc/phpsyscheck/index.php'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
 
 - name: 'Install PHP APC extension (Debian <= 8)'
   apt:
     pkg: 'php-apc'
     state: 'present'
   when: with_php_apc and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install PHP APC extension (Debian >= 9)'
   apt:
     pkg: 'php-apcu'
     state: 'present'
   when: with_php_apc and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install php-apc system check'
   template:
@@ -152,44 +195,65 @@
     dest: '/etc/phpsyscheck/apc.php'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   when: with_php_apc
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install MySQL extension for PHP - native driver (Debian 8)'
   apt:
     pkg: 'php5-mysqlnd'
     state: 'present'
   when: not with_php_mysql_legacy and ansible_lsb.major_release|int == 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install MySQL extension for PHP (old driver)'
   apt:
     pkg: 'php5-mysql'
     state: 'present'
   when: with_php_mysql_legacy
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install PHPMyAdmin'
   apt:
     pkg: 'phpmyadmin'
     state: 'present'
   when: with_phpmyadmin
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install PHPPgAdmin'
   apt:
     pkg: 'phppgadmin'
     state: 'present'
   when: with_phppgadmin
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install FPM for PHP 5 (Debian <= 8)'
   apt:
     pkg: 'php5-fpm'
     state: 'present'
   when: with_fpm and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install FPM for PHP {{ php_version }} (Debian >= 9)'
   apt:
     pkg: 'php{{ php_version }}-fpm'
     state: 'present'
   when: with_fpm and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Configure FPM for PHP 5 (Debian <= 8)'
   lineinfile:
@@ -208,6 +272,9 @@
   notify:
       - 'Reload FPM for PHP 5'
   when: with_fpm and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Configure FPM for PHP {{ php_version }} (Debian >= 9)'
   lineinfile:
@@ -226,6 +293,9 @@
   notify:
       - 'Reload FPM for PHP'
   when: with_fpm and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install FPM pools configuration for PHP 5 (Debian <= 8)'
   template:
@@ -233,10 +303,13 @@
     dest: '/etc/php5/fpm/pool.d/local-pool.cnf'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload FPM for PHP 5'
   when: with_fpm and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install FPM pools configuration for PHP {{ php_version }} (Debian > 9)'
   template:
@@ -244,10 +317,13 @@
     dest: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload FPM for PHP'
   when: with_fpm and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install local PHP configuration overrides for php5-fpm (Debian 8)'
   template:
@@ -255,8 +331,11 @@
     dest: '/etc/php5/fpm/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   when: with_fpm and ansible_lsb.major_release|int == 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install local PHP configuration overrides for php{{ php_version }}-fpm (Debian >= 9)'
   template:
@@ -264,8 +343,11 @@
     dest: '/etc/php/{{ php_version }}/fpm/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   when: with_fpm and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install Nginx config files for PHP FPM (fpm servers pool)'
   template:
@@ -273,10 +355,13 @@
     dest: '/etc/nginx/conf.d/fpm-pool.conf'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload nginx'
   when: with_fpm and with_nginx
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install Nginx config files for PHP FPM (fpm fastcgi config)'
   template:
@@ -284,21 +369,30 @@
     dest: '/etc/nginx/fastcgi_pass_fpm'
     owner: 'root'
     group: 'root'
-    mode: 0644
+    mode: '0644'
   notify:
       - 'Reload nginx'
   when: with_fpm and with_nginx
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Ensure FPM for PHP 5 is running (Debian <= 8)'
   service:
     name: 'php5-fpm'
     state: 'started'
   when: with_fpm and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Ensure FPM for PHP {{ php_version }} is running (Debian >= 9)'
   service:
     name: 'php{{ php_version }}-fpm'
     state: 'started'
   when: with_fpm and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
 
-# vim: ft=ansible
+# vim: ft=yaml.ansible

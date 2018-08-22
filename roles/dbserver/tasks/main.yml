@@ -1,6 +1,12 @@
 - include_tasks: mysql.yml
-  tags: [sql,mysql]
   when: with_mysql or with_mariadb
+  tags:
+    - 'mysql'
+    - 'sql'
 - include_tasks: postgresql.yml
-  tags: [sql,postgresql]
   when: with_postgresql
+  tags:
+    - 'postgresql'
+    - 'sql'
+
+# vim: ft=yaml.ansible

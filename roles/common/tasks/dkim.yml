@@ -5,6 +5,8 @@
     state: 'present'
   with_items:
     - 'opendkim'
+  tags:
+    - 'dkim'
 
 - name: 'Install opendkim main configuration'
   template:
@@ -15,6 +17,8 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
+  tags:
+    - 'dkim'
 
 - name: 'Create opendkim config directory'
   file:
@@ -23,6 +27,8 @@
     owner: 'root'
     group: 'opendkim'
     mode: '0750'
+  tags:
+    - 'dkim'
 
 - name: 'Install opendkim KeyTable'
   template:
@@ -33,6 +39,8 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
+  tags:
+    - 'dkim'
 
 - name: 'Install opendkim SigningTable'
   template:
@@ -43,6 +51,8 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
+  tags:
+    - 'dkim'
 
 - name: 'Install opendkim InternalHosts'
   template:
@@ -53,6 +63,8 @@
     mode: '0640'
   notify:
     - 'Restart opendkim'
+  tags:
+    - 'dkim'
 
 - name: 'Install DKIM private keys'
   copy:
@@ -63,3 +75,7 @@
     mode: '0640'
   with_items: '{{ dkim_domains }}'
   when: dkim_domains
+  tags:
+    - 'dkim'
+
+# vim: ft=yaml.ansible

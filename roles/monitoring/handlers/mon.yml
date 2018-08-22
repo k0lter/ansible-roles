@@ -1,2 +1,6 @@
-- name: Restart mon
-  service: name=mon state=restarted
+- name: 'Restart mon'
+  service:
+    name: 'mon'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

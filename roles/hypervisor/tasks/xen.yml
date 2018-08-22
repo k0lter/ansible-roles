@@ -8,7 +8,9 @@
     - 'grub-xen-host'
     - 'bridge-utils'
     - 'debootstrap'
-  when: with_xen
+  tags:
+    - 'hypervisor'
+    - 'xen'
 
 - name: 'Add GRUB options for Xen'
   lineinfile:
@@ -18,13 +20,14 @@
     line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M dom0_max_vcpus=1 dom0_vcpus_pin {{ xen_grub_opts }}"'
   notify:
     - 'Update GRUB'
-  when: with_xen
+  tags:
+    - 'hypervisor'
+    - 'xen'
 
 - name: 'Set Xen hypervisor to boot first'
   command: 'dpkg-divert --divert /etc/grub.d/09_linux_xen --rename /etc/grub.d/20_linux_xen creates=/etc/grub.d/09_linux_xen'
   notify:
     - 'Update GRUB'
-  when: with_xen
 
 - name: 'Configure Xend'
   template: 
@@ -33,7 +36,9 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_xen
+  tags:
+    - 'hypervisor'
+    - 'xen'
 
 - name: 'Configure Xendomains init script (disable save and restore)'
   lineinfile:
@@ -43,4 +48,8 @@
   with_items:
     - { regexp: '^#?XENDOMAINS_RESTORE=', line: 'XENDOMAINS_RESTORE=false' }
     - { regexp: '^#?XENDOMAINS_SAVE=', line: 'XENDOMAINS_SAVE=' }
-  when: with_xen
+  tags:
+    - 'hypervisor'
+    - 'xen'
+
+# vim: ft=yaml.ansible

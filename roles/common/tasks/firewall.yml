@@ -5,6 +5,8 @@
   with_items:
     - 'linux-image-{{ facter_architecture }}'
     - 'ferm'
+  tags:
+    - 'firewall'
 
 - name: 'Install firewall configuration (ferm.conf)'
   template:
@@ -15,3 +17,7 @@
     mode: '0644'
   notify:
     - 'Apply firewall rules (ferm)'
+  tags:
+    - 'firewall'
+
+# vim: ft=yaml.ansible

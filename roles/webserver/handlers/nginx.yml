@@ -1,5 +1,9 @@
-- name: Reload nginx
+- name: 'Reload nginx'
   shell: nginx -t && nginx -s reload
 
-- name: Restart nginx
-  service: name=nginx state=restarted
+- name: 'Restart nginx'
+  service:
+    name: 'nginx'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

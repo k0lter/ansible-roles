@@ -1,2 +1,4 @@
 - name: 'Update GRUB'
   command: update-grub
+
+# vim: ft=yaml.ansible

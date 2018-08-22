@@ -1,5 +1,5 @@
 #
-# Default variables
+# Default variables for hypervisors
 #
 
 with_xen: False
@@ -9,4 +9,4 @@ xen_grub_opts: ''
 
 with_ganeti: False
 
-# vim: ft=yaml
+# vim: ft=yaml.ansible

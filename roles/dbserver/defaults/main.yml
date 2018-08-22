@@ -1,5 +1,5 @@
 #
-# Default variables for webservers
+# Default variables for dbservers
 #
 
 with_mysql: False
@@ -11,4 +11,4 @@ mysql_admin_password: ''
 with_postgresql: False
 with_postgresql_backup: True
 
-# vim: ft=yaml
+# vim: ft=yaml.ansible

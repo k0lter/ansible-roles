@@ -2,3 +2,5 @@
 - include: nginx.yml
 - include: fpm.yml
 - include: php.yml
+
+# vim: ft=yaml.ansible

@@ -8,4 +8,4 @@ with_zabbix_agent: False
 zabbix_remote_server: 'zabbix.domain.tld'
 zabbix_plugins_config: Null
 
-# vim: ft=yaml
+# vim: ft=yaml.ansible

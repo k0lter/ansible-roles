@@ -7,4 +7,4 @@ rsyncd_uid: backup
 rsyncd_gid: backup
 rsyncd_max_connections: 10
 
-# vim: ft=ansible
+# vim: ft=yaml.ansible

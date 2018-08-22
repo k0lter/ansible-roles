@@ -1,6 +1,12 @@
-- include_tasks: mon.yml
-  tags: [monitoring,mon]
-  when: with_mon
 - include_tasks: zabbix.yml
-  tags: [monitoring,zabbix]
   when: with_zabbix_agent
+  tags:
+    - 'monitoring'
+    - 'zabbix'
+- include_tasks: mon.yml
+  when: with_mon
+  tags:
+    - 'monitoring'
+    - 'mon'
+
+# vim: ft=yaml.ansible

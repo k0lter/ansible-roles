@@ -3,4 +3,4 @@
     name: 'rsync'
     state: 'restarted'
 
-# vim: ft=ansible
+# vim: ft=yaml.ansible

@@ -1,1 +1,3 @@
 - include: 'rsyncd.yml'
+
+# vim: ft=yaml.ansible

@@ -1,6 +1,11 @@
 - include_tasks: 'common.yml'
-  tags: [ftp]
   when: with_ftp
+  tags:
+    - 'ftp'
 - include_tasks: 'pure-ftpd.yml'
-  tags: [ftp,pure-ftpd]
   when: with_ftp
+  tags:
+    - 'ftp'
+    - 'pure-ftpd'
+
+# vim: ft=yaml.ansible

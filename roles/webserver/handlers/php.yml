@@ -1,2 +1,6 @@
-- name: Reload rsyslog for php
-  service: name=rsyslog state=restarted
+- name: 'Reload rsyslog for php'
+  service:
+    name: 'rsyslog'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

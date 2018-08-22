@@ -4,6 +4,9 @@
     state: 'present'
   with_items:
     - 'zabbix-agent'
+  tags:
+    - 'monitoring'
+    - 'zabbix'
 
 - name: 'Install Zabbix agent config file'
   template:
@@ -14,6 +17,9 @@
     mode: '0644'
   notify:
     - 'Restart zabbix agent'
+  tags:
+    - 'monitoring'
+    - 'zabbix'
 
 - name: 'Create zabbix plugins configuration directory'
   file:
@@ -23,6 +29,9 @@
     mode: '0755'
     state: 'directory'
   when: zabbix_plugins_config
+  tags:
+    - 'monitoring'
+    - 'zabbix'
 
 - name: 'Install zabbix plugins configuration (ssl, web availability)'
   template:
@@ -35,3 +44,8 @@
     - 'ssl-discovery'
     - 'web-availability-discovery'
   when: zabbix_plugins_config
+  tags:
+    - 'monitoring'
+    - 'zabbix'
+
+# vim: ft=yaml.ansible

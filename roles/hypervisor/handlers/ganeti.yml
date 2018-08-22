@@ -1,2 +1,4 @@
 - name: 'Rebuild initramfs'
   command: update-initramfs -u -k all
+
+# vim: ft=yaml.ansible

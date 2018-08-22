@@ -1,2 +1,6 @@
-- name: Restart ssh
-  service: name=ssh state=restarted
+- name: 'Restart ssh'
+  service:
+    name: 'ssh'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

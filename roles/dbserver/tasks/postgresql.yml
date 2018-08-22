@@ -1,12 +1,29 @@
-- name: Install PostgreSQL server related packages
-  apt: pkg={{ item }} state=present
+- name: 'Install PostgreSQL server related packages'
+  apt:
+    pkg: '{{ item }}'
+    state: 'present'
   with_items:
-    - postgresql
-    - postgresql-client
+    - 'postgresql'
+    - 'postgresql-client'
+  tags:
+    - 'postgresql'
+    - 'sql'
 
-- name: Install AutoPostgreSQLBackup package
-  apt: pkg=autopostgresqlbackup state=present
+- name: 'Install AutoPostgreSQLBackup package'
+  apt:
+    pkg: 'autopostgresqlbackup'
+    state: 'present'
   when: with_postgresql_backup
+  tags:
+    - 'postgresql'
+    - 'sql'
 
-- name: Ensure PostgreSQL server is running
-  service: name=postgresql state=started
+- name: 'Ensure PostgreSQL server is running'
+  service:
+    name: postgresql
+    state: started
+  tags:
+    - 'postgresql'
+    - 'sql'
+
+# vim: ft=yaml.ansible

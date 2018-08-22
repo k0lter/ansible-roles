@@ -1,12 +1,17 @@
 - include_tasks: apache2.yml
-  tags: [web,apache2]
   when: with_apache2
+  tags:
+    - 'web'
+    - 'apache2'
 - include_tasks: nginx.yml
-  tags: [web,nginx]
   when: with_nginx
+  tags:
+    - 'web'
+    - 'nginx'
 - include_tasks: php.yml
-  tags: [web,php]
   when: with_php
-- include_tasks: webstats.yml
-  tags: [web,webstats]
-  when: with_webstats
+  tags:
+    - 'web'
+    - 'php'
+
+# vim: ft=yaml.ansible

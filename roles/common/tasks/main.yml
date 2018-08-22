@@ -1,26 +1,40 @@
 - include_tasks: base.yml
-  tags: [base]
+  tags:
+    - 'base'
+    - 'ipv6'
 - include_tasks: dotfiles.yml
   when: with_dotfiles
-  tags: [base]
+  tags:
+    - 'base'
 - include_tasks: ssl.yml
-  tags: [ssl]
   when: ssl_certs or ssl_certs_auto
+  tags:
+    - 'ssl'
 - include_tasks: dns.yml
-  tags: [dns]
+  tags:
+    - 'dns'
 - include_tasks: firewall.yml
-  tags: [firewall]
   when: with_firewall
+  tags:
+    - 'firewall'
 - include_tasks: security.yml
-  tags: [security]
+  tags:
+    - 'security'
+    - 'logcheck'
 - include_tasks: smtp.yml
-  tags: [smtp]
   when: with_postfix or with_mail_aliases
+  tags:
+    - 'smtp'
 - include_tasks: dkim.yml
-  tags: [dkim]
   when: with_opendkim
+  tags:
+    - 'dkim'
 - include_tasks: ssh.yml
-  tags: [ssh]
+  tags:
+    - 'ssh'
 - include_tasks: smartd.yml
-  tags: [smartd]
   when: with_smartd
+  tags:
+    - 'smartd'
+
+# vim: ft=yaml.ansible

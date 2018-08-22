@@ -1,19 +1,42 @@
 - name: 'Install hosts file'
-  template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
+  template:
+    src: 'hosts.j2'
+    dest: '/etc/hosts'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   when: with_hosts
+  tags:
+    - 'base'
 
 - name: 'Install hosts.deny file'
-  template: src=hosts.deny.j2 dest=/etc/hosts.deny owner=root group=root mode=0644
+  template:
+    src: 'hosts.deny.j2'
+    dest: '/etc/hosts.deny'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   when: with_hostsdeny
+  tags:
+    - 'base'
 
 - name: 'Write /etc/apt/sources.list'
-  template: src=apt/sources.{{ ansible_lsb.codename }}.list.j2 dest=/etc/apt/sources.list owner=root group=root mode=0644
+  template:
+    src: 'apt/sources.{{ ansible_lsb.codename }}.list.j2'
+    dest: '/etc/apt/sources.list'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   register: apt_sources
+  tags:
+    - 'base'
 
 - name: 'Refresh apt cache'
   apt:
     update_cache: yes
   when: apt_sources.changed
+  tags:
+    - 'base'
 
 - name: 'Write /etc/apt/apt.conf.d configuration files'
   template:
@@ -26,6 +49,8 @@
     - 'nopdiffs'
     - 'norecommends'
     - 'progressbar'
+  tags:
+    - 'base'
 
 - name: 'Install apt key for custom Debian repositories'
   apt_key:
@@ -34,6 +59,8 @@
     state: 'present'
   with_items: '{{ apt_keys }}'
   when: apt_keys
+  tags:
+    - 'base'
 
 - name: 'Add apt sources for custom Debian repositories'
   apt_repository:
@@ -41,9 +68,14 @@
     state: 'present'
   with_items: '{{ apt_repositories }}'
   when: apt_repositories
+  tags:
+    - 'base'
 
 - name: 'Install base packages'
-  apt: pkg={{ item }} install_recommends=no state=present
+  apt:
+    pkg: '{{ item }}'
+    install_recommends: 'no'
+    state: 'present'
   with_items:
     - 'apt-transport-https'
     - 'apticron'
@@ -68,74 +100,154 @@
     - 'etckeeper'
     - 'sharutils'
     - 'ncdu'
+  tags:
+    - 'base'
 
 - name: 'Install additional packages'
-  apt: pkg={{ item }} install_recommends=no state=present
+  apt:
+    pkg: '{{ item }}'
+    install_recommends: 'no'
+    state: 'present'
   with_items: '{{ apt_additional_packages }}'
   when: apt_additional_packages
+  tags:
+    - 'base'
 
 - name: 'Install ntp daemon'
-  apt: pkg=ntp install_recommends=no state=present
+  apt:
+    pkg: 'ntp'
+    install_recommends: 'no'
+    state: 'present'
   when: with_ntp
+  tags:
+    - 'base'
 
 - name: 'Configure default locale ({{ locale }})'
   command: update-locale 'LANG={{ locale }}'
   changed_when: False
   when: locale is defined and locale != ''
+  tags:
+    - 'base'
 
 - name: 'Configure default timezone'
-  debconf: name="{{item.name}}" question="{{item.question}}" value="{{item.value}}" vtype="{{item.vtype}}"
+  debconf:
+    name: '{{ item.name }}'
+    question: '{{ item.question }}'
+    value: '{{ item.value }}'
+    vtype: '{{ item.vtype }}'
   with_items:
     - { name: 'tzdata', question: 'tzdata/Areas', value: '{{ timezone_area }}', vtype: 'select' }
     - { name: 'tzdata', question: 'tzdata/Zones/{{ timezone_area }}', value: '{{ timezone_city }}', vtype: 'select' }
   notify:
     - 'Reconfigure timezone'
+  tags:
+    - 'base'
 
 - name: 'Override logrotate configuration for rsyslog'
-  template: src=logrotate/rsyslog.j2 dest=/etc/logrotate.d/rsyslog owner=root group=root mode=0644
+  template:
+    src: 'logrotate/rsyslog.j2'
+    dest: '/etc/logrotate.d/rsyslog'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  tags:
+    - 'base'
 
 - name: 'Install kernel configuration (proc)'
-  template: src=kernel/sysctl.d/{{ item }}.j2 dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  template:
+    src: 'kernel/sysctl.d/{{ item }}.j2'
+    dest: '/etc/sysctl.d/{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   with_items:
-      - '05-ipv6.conf'
-      - '10-increase-file-descriptors.conf'
+    - '05-ipv6.conf'
+    - '10-increase-file-descriptors.conf'
   notify:
     - 'Apply kernel configuration (proc)'
   tags:
-      - 'ipv6'
+    - 'base'
+    - 'ipv6'
 
 - name: 'Create sysfs configuration directory - /etc/sysfs.d'
-  file: path=/etc/sysfs.d state=directory owner=root group=root mode=0755
+  file:
+    path: '/etc/sysfs.d'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  tags:
+    - 'base'
 
 - name: 'Install kernel configuration (sys)'
-  template: src=kernel/sysfs.d/{{ item }}.j2 dest=/etc/sysfs.d/{{ item }} owner=root group=root mode=0644
+  template:
+    src: 'kernel/sysfs.d/{{ item }}.j2'
+    dest: '/etc/sysfs.d/{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   with_items:
-      - '00-sysfs-prolog.conf'
+    - '00-sysfs-prolog.conf'
   notify:
     - 'Refresh sysfs configuration'
+  tags:
+    - 'base'
 
 - name: 'Install kernel configuration (sys) for disks'
-  template: src=kernel/sysfs.d/{{ item }}.j2 dest=/etc/sysfs.d/{{ item }} owner=root group=root mode=0644
+  template:
+    src: 'kernel/sysfs.d/{{ item }}.j2'
+    dest: '/etc/sysfs.d/{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   with_items:
-      - '10-disks.conf'
+    - '10-disks.conf'
   notify:
     - 'Refresh sysfs configuration'
+  tags:
+    - 'base'
 
 - name: 'Install sudo configuration'
-  template: src=sudo/local-admin.j2 dest=/etc/sudoers.d/local-admin owner=root group=root mode=0440
+  template:
+    src: 'sudo/local-admin.j2'
+    dest: '/etc/sudoers.d/local-admin'
+    owner: 'root'
+    group: 'root'
+    mode: '0440'
+  tags:
+    - 'base'
 
 - name: 'Install unprivileged user'
-  user: name="{{item.user}}" comment="{{item.fullname}}" groups=adm,operator,sudo append=yes shell=/bin/zsh state=present
+  user:
+    name: '{{ item.user }}'
+    comment: '{{ item.fullname }}'
+    groups: 'adm,operator,sudo'
+    append: 'yes'
+    shell: '/bin/zsh'
+    state: 'present'
   with_items: '{{ admins }}'
   when: admins
+  tags:
+    - 'base'
 
 - name: 'Install SSH key for unprivileged user'
-  authorized_key: user="{{item.user}}" key="{{lookup('file', 'data/users/' + item.user + '/sshkey.pub')}}" state=present
+  authorized_key:
+    user: '{{ item.user }}'
+    key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
+    state: 'present'
   with_items: '{{ admins }}'
   when: admins
+  tags:
+    - 'base'
 
 - name: 'Install SSH key for root'
-  authorized_key: user=root key="{{lookup('file', 'data/users/' + item.user + '/sshkey.pub')}}" state=present
+  authorized_key:
+    user: 'root'
+    key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
+    state: 'present'
   with_items: '{{ admins }}'
   when: admins
+  tags:
+    - 'base'
 
+# vim: ft=yaml.ansible

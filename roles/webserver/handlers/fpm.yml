@@ -7,3 +7,5 @@
   service:
     name: 'php{{ php_version }}-fpm'
     state: 'reloaded'
+
+# vim: ft=yaml.ansible

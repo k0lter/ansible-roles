@@ -7,6 +7,8 @@
     mode: '0755'
   with_items: '{{ ssl_certs }}'
   when: ssl_certs
+  tags:
+    - 'ssl'
 
 - name: 'Install ssl certificates (certificate)'
   copy:
@@ -18,6 +20,8 @@
   register: ssl_cert_result
   with_items: '{{ ssl_certs }}'
   when: ssl_certs
+  tags:
+    - 'ssl'
 
 - name: 'Install ssl certificates (private key)'
   copy:
@@ -29,6 +33,8 @@
   register: ssl_key_result
   with_items: '{{ ssl_certs }}'
   when: ssl_certs
+  tags:
+    - 'ssl'
 
 - name: 'Install ssl certificates (chain)'
   copy:
@@ -40,6 +46,8 @@
   register: ssl_chain_result
   with_items: '{{ ssl_certs }}'
   when: ssl_certs
+  tags:
+    - 'ssl'
 
 - name: 'Gathering info about ssl full chain (certificate + chain)'
   stat:
@@ -47,6 +55,8 @@
   with_items: '{{ ssl_certs }}'
   register: ssl_fullchain_stats
   when: ssl_certs
+  tags:
+    - 'ssl'
 
 - name: 'Gathering info about ssl bundle (key + fullchain)'
   stat:
@@ -54,16 +64,22 @@
   with_items: '{{ ssl_certs }}'
   register: ssl_bundle_stats
   when: ssl_certs
+  tags:
+    - 'ssl'
 
 - name: 'Create ssl certificates full chain (certificate + chain)'
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/fullchain.pem'
   with_items: '{{ ssl_fullchain_stats.results }}'
-  when: ssl_certs and (not item.stat.exists or ssl_cert_result|changed or ssl_chain_result|changed)
+  when: ssl_certs and (not item.stat.exists or ssl_cert_result is changed or ssl_chain_result is changed)
+  tags:
+    - 'ssl'
 
 - name: 'Create ssl certificates bundle (key + certificate + bundle)'
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/privkey.pem' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/bundle.pem'
   with_items: '{{ ssl_bundle_stats.results }}'
-  when: ssl_certs and (not item.stat.exists or ssl_key_result|changed or ssl_cert_result|changed or ssl_chain_result|changed)
+  when: ssl_certs and (not item.stat.exists or ssl_key_result is changed or ssl_cert_result is changed or ssl_chain_result is changed)
+  tags:
+    - 'ssl'
 
 - name: 'Install Lets Encrypt client'
   apt:
@@ -71,6 +87,8 @@
     state: 'present'
     default_release: '{{ ansible_lsb.codename }}-backports'
   when: ssl_certs_auto
+  tags:
+    - 'ssl'
 
 - name: 'Install Lets Encrypt domains configuration'
   template:
@@ -80,6 +98,8 @@
     group: 'root'
     mode: '0644'
   when: ssl_certs_auto
+  tags:
+    - 'ssl'
 
 - name: 'List Lets Encrypt SSL installed certificates'
   shell: find /var/lib/dehydrated/certs -iname privkey.pem | cut -d / -f6
@@ -87,6 +107,8 @@
   changed_when: False
   ignore_errors: True
   when: ssl_certs_auto
+  tags:
+    - 'ssl'
 
 - name: 'List Lets Encrypt SSL certificates to be generated'
   shell: egrep -v '^#' /etc/dehydrated/domains.txt | cut -d ' ' -f 1 | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem" || echo "${c}" ; done
@@ -96,6 +118,8 @@
   notify:
     - 'Generate Lets Encrypt SSL certificates'
   when: ssl_certs_auto
+  tags:
+    - 'ssl'
 
 - name: 'Install Lets Encrypt cron job'
   template:
@@ -105,8 +129,14 @@
     group: 'root'
     mode: '0644'
   when: ssl_certs_auto
+  tags:
+    - 'ssl'
 
 - name: 'Register and accept Lets Encrypt terms of service'
   shell: if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then dehydrated --register --accept-terms ; fi
   changed_when: False
   when: ssl_certs_auto
+  tags:
+    - 'ssl'
+
+# vim: ft=yaml.ansible

@@ -1,38 +1,88 @@
-- name: Install mon packages
-  apt: pkg=mon state=present
+- name: 'Install mon packages'
+  apt:
+    pkg: 'mon'
+    state: 'present'
+  tags:
+    - 'monitoring'
+    - 'mon'
 
-- name: Create need directory for mon configuration
-  file: path=/etc/mon/mon.d state=directory owner=root group=root mode=0755
+- name: 'Create need directory for mon configuration'
+  file:
+    path: '/etc/mon/mon.d'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  tags:
+    - 'monitoring'
+    - 'mon'
 
-- name: Install mon configuration
-  template: src=mon/{{ ansible_hostname }}.conf.j2 dest=/etc/mon/mon.cf owner=root group=root mode=0644
+- name: 'Install mon configuration'
+  template:
+    src: 'mon/{{ ansible_hostname }}.conf.j2'
+    dest: '/etc/mon/mon.cf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Restart mon
+    - 'Restart mon'
+  tags:
+    - 'monitoring'
+    - 'mon'
 
-- name: Install mon (default) configuration
-  template: src=mon/default.j2 dest=/etc/default/mon owner=root group=root mode=0644
+- name: 'Install mon (default) configuration'
+  template:
+    src: 'mon/default.j2'
+    dest: '/etc/default/mon'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
-    - Restart mon
+    - 'Restart mon'
+  tags:
+    - 'monitoring'
+    - 'mon'
 
-- name: Install custom mon plugins
-  copy: src=mon/{{ item }}.monitor dest=/etc/mon/mon.d/{{ item }}.monitor owner=root group=root mode=0755
+- name: 'Install custom mon plugins'
+  copy:
+    src: 'mon/{{ item }}.monitor'
+    dest: '/etc/mon/mon.d/{{ item }}.monitor'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
   with_items:
-    - https
-    - imaps
-    - dns
+    - 'https'
+    - 'imaps'
+    - 'dns'
   notify:
-    - Restart mon
+    - 'Restart mon'
+  tags:
+    - 'monitoring'
+    - 'mon'
 
-- name: Install mon plugins
-  file: src=/usr/lib/mon/mon.d/{{ item }}.monitor path=/etc/mon/mon.d/{{ item }}.monitor state=link
+- name: 'Install mon plugins'
+  file:
+    src: '/usr/lib/mon/mon.d/{{ item }}.monitor'
+    path: '/etc/mon/mon.d/{{ item }}.monitor'
+    state: 'link'
   with_items:
-    - fping
-    - http
-    - smtp
-    - imap
-    - tcp
+    - 'fping'
+    - 'http'
+    - 'smtp'
+    - 'imap'
+    - 'tcp'
   notify:
-    - Restart mon
+    - 'Restart mon'
+  tags:
+    - 'monitoring'
+    - 'mon'
 
-- name: Ensure mon is running
-  service: name=mon state=started
+- name: 'Ensure mon is running'
+  service:
+    name: 'mon'
+    state: 'started'
+  tags:
+    - 'monitoring'
+    - 'mon'
+
+# vim: ft=yaml.ansible

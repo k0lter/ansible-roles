@@ -6,3 +6,5 @@
 - include: ssh.yml
 - include: ssl.yml
 - include: smartd.yml
+
+# vim: ft=yaml.ansible

@@ -4,6 +4,8 @@
     state: 'present'
   with_items:
     - 'rsync'
+  tags:
+    - 'rsyncd'
 
 - name: 'Create Rsync daemon configuration directory'
   file:
@@ -12,6 +14,8 @@
     group: 'root'
     mode: 0755
     state: 'directory'
+  tags:
+    - 'rsyncd'
 
 - name: 'Install Rsync daemon configuration'
   template:
@@ -22,10 +26,14 @@
     mode: 0644
   notify:
     - 'Restart Rsync Daemon'
+  tags:
+    - 'rsyncd'
 
 - name: 'Ensure Rsync daemon is running'
   service:
     name: 'rsync'
     state: 'started'
+  tags:
+    - 'rsyncd'
 
-# vim: ft=ansible
+# vim: ft=yaml.ansible

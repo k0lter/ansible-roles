@@ -12,3 +12,5 @@
 
 - name: 'Rehash SASL sender relay map'
   command: 'postmap /etc/postfix/sasl/sender_relay'
+
+# vim: ft=yaml.ansible

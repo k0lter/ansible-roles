@@ -2,6 +2,9 @@
   apt:
     pkg: 'nginx'
     state: 'present'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install logrotate configuration for nginx'
   template:
@@ -10,6 +13,9 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install nginx default file configuration'
   template:
@@ -20,6 +26,9 @@
     mode: '0644'
   notify:
     - 'Restart nginx'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install custom mime types for nginx'
   template:
@@ -30,6 +39,9 @@
     mode: '0644'
   notify:
     - 'Restart nginx'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install nginx configuration'
   template:
@@ -40,6 +52,9 @@
     mode: '0644'
   notify:
     - 'Restart nginx'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install additional nginx configuration params (conf.d/)'
   template:
@@ -52,6 +67,9 @@
     - 'status'
   notify:
     - 'Reload nginx'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install additional nginx configuration params (vhost_*)'
   template:
@@ -68,6 +86,9 @@
     - 'security'
   notify:
     - 'Reload nginx'
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install SSL vhost configuration for Nginx'
   template:
@@ -80,6 +101,9 @@
   notify:
     - 'Reload nginx'
   when: ssl_certs
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install SSL vhost configuration for Nginx (Lets Encrypt certificates)'
   template:
@@ -92,6 +116,9 @@
   notify:
     - 'Reload nginx'
   when: ssl_certs_auto
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install Let Encrypt configuration for Nginx'
   template:
@@ -103,6 +130,9 @@
   notify:
     - 'Reload nginx'
   when: ssl_certs_auto
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Create basic authentication file for admin (Nginx)'
   template:
@@ -112,6 +142,9 @@
     group: 'www-data'
     mode: '0640'
   when: http_auth_admin_password is defined and http_auth_admin_password
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install PHPMyAdmin virtual host for nginx (sites-available)'
   template:
@@ -123,6 +156,9 @@
   notify:
     - 'Reload nginx'
   when: with_phpmyadmin
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install PHPMyAdmin virtual host for nginx (sites-enabled)'
   file:
@@ -132,6 +168,9 @@
   notify:
     - 'Reload nginx'
   when: with_phpmyadmin
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install PHPPgAdmin virtual host for nginx (sites-available)'
   template:
@@ -143,6 +182,9 @@
   notify:
     - 'Reload nginx'
   when: with_phppgadmin
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install PHPPgAdmin virtual host for nginx (sites-enabled)'
   file:
@@ -152,6 +194,9 @@
   notify:
     - 'Reload nginx'
   when: with_phppgadmin
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install PHP system checks virtual host for nginx (sites-available)'
   template:
@@ -163,6 +208,9 @@
   notify:
     - 'Reload nginx'
   when: with_php
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Install PHP system checks virtual host for nginx (sites-enabled)'
   file:
@@ -172,8 +220,16 @@
   notify:
     - 'Reload nginx'
   when: with_php
+  tags:
+    - 'web'
+    - 'nginx'
 
 - name: 'Ensure nginx is running'
   service:
     name: 'nginx'
     state: 'started'
+  tags:
+    - 'web'
+    - 'nginx'
+
+# vim: ft=yaml.ansible
