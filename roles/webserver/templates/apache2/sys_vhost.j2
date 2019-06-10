@@ -29,6 +29,10 @@
         Allow from all
     </Directory>
 
+{% if with_fpm %}
+    Include conf-available/fpm-pool.conf
+{% endif %}
+
     LogLevel warn
     CustomLog ${APACHE_LOG_DIR}/sys.access.log combined
     ErrorLog ${APACHE_LOG_DIR}/sys.error.log
@@ -38,6 +42,10 @@
 
 <VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{%if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}443{% endif %}>
     ServerName {{ phpsyscheck_vhostname }}
+
+    <IfModule http2_module>
+        Protocols h2 http/1.1
+    </IfModule>
 
     Include vhost_ssl_auto-{{ phpsyscheck_vhostname }}.conf
 
@@ -59,6 +67,16 @@
         Order allow,deny
         Allow from all
     </Directory>
+
+    <IfModule php7_module>
+        php_admin_value max_execution_time 240
+        php_admin_value upload_max_filesize 128M
+        php_admin_value post_max_size 128M
+    </IfModule>
+
+{% if with_fpm %}
+    Include conf-available/fpm-pool.conf
+{% endif %}
 
     LogLevel warn
     CustomLog ${APACHE_LOG_DIR}/sys.access.log combined

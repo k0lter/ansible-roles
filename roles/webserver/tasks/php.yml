@@ -25,11 +25,21 @@
     - 'php{{ php_version }}-curl'
     - 'php{{ php_version }}-gd'
     - 'php{{ php_version }}-intl'
-    - 'php{{ php_version }}-mcrypt'
     - 'php{{ php_version }}-mysql'
     - 'php{{ php_version }}-pgsql'
     - 'php{{ php_version }}-sqlite3'
   when: with_php and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install common PHP dependencies (Debian >= 9 and PHP < 7.2)'
+  apt:
+    pkg: '{{ item }}'
+    state: 'present'
+  with_items:
+    - 'php{{ php_version }}-mcrypt'
+  when: with_php and ansible_lsb.major_release|int >= 9 and php_version|float < 7.2
   tags:
     - 'web'
     - 'php'
@@ -106,6 +116,39 @@
   notify:
       - 'Reload apache2'
   when: with_modphp
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Configure Apache2 modules for php-fpm{{ php_version }}'
+  apache2_module:
+    name: '{{ item.name }}'
+    state: '{{ item.state }}'
+    ignore_configcheck: '{{ item.ignore_configcheck }}'
+  with_items:
+    - {name: 'mpm_prefork', state: 'absent', ignore_configcheck: 'yes'}
+    - {name: 'mpm_event', state: 'present', ignore_configcheck: 'yes'}
+    - {name: 'php{{ php_version }}', state: 'absent', ignore_configcheck: 'no'}
+    - {name: 'proxy_fcgi', state: 'present', ignore_configcheck: 'no'}
+  when: with_fpm and with_apache2
+  notify:
+      - 'Reload apache2'
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Configure Apache2 modules for modphp{{ php_version }}'
+  apache2_module:
+    name: '{{ item.name }}'
+    state: '{{ item.state }}'
+    ignore_configcheck: '{{ item.ignore_configcheck }}'
+  with_items:
+    - {name: 'mpm_event', state: 'absent', ignore_configcheck: 'yes'}
+    - {name: 'mpm_prefork', state: 'present', ignore_configcheck: 'yes'}
+    - {name: 'php{{ php_version }}', state: 'present', ignore_configcheck: 'no'}
+  when: with_modphp
+  notify:
+      - 'Reload apache2'
   tags:
     - 'web'
     - 'php'
@@ -345,6 +388,18 @@
     group: 'root'
     mode: '0644'
   when: with_fpm and ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install Apache2 config files for PHP FPM'
+  template:
+    src: 'fpm/apache2/fpm-pool.conf.j2'
+    dest: '/etc/apache2/conf-available/fpm-pool.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: with_fpm and with_apache2
   tags:
     - 'web'
     - 'php'
