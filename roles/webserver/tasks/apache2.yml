@@ -6,7 +6,31 @@
     - 'web'
     - 'apache2'
 
-- name: 'Install logrotate configuration for Apache'
+- name: 'Enable Apache2 default modules'
+  apache2_module:
+    name: '{{ item }}'
+    state: 'present'
+  with_items:
+    - 'ssl'
+    - 'rewrite'
+    - 'expires'
+    - 'headers'
+  tags:
+    - 'web'
+    - 'apache2'
+
+- name: 'Enable Apache2 default modules (Debian >= 9)'
+  apache2_module:
+    name: '{{ item }}'
+    state: 'present'
+  with_items:
+    - 'http2'
+  when: ansible_lsb.major_release|int >= 9
+  tags:
+    - 'web'
+    - 'apache2'
+
+- name: 'Install logrotate configuration for Apache2'
   template:
     src: 'logrotate/apache2.j2'
     dest: '/etc/logrotate.d/apache2'
@@ -17,7 +41,7 @@
     - 'web'
     - 'apache2'
 
-- name: 'Install SSL vhost configuration for Apache'
+- name: 'Install SSL vhost configuration for Apache2'
   template:
     src: 'apache2/vhost_ssl.j2'
     dest: '/etc/apache2/vhost_ssl-{{ item }}.conf'
@@ -32,7 +56,7 @@
     - 'web'
     - 'apache2'
 
-- name: 'Install SSL vhost configuration for Apache (Lets Encrypt certificates)'
+- name: 'Install SSL vhost configuration for Apache2 (Lets Encrypt certificates)'
   template:
     src: 'apache2/vhost_ssl_auto.j2'
     dest: '/etc/apache2/vhost_ssl_auto-{{ item.split(" ")[0] }}.conf'
