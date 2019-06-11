@@ -12,6 +12,7 @@ nginx_http_config: Null
 nginx_security_xframeoptions: True
 nginx_security_xxssprotection: True
 nginx_security_xcontenttypeoptions: True
+nginx_fpm_openbasedir_enforced: False
 
 with_modphp5: False
 with_modphp: False

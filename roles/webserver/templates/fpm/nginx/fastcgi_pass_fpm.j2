@@ -32,6 +32,9 @@ fastcgi_param   SERVER_PORT         $server_port;
 fastcgi_param   SERVER_NAME         $server_name;
 
 fastcgi_param   REDIRECT_STATUS     200;
+{% if nginx_fpm_openbasedir_enforced %}
+fastcgi_param   PHP_ADMIN_VALUE     "upload_tmp_dir=/tmp\nopen_basedir=$document_root:/tmp:/usr/share:/tmp:/dev/random:/dev/urandom";
+{% endif %}
 
 fastcgi_pass    fpm-backend;
 fastcgi_index   index.php;
