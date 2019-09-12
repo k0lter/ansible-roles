@@ -95,7 +95,7 @@
     mode: 0755
     state: 'directory'
   with_items: '{{ ftp_accounts }}'
-  when: ftp_accounts|length > 0
+  when: ftp_accounts|length > 0 and (item.create_home is not defined or (item.create_home is defined and item.create_home))
   tags:
     - 'ftp'
     - 'pure-ftpd'
