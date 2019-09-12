@@ -1,21 +1,19 @@
 - name: 'Remove bind9 (not a suitable dnscache) packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'bind9'
     state: 'absent'
     purge: 'yes'
-  with_items:
-    - 'bind9'
-  when: with_dnscache
+  when: with_dnscache|bool
   tags:
     - 'dns'
 
 - name: 'Install unbound (dnscache) packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'unbound'
     state: 'present'
-  with_items:
-    - 'unbound'
-  when: with_dnscache
+  when: with_dnscache|bool
   tags:
     - 'dns'
 
@@ -26,7 +24,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_dnscache or (nameservers is defined and nameservers)
+  when: with_dnscache|bool or (nameservers is defined and nameservers|length > 0)
   tags:
     - 'dns'
 

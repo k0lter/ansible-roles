@@ -1,11 +1,10 @@
 - name: "Install ssh packages"
   apt:
-    pkg: '{{ item }}'
+    pkg:
+     - 'openssh-server'
+     - 'openssh-client'
     state: 'present'
-  with_items:
-    - 'openssh-server'
-    - 'openssh-client'
-  when: with_ssh
+  when: with_ssh|bool
   tags:
     - 'ssh'
 
@@ -18,7 +17,7 @@
     mode: 0644
   notify:
     - Restart ssh
-  when: with_ssh and ansible_lsb.major_release|int <= 8
+  when: with_ssh|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'ssh'
 
@@ -31,7 +30,7 @@
     mode: 0644
   notify:
     - Restart ssh
-  when: with_ssh and ansible_lsb.major_release|int >= 9
+  when: with_ssh|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'ssh'
 
@@ -39,7 +38,7 @@
   service:
     name: 'ssh'
     state: 'started'
-  when: with_ssh
+  when: with_ssh|bool
   tags:
     - 'ssh'
 

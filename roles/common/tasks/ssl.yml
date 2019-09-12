@@ -6,46 +6,46 @@
     group: 'root'
     mode: '0755'
   with_items: '{{ ssl_certs }}'
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'ssl'
 
 - name: 'Install ssl certificates (certificate)'
   copy:
-    content: "{{lookup('file', 'data/ssl/' + item + '/' + item + '.crt')}}"
+    content: "{{ lookup('file', 'data/ssl/' + item + '/' + item + '.crt') }}"
     dest: '/etc/ssl/local/certs/{{ item }}/cert.pem'
     owner: 'root'
     group: 'root'
     mode: '0640'
   register: ssl_cert_result
   with_items: '{{ ssl_certs }}'
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'ssl'
 
 - name: 'Install ssl certificates (private key)'
   copy:
-    content: "{{lookup('file', 'data/ssl/' + item + '/' + item + '.key')}}"
+    content: "{{ lookup('file', 'data/ssl/' + item + '/' + item + '.key') }}"
     dest: '/etc/ssl/local/certs/{{ item }}/privkey.pem'
     owner: 'root'
     group: 'root'
     mode: '0640'
   register: ssl_key_result
   with_items: '{{ ssl_certs }}'
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'ssl'
 
 - name: 'Install ssl certificates (chain)'
   copy:
-    content: "{{lookup('file', 'data/ssl/' + item + '/bundle.crt')}}"
+    content: "{{ lookup('file', 'data/ssl/' + item + '/bundle.crt') }}"
     dest: '/etc/ssl/local/certs/{{ item }}/chain.pem'
     owner: 'root'
     group: 'root'
     mode: '0644'
   register: ssl_chain_result
   with_items: '{{ ssl_certs }}'
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'ssl'
 
@@ -54,7 +54,7 @@
     path: '/etc/ssl/local/certs/{{ item }}/fullchain.pem'
   with_items: '{{ ssl_certs }}'
   register: ssl_fullchain_stats
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'ssl'
 
@@ -63,21 +63,21 @@
     path: '/etc/ssl/local/certs/{{ item }}/bundle.pem'
   with_items: '{{ ssl_certs }}'
   register: ssl_bundle_stats
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'ssl'
 
 - name: 'Create ssl certificates full chain (certificate + chain)'
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/fullchain.pem'
   with_items: '{{ ssl_fullchain_stats.results }}'
-  when: ssl_certs and (not item.stat.exists or ssl_cert_result is changed or ssl_chain_result is changed)
+  when: ssl_certs|length > 0 and (not item.stat.exists or ssl_cert_result is changed or ssl_chain_result is changed)
   tags:
     - 'ssl'
 
 - name: 'Create ssl certificates bundle (key + certificate + bundle)'
   shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/privkey.pem' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/bundle.pem'
   with_items: '{{ ssl_bundle_stats.results }}'
-  when: ssl_certs and (not item.stat.exists or ssl_key_result is changed or ssl_cert_result is changed or ssl_chain_result is changed)
+  when: ssl_certs|length > 0 and (not item.stat.exists or ssl_key_result is changed or ssl_cert_result is changed or ssl_chain_result is changed)
   tags:
     - 'ssl'
 
@@ -86,7 +86,7 @@
     pkg: 'dehydrated'
     state: 'present'
     default_release: '{{ ansible_lsb.codename }}'
-  when: ssl_certs_auto and ansible_lsb.major_release|int != 9
+  when: ssl_certs_auto|length > 0 and ansible_lsb.major_release|int != 9
   tags:
     - 'ssl'
 
@@ -95,7 +95,7 @@
     pkg: 'dehydrated'
     state: 'present'
     default_release: '{{ ansible_lsb.codename }}-backports'
-  when: ssl_certs_auto and ansible_lsb.major_release|int == 9
+  when: ssl_certs_auto|length > 0 and ansible_lsb.major_release|int == 9
   tags:
     - 'ssl'
 
@@ -106,7 +106,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 
@@ -115,7 +115,7 @@
   register: ssl_certs_auto_installed
   changed_when: False
   ignore_errors: True
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 
@@ -126,7 +126,7 @@
   changed_when: ssl_certs_auto_missing.stdout_lines != []
   notify:
     - 'Generate Lets Encrypt SSL certificates'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 
@@ -137,14 +137,14 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 
 - name: 'Register and accept Lets Encrypt terms of service'
   shell: if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then dehydrated --register --accept-terms ; fi
   changed_when: False
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 

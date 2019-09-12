@@ -1,13 +1,12 @@
 - name: 'Install Ganeti related packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'ganeti'
+      - 'ganeti-instance-debootstrap'
+      - 'drbd-utils'
+      - 'dnsutils'
     install_recommends: 'no'
     state: 'present'
-  with_items:
-    - 'ganeti'
-    - 'ganeti-instance-debootstrap'
-    - 'drbd-utils'
-    - 'dnsutils'
   tags:
     - 'hypervisor'
     - 'ganeti'

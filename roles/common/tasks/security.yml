@@ -1,8 +1,9 @@
 - name: 'Install auto upgrades package'
   apt:
-    pkg: 'unattended-upgrades'
+    pkg:
+      - 'unattended-upgrades'
     state: 'present'
-  when: with_auto_upgrade
+  when: with_auto_upgrade|bool
   tags:
     - 'security'
 
@@ -14,7 +15,7 @@
     vtype: 'boolean'
   notify:
     - 'Reconfigure unattended-upgrades'
-  when: with_auto_upgrade
+  when: with_auto_upgrade|bool
   tags:
     - 'security'
 
@@ -28,18 +29,17 @@
   with_first_found:
     - 'apt/auto-upgrades.{{ ansible_lsb.codename }}.j2'
     - 'apt/auto-upgrades.j2'
-  when: with_auto_upgrade
+  when: with_auto_upgrade|bool
   tags:
     - 'security'
 
 - name: 'Install logcheck packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'logcheck'
+      - 'logcheck-database'
     state: 'present'
-  with_items:
-    - 'logcheck'
-    - 'logcheck-database'
-  when: with_logcheck
+  when: with_logcheck|bool
   tags:
     - 'security'
 
@@ -88,7 +88,7 @@
     - 'sympa'
     - 'systemd'
     - 'zabbix-agentd'
-  when: with_logcheck
+  when: with_logcheck|bool
   tags:
     - 'security'
     - 'logcheck'
@@ -100,36 +100,35 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_logcheck
+  when: with_logcheck|bool
   tags:
     - 'security'
     - 'logcheck'
 
 - name: 'Install rkhunter related packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'lsof'
+      - 'unhide'
+      - 'rkhunter'
     state: 'present'
-  with_items:
-    - 'lsof'
-    - 'unhide'
-    - 'rkhunter'
-  when: with_rkhunter
+  when: with_rkhunter|bool
   tags:
     - 'security'
 
 - name: 'Reconfigure rkhunter package'
   debconf:
-    name: '{{item.name}}'
-    question: '{{item.question}}'
-    value: '{{item.value}}'
-    vtype: '{{item.vtype}}'
+    name: '{{ item.name }}'
+    question: '{{ item.question }}'
+    value: '{{ item.value }}'
+    vtype: '{{ item.vtype }}'
   with_items:
     - { name: 'rkhunter', question: 'rkhunter/apt_autogen', value: 'true', vtype: 'boolean' }
     - { name: 'rkhunter', question: 'rkhunter/cron_daily_run', value: 'true', vtype: 'boolean' }
     - { name: 'rkhunter', question: 'rkhunter/cron_db_update', value: 'true', vtype: 'boolean' }
   notify:
     - 'Reconfigure rkhunter'
-  when: with_rkhunter
+  when: with_rkhunter|bool
   tags:
     - 'security'
 
@@ -140,13 +139,13 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_rkhunter
+  when: with_rkhunter|bool
   tags:
     - 'security'
 
 - name: 'Update chkrootkit configuration'
   template: src=chkrootkit/chkrootkit.conf.j2 dest=/etc/chkrootkit.conf owner=root group=root mode=0644
-  when: with_chkrootkit
+  when: with_chkrootkit|bool
   tags:
     - 'security'
 
@@ -158,7 +157,7 @@
     backrefs: 'yes'
   notify:
       - 'Remount /proc'
-  when: with_hideproc and hideproc_gid == ''
+  when: with_hideproc|bool and hideproc_gid|length == 0
   tags:
     - 'security'
 
@@ -166,11 +165,11 @@
   lineinfile:
     dest: '/etc/fstab'
     regexp: '(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$'
-    line: '\1defaults,hidepid=2,gid={{hideproc_gid}}\3'
+    line: '\1defaults,hidepid=2,gid={{ hideproc_gid }}\3'
     backrefs: 'yes'
   notify:
       - 'Remount /proc'
-  when: with_hideproc and hideproc_gid != ''
+  when: with_hideproc|bool and hideproc_gid|length > 0
   tags:
     - 'security'
 

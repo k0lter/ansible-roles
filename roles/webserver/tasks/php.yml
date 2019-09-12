@@ -1,45 +1,42 @@
 - name: 'Install common PHP dependencies (Debian <= 8)'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'php5-cli'
+      - 'php5-curl'
+      - 'php5-gd'
+      - 'php5-intl'
+      - 'php5-mcrypt'
+      - 'php-mime-type'
+      - 'php5-pgsql'
+      - 'php5-sqlite'
     state: 'present'
-  with_items:
-    - 'php5-cli'
-    - 'php5-curl'
-    - 'php5-gd'
-    - 'php5-intl'
-    - 'php5-mcrypt'
-    - 'php-mime-type'
-    - 'php5-pgsql'
-    - 'php5-sqlite'
-  when: with_php and ansible_lsb.major_release|int <= 8
+  when: with_php|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install common PHP dependencies (Debian >= 9)'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'php{{ php_version }}-cli'
+      - 'php{{ php_version }}-curl'
+      - 'php{{ php_version }}-gd'
+      - 'php{{ php_version }}-intl'
+      - 'php{{ php_version }}-mysql'
+      - 'php{{ php_version }}-pgsql'
+      - 'php{{ php_version }}-sqlite3'
     state: 'present'
-  with_items:
-    - 'php{{ php_version }}-cli'
-    - 'php{{ php_version }}-curl'
-    - 'php{{ php_version }}-gd'
-    - 'php{{ php_version }}-intl'
-    - 'php{{ php_version }}-mysql'
-    - 'php{{ php_version }}-pgsql'
-    - 'php{{ php_version }}-sqlite3'
-  when: with_php and ansible_lsb.major_release|int >= 9
+  when: with_php|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install common PHP dependencies (Debian >= 9 and PHP < 7.2)'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'php{{ php_version }}-mcrypt'
     state: 'present'
-  with_items:
-    - 'php{{ php_version }}-mcrypt'
-  when: with_php and ansible_lsb.major_release|int >= 9 and php_version|float < 7.2
+  when: with_php|bool and ansible_lsb.major_release|int >= 9 and php_version|float < 7.2
   tags:
     - 'web'
     - 'php'
@@ -51,7 +48,7 @@
     owner: 'root'
     group: 'root'
     mode: '0755'
-  when: with_fpm
+  when: with_fpm|bool
   tags:
     - 'web'
     - 'php'
@@ -68,7 +65,7 @@
     - { src: 'logrotate/php-errors.j2', dest: '/etc/logrotate.d/php-errors' }
   notify:
       - 'Reload rsyslog for php'
-  when: with_fpm
+  when: with_fpm|bool
   tags:
     - 'web'
     - 'php'
@@ -81,7 +78,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_php and ansible_lsb.major_release|int == 8
+  when: with_php|bool and ansible_lsb.major_release|int == 8
   tags:
     - 'web'
     - 'php'
@@ -89,33 +86,35 @@
 - name: 'Install local PHP configuration overrides for php{{ php_version }}-cli (Debian >= 9)'
   template:
     src: 'php/php-config-cli.ini.j2'
-    dest: '/etc/php/{{php_version }}/cli/conf.d/99-local-config.ini'
+    dest: '/etc/php/{{ php_version }}/cli/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_php and ansible_lsb.major_release|int >= 9
+  when: with_php|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install Apache2 module for php5'
   apt:
-    pkg: 'libapache2-mod-php5'
+    pkg:
+      - 'libapache2-mod-php5'
     state: 'present'
   notify:
       - 'Reload apache2'
-  when: with_modphp5
+  when: with_modphp5|bool
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install Apache2 module for php{{ php_version }}'
   apt:
-    pkg: 'libapache2-mod-php{{php_version}}'
+    pkg:
+      - 'libapache2-mod-php{{ php_version }}'
     state: 'present'
   notify:
       - 'Reload apache2'
-  when: with_modphp
+  when: with_modphp|bool
   tags:
     - 'web'
     - 'php'
@@ -130,7 +129,7 @@
     - {name: 'mpm_event', state: 'present', ignore_configcheck: 'yes'}
     - {name: 'php{{ php_version }}', state: 'absent', ignore_configcheck: 'no'}
     - {name: 'proxy_fcgi', state: 'present', ignore_configcheck: 'no'}
-  when: with_fpm and with_apache2
+  when: with_fpm|bool and with_apache2|bool
   notify:
       - 'Reload apache2'
   tags:
@@ -146,7 +145,7 @@
     - {name: 'mpm_event', state: 'absent', ignore_configcheck: 'yes'}
     - {name: 'mpm_prefork', state: 'present', ignore_configcheck: 'yes'}
     - {name: 'php{{ php_version }}', state: 'present', ignore_configcheck: 'no'}
-  when: with_modphp
+  when: with_modphp|bool
   notify:
       - 'Reload apache2'
   tags:
@@ -162,7 +161,7 @@
     mode: '0644'
   notify:
       - 'Reload apache2'
-  when: with_modphp5 and ansible_lsb.major_release|int < 8
+  when: with_modphp5|bool and ansible_lsb.major_release|int < 8
   tags:
     - 'web'
     - 'php'
@@ -176,7 +175,7 @@
     mode: '0644'
   notify:
       - 'Reload apache2'
-  when: with_modphp5 and ansible_lsb.major_release|int == 8
+  when: with_modphp5|bool and ansible_lsb.major_release|int == 8
   tags:
     - 'web'
     - 'php'
@@ -190,7 +189,7 @@
     mode: '0644'
   notify:
       - 'Reload apache2'
-  when: with_modphp and ansible_lsb.major_release|int >= 9
+  when: with_modphp|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -216,18 +215,20 @@
 
 - name: 'Install PHP APC extension (Debian <= 8)'
   apt:
-    pkg: 'php-apc'
+    pkg:
+      - 'php-apc'
     state: 'present'
-  when: with_php_apc and ansible_lsb.major_release|int <= 8
+  when: with_php_apc|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install PHP APC extension (Debian >= 9)'
   apt:
-    pkg: 'php-apcu'
+    pkg:
+      - 'php-apcu'
     state: 'present'
-  when: with_php_apc and ansible_lsb.major_release|int >= 9
+  when: with_php_apc|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -239,16 +240,17 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_php_apc
+  when: with_php_apc|bool
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install MySQL extension for PHP - native driver (Debian 8)'
   apt:
-    pkg: 'php5-mysqlnd'
+    pkg:
+      - 'php5-mysqlnd'
     state: 'present'
-  when: not with_php_mysql_legacy and ansible_lsb.major_release|int == 8
+  when: not with_php_mysql_legacy|bool and ansible_lsb.major_release|int == 8
   tags:
     - 'web'
     - 'php'
@@ -257,43 +259,47 @@
   apt:
     pkg: 'php5-mysql'
     state: 'present'
-  when: with_php_mysql_legacy
+  when: with_php_mysql_legacy|bool
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install PHPMyAdmin'
   apt:
-    pkg: 'phpmyadmin'
+    pkg:
+      - 'phpmyadmin'
     state: 'present'
-  when: with_phpmyadmin
+  when: with_phpmyadmin|bool
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install PHPPgAdmin'
   apt:
-    pkg: 'phppgadmin'
+    pkg:
+      - 'phppgadmin'
     state: 'present'
-  when: with_phppgadmin
+  when: with_phppgadmin|bool
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install FPM for PHP 5 (Debian <= 8)'
   apt:
-    pkg: 'php5-fpm'
+    pkg:
+      - 'php5-fpm'
     state: 'present'
-  when: with_fpm and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install FPM for PHP {{ php_version }} (Debian >= 9)'
   apt:
-    pkg: 'php{{ php_version }}-fpm'
+    pkg:
+      - 'php{{ php_version }}-fpm'
     state: 'present'
-  when: with_fpm and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -301,9 +307,9 @@
 - name: 'Configure FPM for PHP 5 (Debian <= 8)'
   lineinfile:
     dest: '/etc/php5/fpm/php-fpm.conf'
-    regexp: '^{{item.key}}\s*=.*$'
-    line: '{{item.key}} = {{item.value}}'
-    insertafter: '^;{{item.key}}'
+    regexp: '^{{ item.key }}\s*=.*$'
+    line: '{{ item.key }} = {{ item.value }}'
+    insertafter: '^;{{ item.key }}'
   with_items:
     - { key: 'error_log', value: 'syslog' }
     - { key: 'log_level', value: 'warning' }
@@ -314,7 +320,7 @@
     - { key: 'include', value: '/etc/php5/fpm/pool.d/local-pool.cnf' }
   notify:
       - 'Reload FPM for PHP 5'
-  when: with_fpm and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
@@ -322,9 +328,9 @@
 - name: 'Configure FPM for PHP {{ php_version }} (Debian >= 9)'
   lineinfile:
     dest: '/etc/php/{{ php_version }}/fpm/php-fpm.conf'
-    regexp: '^{{item.key}}\s*=.*$'
-    line: '{{item.key}} = {{item.value}}'
-    insertafter: '^;{{item.key}}'
+    regexp: '^{{ item.key }}\s*=.*$'
+    line: '{{ item.key }} = {{ item.value }}'
+    insertafter: '^;{{ item.key }}'
   with_items:
     - { key: 'error_log', value: 'syslog' }
     - { key: 'log_level', value: 'warning' }
@@ -335,7 +341,7 @@
     - { key: 'include', value: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf' }
   notify:
       - 'Reload FPM for PHP'
-  when: with_fpm and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -349,7 +355,7 @@
     mode: '0644'
   notify:
       - 'Reload FPM for PHP 5'
-  when: with_fpm and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
@@ -363,7 +369,7 @@
     mode: '0644'
   notify:
       - 'Reload FPM for PHP'
-  when: with_fpm and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -375,7 +381,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_fpm and ansible_lsb.major_release|int == 8
+  when: with_fpm|bool and ansible_lsb.major_release|int == 8
   tags:
     - 'web'
     - 'php'
@@ -387,7 +393,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_fpm and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -399,7 +405,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_fpm and with_apache2
+  when: with_fpm|bool and with_apache2|bool
   tags:
     - 'web'
     - 'php'
@@ -413,7 +419,7 @@
     mode: '0644'
   notify:
       - 'Reload nginx'
-  when: with_fpm and with_nginx
+  when: with_fpm|bool and with_nginx|bool
   tags:
     - 'web'
     - 'php'
@@ -427,7 +433,7 @@
     mode: '0644'
   notify:
       - 'Reload nginx'
-  when: with_fpm and with_nginx
+  when: with_fpm|bool and with_nginx|bool
   tags:
     - 'web'
     - 'php'
@@ -436,7 +442,7 @@
   service:
     name: 'php5-fpm'
     state: 'started'
-  when: with_fpm and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
@@ -445,7 +451,7 @@
   service:
     name: 'php{{ php_version }}-fpm'
     state: 'started'
-  when: with_fpm and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'

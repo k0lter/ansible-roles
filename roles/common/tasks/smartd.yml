@@ -1,6 +1,7 @@
 - name: 'Install smartmontools package'
   apt:
-    pkg: 'smartmontools'
+    pkg:
+      - 'smartmontools'
     state: 'present'
   tags:
     - 'smartd'

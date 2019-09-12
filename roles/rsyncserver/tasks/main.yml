@@ -1,5 +1,5 @@
 - include_tasks: 'rsyncd.yml'
-  when: with_rsyncd
+  when: with_rsyncd|bool
   tags:
     - 'rsyncd'
 

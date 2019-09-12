@@ -1,32 +1,31 @@
 - name: 'Install MySQL server related packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'mysql-server'
+      - 'mysql-client'
     state: 'present'
-  with_items:
-    - 'mysql-server'
-    - 'mysql-client'
-  when: with_mysql
+  when: with_mysql|bool
   tags:
     - 'mysql'
     - 'sql'
 
 - name: 'Install MariaDB server related packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'mariadb-server'
+      - 'mariadb-client'
     state: 'present'
-  with_items:
-    - 'mariadb-server'
-    - 'mariadb-client'
-  when: with_mariadb
+  when: with_mariadb|bool
   tags:
     - 'mysql'
     - 'sql'
 
 - name: 'Install MySQL or MariaDB backup related packages (automysqlbackup)'
   apt:
-    pkg: 'automysqlbackup'
+    pkg:
+      - 'automysqlbackup'
     state: 'present'
-  when: with_mysql_backup
+  when: with_mysql_backup|bool
   tags:
     - 'mysql'
     - 'sql'
@@ -36,7 +35,7 @@
     dest: '/usr/sbin/automysqlbackup'
     regexp: '^OPT='
     line: 'OPT="--quote-names --events" # OPT string for use with mysqldump ( see man mysqldump )'
-  when: with_mysql_backup
+  when: with_mysql_backup|bool
   tags:
     - 'mysql'
     - 'sql'
@@ -44,7 +43,7 @@
 - name: 'Change MySQL or MariaDB root default password'
   raw: if ! echo "SELECT VERSION();" | mysql -u root --password='{{ mysql_root_password }}' >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('{{ mysql_root_password }}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
   changed_when: False
-  when: mysql_root_password != ''
+  when: mysql_root_password|length > 0
   tags:
     - 'mysql'
     - 'sql'
@@ -52,7 +51,7 @@
 - name: 'Add MySQL or MariaDB admin account'
   raw: if ! echo "SELECT VERSION();" | mysql -u admin --password='{{ mysql_admin_password }}' >/dev/null 2>&1 ; then echo "CREATE USER 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}'; GRANT ALL PRIVILEGES ON * . * TO 'admin'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
   changed_when: False
-  when: mysql_admin_password != ''
+  when: mysql_admin_password|length > 0
   tags:
     - 'mysql'
     - 'sql'

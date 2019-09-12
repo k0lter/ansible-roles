@@ -1,9 +1,8 @@
 - name: 'Install Zabbix agent'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'zabbix-agent'
     state: 'present'
-  with_items:
-    - 'zabbix-agent'
   tags:
     - 'monitoring'
     - 'zabbix'
@@ -28,7 +27,7 @@
     group: 'root'
     mode: '0755'
     state: 'directory'
-  when: zabbix_plugins_config
+  when: zabbix_plugins_config|length > 0
   tags:
     - 'monitoring'
     - 'zabbix'
@@ -43,7 +42,7 @@
   with_items:
     - 'ssl-discovery'
     - 'web-availability-discovery'
-  when: zabbix_plugins_config
+  when: zabbix_plugins_config|length > 0
   tags:
     - 'monitoring'
     - 'zabbix'

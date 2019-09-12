@@ -6,6 +6,6 @@ with_mon: False
 
 with_zabbix_agent: False
 zabbix_remote_server: 'zabbix.domain.tld'
-zabbix_plugins_config: Null
+zabbix_plugins_config: []
 
 # vim: ft=yaml.ansible
