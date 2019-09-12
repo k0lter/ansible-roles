@@ -1,7 +1,15 @@
+- name: 'Get architecture using dpkg'
+  command: dpkg --print-architecture
+  register: dpkg_architecture
+  changed_when: False
+  check_mode: no
+  tags:
+    - 'firewall'
+
 - name: 'Install firewall package (ferm)'
   apt:
     pkg:
-      - 'linux-image-{{ facter_architecture }}'
+      - 'linux-image-{{ dpkg_architecture.stdout }}'
       - 'ferm'
     state: 'present'
   tags:
