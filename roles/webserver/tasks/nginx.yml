@@ -225,6 +225,20 @@
     - 'web'
     - 'nginx'
 
+- name: 'Install Cloudflare configuration to set the real ip in logs'
+  template:
+    src: 'nginx/cloudflare.conf.j2'
+    dest: '/etc/nginx/snippets/cloudflare.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload nginx'
+  when: with_cloudflare is defined and with_cloudflare
+  tags:
+    - 'web'
+    - 'nginx'
+
 - name: 'Ensure nginx is running'
   service:
     name: 'nginx'
