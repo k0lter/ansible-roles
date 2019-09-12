@@ -8,24 +8,22 @@
     - 'apache2'
 
 - name: 'Enable Apache2 default modules'
-  apache2_module:
-    name: '{{ item }}'
-    state: 'present'
+  shell: a2enmod '{{ item }}'
   with_items:
     - 'ssl'
     - 'rewrite'
     - 'expires'
     - 'headers'
+  changed_when: False
   tags:
     - 'web'
     - 'apache2'
 
 - name: 'Enable Apache2 default modules (Debian >= 9)'
-  apache2_module:
-    name: '{{ item }}'
-    state: 'present'
+  shell: a2enmod '{{ item }}'
   with_items:
     - 'http2'
+  changed_when: False
   when: ansible_lsb.major_release|int >= 9
   tags:
     - 'web'

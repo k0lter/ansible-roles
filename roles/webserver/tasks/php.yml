@@ -120,15 +120,8 @@
     - 'php'
 
 - name: 'Configure Apache2 modules for php-fpm{{ php_version }}'
-  apache2_module:
-    name: '{{ item.name }}'
-    state: '{{ item.state }}'
-    ignore_configcheck: '{{ item.ignore_configcheck }}'
-  with_items:
-    - {name: 'mpm_prefork', state: 'absent', ignore_configcheck: 'yes'}
-    - {name: 'mpm_event', state: 'present', ignore_configcheck: 'yes'}
-    - {name: 'php{{ php_version }}', state: 'absent', ignore_configcheck: 'no'}
-    - {name: 'proxy_fcgi', state: 'present', ignore_configcheck: 'no'}
+  shell: a2dismod php{{ php_version }} mpm_prefork ; a2enmod mpm_event proxy_fcgi
+  changed_when: False
   when: with_fpm|bool and with_apache2|bool
   notify:
       - 'Reload apache2'
@@ -137,14 +130,8 @@
     - 'php'
 
 - name: 'Configure Apache2 modules for modphp{{ php_version }}'
-  apache2_module:
-    name: '{{ item.name }}'
-    state: '{{ item.state }}'
-    ignore_configcheck: '{{ item.ignore_configcheck }}'
-  with_items:
-    - {name: 'mpm_event', state: 'absent', ignore_configcheck: 'yes'}
-    - {name: 'mpm_prefork', state: 'present', ignore_configcheck: 'yes'}
-    - {name: 'php{{ php_version }}', state: 'present', ignore_configcheck: 'no'}
+  shell: a2dismod mpm_event ; a2enmod mpm_prefork php{{ php_version }}
+  changed_when: False
   when: with_modphp|bool
   notify:
       - 'Reload apache2'
