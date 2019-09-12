@@ -4,7 +4,7 @@
       - 'mysql-server'
       - 'mysql-client'
     state: 'present'
-  when: with_mysql|bool
+  when: with_mysql|bool and ansible_lsb.major_release|int < 10
   tags:
     - 'mysql'
     - 'sql'
@@ -15,7 +15,7 @@
       - 'mariadb-server'
       - 'mariadb-client'
     state: 'present'
-  when: with_mariadb|bool
+  when: with_mariadb|bool or (with_mysql|bool and ansible_lsb.major_release|int >= 10)
   tags:
     - 'mysql'
     - 'sql'

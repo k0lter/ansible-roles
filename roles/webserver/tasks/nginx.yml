@@ -101,7 +101,7 @@
   with_items: '{{ ssl_certs }}'
   notify:
     - 'Reload nginx'
-  when: ssl_certs
+  when: ssl_certs|length > 0
   tags:
     - 'web'
     - 'nginx'

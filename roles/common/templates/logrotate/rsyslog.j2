@@ -23,8 +23,10 @@
     postrotate
 {% if ansible_lsb.codename == 'lenny' or ansible_lsb.codename == 'squeeze' %}
         invoke-rc.d rsyslog reload > /dev/null
-{% else %}
+{% elif ansible_lsb.codename == 'jessie' or ansible_lsb.codename == 'stretch' %}
         invoke-rc.d rsyslog rotate > /dev/null
+{% else %}
+        /usr/lib/rsyslog/rsyslog-rotate
 {% endif %}
     endscript
 }
@@ -47,8 +49,10 @@
     postrotate
 {% if ansible_lsb.codename == 'lenny' or ansible_lsb.codename == 'squeeze' %}
         invoke-rc.d rsyslog reload > /dev/null
-{% else %}
+{% elif ansible_lsb.codename == 'jessie' or ansible_lsb.codename == 'stretch' %}
         invoke-rc.d rsyslog rotate > /dev/null
+{% else %}
+        /usr/lib/rsyslog/rsyslog-rotate
 {% endif %}
     endscript
 }
