@@ -48,7 +48,7 @@
     owner: 'root'
     group: 'root'
     mode: '0755'
-  when: with_fpm|bool
+  when: with_php|bool
   tags:
     - 'web'
     - 'php'
