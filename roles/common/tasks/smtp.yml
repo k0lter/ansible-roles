@@ -1,14 +1,13 @@
 - name: 'Install Postfix packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'postfix'
+      - 'ca-certificates'
+      - 'procmail'
+      - 'libsasl2-modules'
     install_recommends: 'no'
     state: 'present'
-  with_items:
-    - 'postfix'
-    - 'ca-certificates'
-    - 'procmail'
-    - 'libsasl2-modules'
-  when: with_postfix
+  when: with_postfix|bool
   tags:
     - 'smtp'
 
@@ -21,7 +20,7 @@
     mode: '0644'
   notify:
     - 'Regenerate aliases cache'
-  when: with_mail_aliases
+  when: with_mail_aliases|bool
   tags:
     - 'smtp'
 
@@ -34,7 +33,7 @@
     mode: '0644'
   notify:
     - 'Reload Postfix'
-  when: with_postfix
+  when: with_postfix|bool
   tags:
     - 'smtp'
 
@@ -48,7 +47,7 @@
             -o slowsmtp_destination_rate_delay=1
   notify:
     - 'Reload Postfix'
-  when: with_postfix_slowsmtp
+  when: with_postfix_slowsmtp|bool
   tags:
     - 'smtp'
 
@@ -62,7 +61,7 @@
   notify:
     - 'Rehash slowsmtp transport map'
     - 'Reload Postfix'
-  when: with_postfix_slowsmtp
+  when: with_postfix_slowsmtp|bool
   tags:
     - 'smtp'
 
@@ -76,7 +75,7 @@
   notify:
     - 'Rehash SASL sender relay map'
     - 'Reload Postfix'
-  when: with_postfix_external_smtp
+  when: with_postfix_external_smtp|bool
   tags:
     - 'smtp'
 
@@ -90,7 +89,7 @@
   notify:
     - 'Rehash SASL credentials map'
     - 'Reload Postfix'
-  when: with_postfix_external_smtp
+  when: with_postfix_external_smtp|bool
   tags:
     - 'smtp'
 
@@ -103,7 +102,7 @@
     mode: '0600'
   notify:
     - 'Reload Postfix'
-  when: with_postfix_external_smtp and postfix_external_sender_rewrites
+  when: with_postfix_external_smtp|bool and postfix_external_sender_rewrites
   tags:
     - 'smtp'
 

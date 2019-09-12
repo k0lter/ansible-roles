@@ -1,19 +1,19 @@
 - name: 'Install PostgreSQL server related packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'postgresql'
+      - 'postgresql-client'
     state: 'present'
-  with_items:
-    - 'postgresql'
-    - 'postgresql-client'
   tags:
     - 'postgresql'
     - 'sql'
 
 - name: 'Install AutoPostgreSQLBackup package'
   apt:
-    pkg: 'autopostgresqlbackup'
+    pkg:
+      - 'autopostgresqlbackup'
     state: 'present'
-  when: with_postgresql_backup
+  when: with_postgresql_backup|bool
   tags:
     - 'postgresql'
     - 'sql'

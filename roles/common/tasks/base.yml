@@ -5,7 +5,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_hosts
+  when: with_hosts|bool
   tags:
     - 'base'
 
@@ -16,7 +16,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_hostsdeny
+  when: with_hostsdeny|bool
   tags:
     - 'base'
 
@@ -58,7 +58,7 @@
     url: '{{ item.url }}'
     state: 'present'
   with_items: '{{ apt_keys }}'
-  when: apt_keys
+  when: apt_keys|length > 0
   tags:
     - 'base'
 
@@ -67,49 +67,47 @@
     repo: 'deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
     state: 'present'
   with_items: '{{ apt_repositories }}'
-  when: apt_repositories
+  when: apt_repositories|length > 0
   tags:
     - 'base'
 
 - name: 'Install base packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'apt-transport-https'
+      - 'apticron'
+      - 'locales-all'
+      - 'locales'
+      - 'lsb-release'
+      - 'facter'
+      - 'zsh'
+      - 'git-core'
+      - 'tig'
+      - 'vim-nox'
+      - 'ccze'
+      - 'tree'
+      - 'pydf'
+      - 'htop'
+      - 'sudo'
+      - 'sysfsutils'
+      - 'tmux'
+      - 'rsync'
+      - 'ca-certificates'
+      - 'sysstat'
+      - 'etckeeper'
+      - 'sharutils'
+      - 'ncdu'
     install_recommends: 'no'
     state: 'present'
-  with_items:
-    - 'apt-transport-https'
-    - 'apticron'
-    - 'locales-all'
-    - 'locales'
-    - 'lsb-release'
-    - 'facter'
-    - 'zsh'
-    - 'git-core'
-    - 'tig'
-    - 'vim-nox'
-    - 'ccze'
-    - 'tree'
-    - 'pydf'
-    - 'htop'
-    - 'sudo'
-    - 'sysfsutils'
-    - 'tmux'
-    - 'rsync'
-    - 'ca-certificates'
-    - 'sysstat'
-    - 'etckeeper'
-    - 'sharutils'
-    - 'ncdu'
   tags:
     - 'base'
 
 - name: 'Install additional packages'
   apt:
-    pkg: '{{ item }}'
+    pkg: '{{ apt_additional_packages }}'
     install_recommends: 'no'
     state: 'present'
-  with_items: '{{ apt_additional_packages }}'
-  when: apt_additional_packages
+  when: apt_additional_packages|length > 0
   tags:
     - 'base'
 
@@ -118,14 +116,14 @@
     pkg: 'ntp'
     install_recommends: 'no'
     state: 'present'
-  when: with_ntp
+  when: with_ntp|bool
   tags:
     - 'base'
 
 - name: 'Configure default locale ({{ locale }})'
   command: update-locale 'LANG={{ locale }}'
   changed_when: False
-  when: locale is defined and locale != ''
+  when: locale is defined and locale|length > 0
   tags:
     - 'base'
 
@@ -226,7 +224,7 @@
     shell: '/bin/zsh'
     state: 'present'
   with_items: '{{ admins }}'
-  when: admins
+  when: admins|length > 0
   tags:
     - 'base'
 
@@ -236,7 +234,7 @@
     key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
     state: 'present'
   with_items: '{{ admins }}'
-  when: admins
+  when: admins|length > 0
   tags:
     - 'base'
 
@@ -246,7 +244,7 @@
     key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
     state: 'present'
   with_items: '{{ admins }}'
-  when: admins
+  when: admins|length > 0
   tags:
     - 'base'
 

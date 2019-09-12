@@ -5,6 +5,6 @@
 with_ftp: False
 with_ftp_tls: False
 ftp_tls_domain: Null
-ftp_accounts: Null
+ftp_accounts: []
 
 # vim: ft=yaml.ansible

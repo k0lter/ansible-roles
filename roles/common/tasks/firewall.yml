@@ -1,10 +1,9 @@
 - name: 'Install firewall package (ferm)'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'linux-image-{{ facter_architecture }}'
+      - 'ferm'
     state: 'present'
-  with_items:
-    - 'linux-image-{{ facter_architecture }}'
-    - 'ferm'
   tags:
     - 'firewall'
 

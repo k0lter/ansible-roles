@@ -1,10 +1,9 @@
 - name: 'Install opendkim packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'opendkim'
     install_recommends: 'no'
     state: 'present'
-  with_items:
-    - 'opendkim'
   tags:
     - 'dkim'
 
@@ -68,7 +67,7 @@
 
 - name: 'Install DKIM private keys'
   copy:
-    content: "{{lookup('file', 'data/dkim/' + item + '.pem')}}"
+    content: "{{ lookup('file', 'data/dkim/' + item + '.pem') }}"
     dest: '/etc/opendkim/{{ item }}_default.pem'
     owner: 'root'
     group: 'opendkim'

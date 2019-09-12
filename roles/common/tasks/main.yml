@@ -3,18 +3,18 @@
     - 'base'
     - 'ipv6'
 - include_tasks: dotfiles.yml
-  when: with_dotfiles
+  when: with_dotfiles|bool
   tags:
     - 'base'
 - include_tasks: ssl.yml
-  when: ssl_certs or ssl_certs_auto
+  when: ssl_certs|length > 0 or ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 - include_tasks: dns.yml
   tags:
     - 'dns'
 - include_tasks: firewall.yml
-  when: with_firewall
+  when: with_firewall|bool
   tags:
     - 'firewall'
 - include_tasks: security.yml
@@ -22,18 +22,18 @@
     - 'security'
     - 'logcheck'
 - include_tasks: smtp.yml
-  when: with_postfix or with_mail_aliases
+  when: with_postfix|bool or with_mail_aliases|bool
   tags:
     - 'smtp'
 - include_tasks: dkim.yml
-  when: with_opendkim
+  when: with_opendkim|bool
   tags:
     - 'dkim'
 - include_tasks: ssh.yml
   tags:
     - 'ssh'
 - include_tasks: smartd.yml
-  when: with_smartd
+  when: with_smartd|bool
   tags:
     - 'smartd'
 

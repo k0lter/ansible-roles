@@ -65,7 +65,7 @@ mydestination = $myhostname {% if postfix_hostname is defined %}{{ postfix_hostn
 
 {% if smtp_relay_host is defined %}
 relayhost = {{ smtp_relay_host }}
-{% elif with_postfix_external_smtp %}
+{% elif with_postfix_external_smtp|bool %}
 smtp_sasl_auth_enable = yes
 smtp_sasl_security_options = noanonymous
 smtp_sasl_password_maps = hash:/etc/postfix/sasl/credentials
@@ -83,7 +83,7 @@ sender_canonical_maps = regexp:/etc/postfix/sasl/sender_rewrite
 alias_maps = hash:/etc/aliases
 alias_database = $alias_maps
 
-{% if with_postfix_slowsmtp %}
+{% if with_postfix_slowsmtp|bool %}
 transport_maps =
     hash:/etc/postfix/transport_slowsmtp
 slowsmtp_destination_recipient_limit = 20
@@ -134,7 +134,7 @@ smtpd_sender_restrictions =
     reject_non_fqdn_sender,
     reject_unknown_sender_domain
 
-{% if with_opendkim is defined and with_opendkim %}
+{% if with_opendkim is defined and with_opendkim|bool %}
 # DKIM support
 milter_default_action = accept
 smtpd_milters = inet:localhost:8891

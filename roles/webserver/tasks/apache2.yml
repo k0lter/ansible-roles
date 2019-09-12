@@ -1,6 +1,7 @@
 - name: 'Install Apache2 packages'
   apt:
-    pkg: 'apache2'
+    pkg:
+      - 'apache2'
     state: 'present'
   tags:
     - 'web'
@@ -66,7 +67,7 @@
   with_items: '{{ ssl_certs_auto }}'
   notify:
     - 'Reload apache2'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'web'
     - 'apache2'
@@ -108,7 +109,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'web'
     - 'apache2'
@@ -134,7 +135,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_phpmyadmin
+  when: with_phpmyadmin|bool
   tags:
     - 'web'
     - 'apache2'
@@ -146,7 +147,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phpmyadmin
+  when: with_phpmyadmin|bool
   tags:
     - 'web'
     - 'apache2'
@@ -160,7 +161,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_phppgadmin
+  when: with_phppgadmin|bool
   tags:
     - 'web'
     - 'apache2'
@@ -172,7 +173,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phppgadmin
+  when: with_phppgadmin|bool
   tags:
     - 'web'
     - 'apache2'
@@ -186,7 +187,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_php
+  when: with_php|bool
   tags:
     - 'web'
     - 'apache2'
@@ -198,7 +199,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_php
+  when: with_php|bool
   tags:
     - 'web'
     - 'apache2'

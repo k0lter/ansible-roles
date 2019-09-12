@@ -1,13 +1,12 @@
 - name: 'Install Xen related packages'
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - 'xen-linux-system-amd64'
+      - 'grub-xen-host'
+      - 'bridge-utils'
+      - 'debootstrap'
     install_recommends: 'no'
     state: 'present'
-  with_items:
-    - 'xen-linux-system-amd64'
-    - 'grub-xen-host'
-    - 'bridge-utils'
-    - 'debootstrap'
   tags:
     - 'hypervisor'
     - 'xen'

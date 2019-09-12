@@ -1,6 +1,7 @@
 - name: 'Install nginx package'
   apt:
-    pkg: 'nginx'
+    pkg:
+      - 'nginx'
     state: 'present'
   tags:
     - 'web'
@@ -115,7 +116,7 @@
   with_items: '{{ ssl_certs_auto }}'
   notify:
     - 'Reload nginx'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'web'
     - 'nginx'
@@ -129,7 +130,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: ssl_certs_auto
+  when: ssl_certs_auto|length > 0
   tags:
     - 'web'
     - 'nginx'
@@ -155,7 +156,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin
+  when: with_phpmyadmin|bool
   tags:
     - 'web'
     - 'nginx'
@@ -167,7 +168,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin
+  when: with_phpmyadmin|bool
   tags:
     - 'web'
     - 'nginx'
@@ -181,7 +182,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_phppgadmin
+  when: with_phppgadmin|bool
   tags:
     - 'web'
     - 'nginx'
@@ -193,7 +194,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phppgadmin
+  when: with_phppgadmin|bool
   tags:
     - 'web'
     - 'nginx'
@@ -207,7 +208,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_php
+  when: with_php|bool
   tags:
     - 'web'
     - 'nginx'
@@ -219,7 +220,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_php
+  when: with_php|bool
   tags:
     - 'web'
     - 'nginx'

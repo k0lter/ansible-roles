@@ -1,9 +1,9 @@
 - include_tasks: 'common.yml'
-  when: with_ftp
+  when: with_ftp|bool
   tags:
     - 'ftp'
 - include_tasks: 'pure-ftpd.yml'
-  when: with_ftp
+  when: with_ftp|bool
   tags:
     - 'ftp'
     - 'pure-ftpd'

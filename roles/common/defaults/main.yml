@@ -4,7 +4,7 @@
 
 ansible_master: 'root@localhost'
 
-admins: Null
+admins: []
 admins_emails:
   - 'root@localhost'
 
@@ -15,21 +15,21 @@ timezone_city: 'Paris'
 with_hosts: False
 with_hostsdeny: False
 hosts_fqdn: True
-hosts_static_lookup: Null
+hosts_static_lookup: []
 
 ipv6_disabled: False
 
 debian_mirror: 'http://httpredir.debian.org/debian'
 
-apt_keys: Null
-apt_repositories: Null
-apt_additional_packages: Null
+apt_keys: []
+apt_repositories: []
+apt_additional_packages: []
 
 hosts_deny_nfs: False
 host_deny_paranoid: False
 
 with_auto_upgrade: False
-auto_upgrade_additional_patterns: Null
+auto_upgrade_additional_patterns: []
 
 with_logcheck: False
 with_rkhunter: False
@@ -65,7 +65,7 @@ ssh_strengthened: True
 ssh_ports:
   - 22
 ssh_usedns: True
-ssh_allowed_users: Null
+ssh_allowed_users: []
 ssh_allowed_groups:
   - 'root'
   - 'operator'
@@ -80,10 +80,10 @@ dotfiles_repo: 'https://git.openics.org/kolter/dotfiles-sys.git'
 dotfiles_dest: '/srv/hosting-tools/shell'
 dotfiles_lcsshvars: 0
 
-ssl_certs: Null
-ssl_certs_auto: Null
+ssl_certs: []
+ssl_certs_auto: []
 
-dkim_domains: Null
+dkim_domains: []
 with_opendkim: False
 
 # vim: ft=yaml.ansible

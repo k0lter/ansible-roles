@@ -32,7 +32,7 @@
         php_admin_value post_max_size 128M
     </IfModule>
 
-{% if with_fpm %}
+{% if with_fpm|bool %}
     Include conf-available/fpm-pool.conf
 {% endif %}
 
@@ -78,7 +78,7 @@
         php_admin_value post_max_size 128M
     </IfModule>
 
-{% if with_fpm %}
+{% if with_fpm|bool %}
     Include conf-available/fpm-pool.conf
 {% endif %}
 

@@ -2,7 +2,7 @@
 {% from 'templates/ansible/prolog.j2' import prolog with context %}
 {{ prolog() }}
 {% endif -%}
-{% if ssl_certs_auto is defined %}
+{% if ssl_certs_auto|length > 0 %}
 {% for d in ssl_certs_auto %}
 {{ d }}
 {% endfor %}

@@ -2,7 +2,7 @@
 {% from 'templates/ansible/prolog.j2' import prolog with context %}
 {{ prolog() }}
 {% endif -%}
-{% if with_dnscache %}
+{% if with_dnscache|bool %}
 nameserver 127.0.0.1
 {% endif %}
 {% if nameservers is defined %}

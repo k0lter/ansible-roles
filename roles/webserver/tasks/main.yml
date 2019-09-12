@@ -1,15 +1,15 @@
 - include_tasks: apache2.yml
-  when: with_apache2
+  when: with_apache2|bool
   tags:
     - 'web'
     - 'apache2'
 - include_tasks: nginx.yml
-  when: with_nginx
+  when: with_nginx|bool
   tags:
     - 'web'
     - 'nginx'
 - include_tasks: php.yml
-  when: with_php
+  when: with_php|bool
   tags:
     - 'web'
     - 'php'
