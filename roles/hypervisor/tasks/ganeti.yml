@@ -21,6 +21,7 @@
   with_items:
     - 'jessie'
     - 'stretch'
+    - 'buster'
   tags:
     - 'hypervisor'
     - 'ganeti'
@@ -36,6 +37,7 @@
   with_items:
     - 'jessie'
     - 'stretch'
+    - 'buster'
   tags:
     - 'hypervisor'
     - 'ganeti'
