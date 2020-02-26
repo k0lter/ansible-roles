@@ -3,5 +3,5 @@
 {{ prolog() }}
 {% endif -%}
 {% for domain in dkim_domains %}
-*@{{ domain }} default._domainkey.{{ domain }}
+*@{{ domain }} {{ dkim_selector }}._domainkey.{{ domain }}
 {% endfor %}

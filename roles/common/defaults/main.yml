@@ -84,6 +84,7 @@ ssl_certs: []
 ssl_certs_auto: []
 
 dkim_domains: []
+dkim_selector: 'default'
 with_opendkim: False
 
 # vim: ft=yaml.ansible

@@ -3,5 +3,5 @@
 {{ prolog() }}
 {% endif -%}
 {% for domain in dkim_domains %}
-default._domainkey.{{ domain }} {{ domain }}:default:/etc/opendkim/{{ domain }}_default.pem
+{{ dkim_selector }}._domainkey.{{ domain }} {{ domain }}:{{ dkim_selector }}:/etc/opendkim/{{ domain }}_{{ dkim_selector }}.pem
 {% endfor %}

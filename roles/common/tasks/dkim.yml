@@ -68,12 +68,12 @@
 - name: 'Install DKIM private keys'
   copy:
     content: "{{ lookup('file', 'data/dkim/' + item + '.pem') }}"
-    dest: '/etc/opendkim/{{ item }}_default.pem'
+    dest: '/etc/opendkim/{{ item }}_{{ dkim_selector }}.pem'
     owner: 'root'
     group: 'opendkim'
     mode: '0640'
   with_items: '{{ dkim_domains }}'
-  when: dkim_domains
+  when: dkim_domains|length > 0
   tags:
     - 'dkim'
 
