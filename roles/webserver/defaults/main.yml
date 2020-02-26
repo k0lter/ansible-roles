@@ -31,10 +31,12 @@ with_php: False
 php_version: '7.0'
 with_php_mysql_legacy: False
 
+with_phpsyscheck: True
 phpsyscheck_vhostname: 'sys.localhost'
 phpsyscheck_vhostip: Null
 phpsyscheck_vhostport: Null
 phpsyscheck_ssl: False
+http_auth_syscheck: False
 
 php_config:
   date.timezone: 'Europe/Paris'

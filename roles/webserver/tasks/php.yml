@@ -188,6 +188,7 @@
     owner: 'root'
     group: 'root'
     mode: '0755'
+  when: with_phpsyscheck|bool
   tags:
     - 'web'
     - 'php'
@@ -199,6 +200,10 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+  when: with_phpsyscheck|bool
+  tags:
+    - 'web'
+    - 'php'
 
 - name: 'Install PHP APC extension (Debian <= 8)'
   apt:
@@ -227,7 +232,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_php_apc|bool
+  when: with_phpsyscheck|bool and with_php_apc|bool
   tags:
     - 'web'
     - 'php'

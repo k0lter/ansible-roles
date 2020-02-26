@@ -185,7 +185,7 @@
     mode: '0644'
   notify:
     - 'Reload apache2'
-  when: with_php|bool
+  when: with_phpsyscheck|bool and with_php|bool
   tags:
     - 'web'
     - 'apache2'
@@ -197,7 +197,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_php|bool
+  when: with_phpsyscheck|bool and with_php|bool
   tags:
     - 'web'
     - 'apache2'
