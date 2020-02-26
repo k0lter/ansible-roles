@@ -26,11 +26,19 @@
 
     Include /etc/phpmyadmin/apache.conf
 
-    <IfModule mod_php5.c>
-        php_admin_value max_execution_time 240
-        php_admin_value upload_max_filesize 128M
-        php_admin_value post_max_size 128M
-    </IfModule>
+    <Directory /usr/share/phpmyadmin>
+        <IfModule mod_php5.c>
+            php_admin_value max_execution_time 240
+            php_admin_value upload_max_filesize 128M
+            php_admin_value post_max_size 128M
+        </IfModule>
+
+        <IfModule php7_module>
+            php_admin_value max_execution_time 240
+            php_admin_value upload_max_filesize 128M
+            php_admin_value post_max_size 128M
+        </IfModule>
+    </Directory>
 
 {% if with_fpm|bool %}
     Include conf-available/fpm-pool.conf
@@ -66,17 +74,19 @@
 
     Include /etc/phpmyadmin/apache.conf
 
-    <IfModule mod_php5.c>
-        php_admin_value max_execution_time 240
-        php_admin_value upload_max_filesize 128M
-        php_admin_value post_max_size 128M
-    </IfModule>
+    <Directory /usr/share/phpmyadmin>
+        <IfModule mod_php5.c>
+            php_admin_value max_execution_time 240
+            php_admin_value upload_max_filesize 128M
+            php_admin_value post_max_size 128M
+        </IfModule>
 
-    <IfModule php7_module>
-        php_admin_value max_execution_time 240
-        php_admin_value upload_max_filesize 128M
-        php_admin_value post_max_size 128M
-    </IfModule>
+        <IfModule php7_module>
+            php_admin_value max_execution_time 240
+            php_admin_value upload_max_filesize 128M
+            php_admin_value post_max_size 128M
+        </IfModule>
+    </Directory>
 
 {% if with_fpm|bool %}
     Include conf-available/fpm-pool.conf
