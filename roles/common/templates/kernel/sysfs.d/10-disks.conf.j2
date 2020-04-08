@@ -3,7 +3,7 @@
 #
 {% if ansible_virtualization_type is defined and ansible_virtualization_type == 'xen' and ansible_virtualization_role == 'guest' %}
 {% for disk in ansible_devices %}
-block/{{ disk }}/queue/scheduler = noop
+block/{{ disk }}/queue/scheduler = none
 {% endfor %}
 {% endif %}
 {% if sysfs_disk_settings %}
