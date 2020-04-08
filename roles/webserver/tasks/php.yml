@@ -15,7 +15,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies (Debian >= 9)'
+- name: 'Install common PHP dependencies (Debian >= 9, PHP version {{ php_version }})'
   apt:
     pkg:
       - 'php{{ php_version }}-cli'
@@ -31,7 +31,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies (Debian >= 9 and PHP < 7.2)'
+- name: 'Install common PHP dependencies (Debian >= 9, PHP < 7.2, PHP version {{ php_version }})'
   apt:
     pkg:
       - 'php{{ php_version }}-mcrypt'
