@@ -38,9 +38,9 @@ server {
         include fastcgi_pass_fpm;
         fastcgi_read_timeout 300s;
 {% if nginx_fpm_openbasedir_enforced %}
-        fastcgi_param PHP_ADMIN_VALUE "upload_tmp_dir=/tmp\nopen_basedir=$document_root:/etc/phpmyadmin:/var/lib/phpmyadmin:/tmp:/usr/share:/tmp:/dev/random:/dev/urandom\nmax_execution_time=300\nupload_max_filesize=128M\npost_max_size=128M";
+        fastcgi_param PHP_ADMIN_VALUE "upload_tmp_dir=/tmp\nopen_basedir=$document_root:/etc/phpmyadmin:/var/lib/phpmyadmin:/tmp:/usr/share:/tmp:/dev/random:/dev/urandom\nmax_execution_time=300\nupload_max_filesize=128M\npost_max_size=128M\nmax_input_vars=10000";
 {% else %}
-        fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M";
+        fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M\nmax_input_vars=10000";
 {% endif %}
     }
 {% endif %}
@@ -72,9 +72,9 @@ server {
         include fastcgi_pass_fpm;
         fastcgi_read_timeout 300s;
 {% if nginx_fpm_openbasedir_enforced %}
-        fastcgi_param PHP_ADMIN_VALUE "upload_tmp_dir=/tmp\nopen_basedir=$document_root:/etc/phpmyadmin:/var/lib/phpmyadmin:/tmp:/usr/share:/tmp:/dev/random:/dev/urandom\nmax_execution_time=300\nupload_max_filesize=128M\npost_max_size=128M";
+        fastcgi_param PHP_ADMIN_VALUE "upload_tmp_dir=/tmp\nopen_basedir=$document_root:/etc/phpmyadmin:/var/lib/phpmyadmin:/tmp:/usr/share:/tmp:/dev/random:/dev/urandom\nmax_execution_time=300\nupload_max_filesize=128M\npost_max_size=128M\nmax_input_vars=10000";
 {% else %}
-        fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M";
+        fastcgi_param PHP_ADMIN_VALUE "max_execution_time=240\nupload_max_filesize=128M\npost_max_size=128M\nmax_input_vars=10000";
 {% endif %}
     }
 }
