@@ -25,6 +25,7 @@
       - 'php{{ php_version }}-mysql'
       - 'php{{ php_version }}-pgsql'
       - 'php{{ php_version }}-sqlite3'
+      - 'php{{ php_version }}-zip'
     state: 'present'
   when: with_php|bool and ansible_lsb.major_release|int >= 9
   tags:
