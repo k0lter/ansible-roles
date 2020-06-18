@@ -1,5 +1,6 @@
 - name: 'Restart opendkim'
-  service:
+  systemd:
+    daemon_reload: 'yes'
     name: 'opendkim'
     state: 'restarted'
 

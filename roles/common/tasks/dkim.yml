@@ -77,4 +77,16 @@
   tags:
     - 'dkim'
 
+- name: 'Install opendkim systemd service override'
+  template:
+    src: 'opendkim/opendkim.service.j2'
+    dest: '/etc/systemd/system/opendkim.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Restart opendkim'
+  tags:
+    - 'dkim'
+
 # vim: ft=yaml.ansible
