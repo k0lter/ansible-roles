@@ -37,7 +37,15 @@ fastcgi_param   REDIRECT_STATUS     200;
 fastcgi_param   PHP_ADMIN_VALUE     "upload_tmp_dir=/tmp\nopen_basedir=$document_root:/tmp:/usr/share:/tmp:/dev/random:/dev/urandom";
 {% endif %}
 
+{% if fpm_pools is defined and fpm_pools %}
+{% for pool in fpm_pools %}
+{% if fpm_pools[pool].default is defined and fpm_pools[pool].default %}
+fastcgi_pass    fpm-backend-{{ pool }};
+{% endif %}
+{% endfor %}
+{% else %}
 fastcgi_pass    fpm-backend;
+{% endif %}
 fastcgi_index   index.php;
 
 fastcgi_buffer_size 8m;

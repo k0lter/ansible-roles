@@ -1,4 +1,3 @@
-#jinja2: trim_blocks:False
 {% if ansible_prolog -%}
 {% from 'templates/ansible/prolog.j2' import prolog with context %}
 {{ prolog(';') }}
@@ -15,9 +14,9 @@
 ; Start a new pool named 'www'.
 ; the variable $pool can be used in any directive and will be replaced by the
 ; pool name ('www' here)
-{% for pool in fpm_pools %}
-{% for num in range(0, fpm_pools[pool].count, 1) %}
-[{{ pool }}{{ num }}]
+
+{% for num in range(0, fpm_pool_count, 1) %}
+[www{{ num }}]
 
 ; Per pool prefix
 ; It only applies on the following directives:
@@ -36,8 +35,8 @@
 ; Unix user/group of processes
 ; Note: The user is mandatory. If the group is not set, the default user's group
 ;       will be used.
-user = {% if fpm_pools[pool].user is defined %}{{ fpm_pools[pool].user }}{% else %}{{ fpm_user }}{% endif %}
-group = {% if fpm_pools[pool].group is defined %}{{ fpm_pools[pool].group }}{% else %}{{ fpm_group }}{% endif %}
+user = {{ fpm_user }}
+group = {{ fpm_group }}
 
 ; The address on which to accept FastCGI requests.
 ; Valid syntaxes are:
@@ -109,7 +108,7 @@ listen.mode = 0660
 ;             pm.process_idle_timeout   - The number of seconds after which
 ;                                         an idle process will be killed.
 ; Note: This value is mandatory.
-pm = {% if fpm_pools[pool].pm is defined %}{{ fpm_pools[pool].pm }}{% else %}dynamic{% endif %}
+pm = dynamic
 
 ; The number of child processes to be created when pm is set to 'static' and the
 ; maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
@@ -120,22 +119,22 @@ pm = {% if fpm_pools[pool].pm is defined %}{{ fpm_pools[pool].pm }}{% else %}dyn
 ; forget to tweak pm.* to fit your needs.
 ; Note: Used when pm is set to 'static', 'dynamic' or 'ondemand'
 ; Note: This value is mandatory.
-pm.max_children = {% if fpm_pools[pool].max_children is defined %}{{ fpm_pools[pool].max_children }}{% else %}{{ fpm_max_children }}{% endif %}
+pm.max_children = {{ fpm_max_children }}
 
 ; The number of child processes created on startup.
 ; Note: Used only when pm is set to 'dynamic'
 ; Default Value: min_spare_servers + (max_spare_servers - min_spare_servers) / 2
-pm.start_servers = {% if fpm_pools[pool].start_servers is defined %}{{ fpm_pools[pool].start_servers }}{% else %}{{ fpm_start_servers }}{% endif %}
+pm.start_servers = {{ fpm_start_servers }}
 
 ; The desired minimum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.min_spare_servers = {% if fpm_pools[pool].min_spare_servers is defined %}{{ fpm_pools[pool].min_spare_servers }}{% else %}{{ fpm_min_spare_servers }}{% endif %}
+pm.min_spare_servers = {{ fpm_min_spare_servers }}
 
 ; The desired maximum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.max_spare_servers = {% if fpm_pools[pool].max_spare_servers is defined %}{{ fpm_pools[pool].max_spare_servers }}{% else %}{{ fpm_max_spare_servers }}{% endif %}
+pm.max_spare_servers = {{ fpm_max_spare_servers }}
 
 ; The number of seconds after which an idle process will be killed.
 ; Note: Used only when pm is set to 'ondemand'
@@ -146,7 +145,7 @@ pm.max_spare_servers = {% if fpm_pools[pool].max_spare_servers is defined %}{{ f
 ; This can be useful to work around memory leaks in 3rd party libraries. For
 ; endless request processing specify '0'. Equivalent to PHP_FCGI_MAX_REQUESTS.
 ; Default Value: 0
-pm.max_requests = {% if fpm_pools[pool].max_requests is defined %}{{ fpm_pools[pool].max_requests }}{% else %}200{% endif %}
+pm.max_requests = 200
 
 ; The URI to view the FPM status page. If this value is not set, no URI will be
 ; recognized as a status page. It shows the following informations:
@@ -420,6 +419,5 @@ catch_workers_output = yes
 ;php_admin_value[memory_limit] = 32M
 php_admin_flag[cgi.fix_pathinfo] = on
 
-{% endfor %}
 {% endfor %}
 ; vim: ft=dosini

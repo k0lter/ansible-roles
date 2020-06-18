@@ -3,6 +3,17 @@
 {{ prolog() }}
 {% endif -%}
 
+{% if fpm_pools is defined and fpm_pools %}
+{% for pool in fpm_pools %}
+upstream fpm-backend-{{ pool }} {
+    # Depending on the IP ensure that the same server will handle the request
+    #ip_hash;
+{% for num in range(0, fpm_pools[pool].count, 1) %}
+    server unix:/run/php/php{{ php_version }}-fpm-pool-{{ pool }}{{ num }}.sock;
+{% endfor %}
+}
+{% endfor %}
+{% else %}
 upstream fpm-backend {
     # Depending on the IP ensure that the same server will handle the request
     #ip_hash;
@@ -14,3 +25,4 @@ upstream fpm-backend {
 {% endif %}
 {% endfor %}
 }
+{% endif %}

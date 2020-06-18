@@ -18,6 +18,7 @@ with_modphp5: False
 with_modphp: False
 
 with_fpm: False
+
 fpm_pool_count: 1
 fpm_user: 'www-data'
 fpm_group: 'www-data'
@@ -26,6 +27,8 @@ fpm_start_servers: 2
 fpm_max_children: 5
 fpm_min_spare_servers: 1
 fpm_max_spare_servers: 3
+
+fpm_pools: Null
 
 with_php: False
 php_version: '7.0'

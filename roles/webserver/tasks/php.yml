@@ -339,7 +339,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install FPM pools configuration for PHP 5 (Debian <= 8)'
+- name: 'Install FPM pools configuration (legacy) for PHP 5 (Debian <= 8)'
   template:
     src: 'fpm/php5-fpm-pools.conf.j2'
     dest: '/etc/php5/fpm/pool.d/local-pool.cnf'
@@ -348,7 +348,21 @@
     mode: '0644'
   notify:
       - 'Reload FPM for PHP 5'
-  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and not (fpm_pools is defined and fpm_pools) and ansible_lsb.major_release|int <= 8
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install FPM pools configuration (legacy) for PHP {{ php_version }} (Debian > 9)'
+  template:
+    src: 'fpm/php-fpm-pools-legacy.conf.j2'
+    dest: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+      - 'Reload FPM for PHP'
+  when: with_fpm|bool and not (fpm_pools is defined and fpm_pools) and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -362,7 +376,7 @@
     mode: '0644'
   notify:
       - 'Reload FPM for PHP'
-  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and fpm_pools is defined and fpm_pools and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -386,6 +400,8 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+  notify:
+      - 'Reload FPM for PHP'
   when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
