@@ -1,7 +1,7 @@
 - name: 'Install Xen related packages'
   apt:
     pkg:
-      - 'xen-linux-system-amd64'
+      - 'xen-system-amd64'
       - 'grub-xen-host'
       - 'bridge-utils'
       - 'debootstrap'
