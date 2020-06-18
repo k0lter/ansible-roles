@@ -81,7 +81,7 @@
   tags:
     - 'ssl'
 
-- name: 'Install Lets Encrypt client'
+- name: 'Install Lets Encrypt client (dehydrated)'
   apt:
     pkg: 'dehydrated'
     state: 'present'
@@ -90,7 +90,7 @@
   tags:
     - 'ssl'
 
-- name: 'Install Lets Encrypt client from backports (Debian == 9)'
+- name: 'Install Lets Encrypt client (dehydrated) from backports (Debian == 9)'
   apt:
     pkg: 'dehydrated'
     state: 'present'
@@ -99,13 +99,60 @@
   tags:
     - 'ssl'
 
-- name: 'Install Lets Encrypt domains configuration'
+- name: 'Install Lets Encrypt domains configuration for dehydrated)'
   template:
-    src: 'ssl/letsencrypt_domains.j2'
+    src: 'dehydrated/domains.j2'
     dest: '/etc/dehydrated/domains.txt'
     owner: 'root'
     group: 'root'
     mode: '0644'
+  when: ssl_certs_auto|length > 0
+  tags:
+    - 'ssl'
+
+- name: 'Create dehydrated hooks directory'
+  file:
+    path: '/etc/dehydrated/hooks'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  when: ssl_certs_auto|length > 0
+  tags:
+    - 'ssl'
+
+- name: 'Install configuration for hooks support in dehydrated'
+  template:
+    src: 'dehydrated/config_hooks.sh.j2'
+    dest: '/etc/dehydrated/conf.d/hooks.sh'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: ssl_certs_auto|length > 0
+  tags:
+    - 'ssl'
+
+- name: 'Install hook script for dehydrated'
+  template:
+    src: 'dehydrated/hook.sh.j2'
+    dest: '/etc/dehydrated/hook.sh'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  when: ssl_certs_auto|length > 0
+  tags:
+    - 'ssl'
+
+- name: 'Install dehydrated hooks for various services'
+  template:
+    src: 'dehydrated/hooks/{{ item }}.sh.j2'
+    dest: '/etc/dehydrated/hooks/{{ item }}.sh'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  with_items:
+    - 'nginx'
+    - 'apache2'
   when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
