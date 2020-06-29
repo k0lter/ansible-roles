@@ -2,20 +2,17 @@
 {% from 'templates/ansible/prolog.j2' import prolog with context %}
 {{ prolog() }}
 {% endif -%}
-deb {{ debian_mirror }} squeeze main contrib non-free
-#deb-src {{ debian_mirror }} squeeze main contrib non-free
+deb http://archive.debian.org/debian squeeze main contrib non-free
+#deb-src http://archive.debian.org/debian squeeze main contrib non-free
 
-deb {{ debian_mirror }} squeeze-updates main contrib non-free
-#deb-src {{ debian_mirror }} squeeze-updates main contrib non-free
+deb http://archive.debian.org/debian squeeze-proposed-updates main contrib non-free
+#deb-src http://archive.debian.org/debian squeeze-proposed-updates main contrib non-free
 
-deb {{ debian_mirror }} squeeze-lts main contrib non-free
-#deb-src {{ debian_mirror }} squeeze-lts main contrib non-free
+deb http://archive.debian.org/debian squeeze-lts main contrib non-free
+#deb-src http://archive.debian.org/debian squeeze-lts main contrib non-free
 
-deb http://security.debian.org/ squeeze/updates main contrib non-free
-#deb-src http://security.debian.org/ squeeze/updates main contrib non-free
+#deb http://archive.debian.org/debian-backports squeeze-backports main contrib non-free
+#deb-src http://archive.debian.org/debian-backports squeeze-backports main contrib non-free
 
-deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free
-#deb-src http://backports.debian.org/debian-backports squeeze-backports main contrib non-free
-
-deb http://backports.debian.org/debian-backports squeeze-backports-sloppy main contrib non-free
-#deb-src http://backports.debian.org/debian-backports squeeze-backports-sloppy main contrib non-free
+#deb http://archive.debian.org/debian-backports squeeze-backports-sloppy main contrib non-free
+#deb-src http://archive.debian.org/debian-backports squeeze-backports-sloppy main contrib non-free
