@@ -86,16 +86,7 @@
     pkg: 'dehydrated'
     state: 'present'
     default_release: '{{ ansible_lsb.codename }}'
-  when: ssl_certs_auto|length > 0 and ansible_lsb.major_release|int != 9
-  tags:
-    - 'ssl'
-
-- name: 'Install Lets Encrypt client (dehydrated) from backports (Debian == 9)'
-  apt:
-    pkg: 'dehydrated'
-    state: 'present'
-    default_release: '{{ ansible_lsb.codename }}-backports'
-  when: ssl_certs_auto|length > 0 and ansible_lsb.major_release|int == 9
+  when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 
