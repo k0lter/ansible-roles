@@ -20,15 +20,19 @@
         AuthType basic
         AuthName "Restricted Access"
         AuthUserFile /etc/apache2/auth_admin
-        Require valid-user
+        <RequireAny>
+{% if phpsyscheck_http_whitelist_ip|length > 0 %}
+            Require ip {{ phpsyscheck_http_whitelist_ip | join(' ')  }}
+{% endif %}
+            Require valid-user
+        </RequireAny>
     </Location>
 {% endif %}
 
     <Directory /etc/phpsyscheck>
         Options None
         AllowOverride None
-        Order allow,deny
-        Allow from all
+        Require all granted
     </Directory>
 
 {% if with_fpm|bool %}
@@ -59,15 +63,19 @@
         AuthType basic
         AuthName "Restricted Access"
         AuthUserFile /etc/apache2/auth_admin
-        Require valid-user
+        <RequireAny>
+{% if phpsyscheck_http_whitelist_ip|length > 0 %}
+            Require ip {{ phpsyscheck_http_whitelist_ip | join(' ')  }}
+{% endif %}
+            Require valid-user
+        </RequireAny>
     </Location>
 {% endif %}
 
     <Directory /etc/phpsyscheck>
         Options None
         AllowOverride None
-        Order allow,deny
-        Allow from all
+        Require all granted
     </Directory>
 
     <IfModule php7_module>

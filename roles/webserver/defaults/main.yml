@@ -40,6 +40,7 @@ phpsyscheck_vhostip: Null
 phpsyscheck_vhostport: Null
 phpsyscheck_ssl: False
 phpsyscheck_http_auth: False
+phpsyscheck_http_whitelist_ip: []
 
 php_config:
   date.timezone: 'Europe/Paris'
@@ -62,12 +63,14 @@ phpmyadmin_vhostip: Null
 phpmyadmin_vhostport: Null
 phpmyadmin_ssl: False
 phpmyadmin_http_auth: False
+phpmyadmin_http_whitelist_ip: []
 
 with_phppgadmin: False
 phppgadmin_vhostname: 'pga.localhost'
 phppgadmin_vhostip: Null
 phppgadmin_vhostport: 80
 phppgadmin_http_auth: False
+phppgadmin_http_whitelist_ip: []
 
 http_auth_admin_password: Null
 http_auth_user_name: Null

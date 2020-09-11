@@ -15,7 +15,12 @@
         AuthType basic
         AuthName "Restricted Access"
         AuthUserFile /etc/apache2/auth_admin
-        Require valid-user
+        <RequireAny>
+{% if phppgadmin_http_whitelist_ip|length > 0 %}
+            Require ip {{ phppgadmin_http_whitelist_ip | join(' ')  }}
+{% endif %}
+            Require valid-user
+        </RequireAny>
     </Location>
 {% endif %}
 

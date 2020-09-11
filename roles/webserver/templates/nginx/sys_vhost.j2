@@ -30,6 +30,13 @@ server {
 {% if phpsyscheck_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
+{% if phpsyscheck_http_whitelist_ip|length > 0 %}
+{% for ip in phpsyscheck_http_whitelist_ip %}
+    allow {{ ip }};
+{% endfor %}
+    deny all;
+    satisfy any;
+{% endif %}
 {% endif %}
 
     location ~ \.php(/|$) {
@@ -56,6 +63,13 @@ server {
 {% if phpsyscheck_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
+{% if phpsyscheck_http_whitelist_ip|length > 0 %}
+{% for ip in phpsyscheck_http_whitelist_ip %}
+    allow {{ ip }};
+{% endfor %}
+    deny all;
+    satisfy any;
+{% endif %}
 {% endif %}
 
     location ~ \.php(/|$) {
