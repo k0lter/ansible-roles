@@ -27,7 +27,7 @@ server {
     index index.php;
     try_files $uri $uri/ /index.php;
 
-{% if http_auth_phpmyadmin %}
+{% if phpmyadmin_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
 {% endif %}
@@ -61,7 +61,7 @@ server {
     index index.php;
     try_files $uri $uri/ /index.php;
 
-{% if http_auth_phpmyadmin %}
+{% if phpmyadmin_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
 {% endif %}

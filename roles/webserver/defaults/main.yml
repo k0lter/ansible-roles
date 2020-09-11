@@ -39,7 +39,7 @@ phpsyscheck_vhostname: 'sys.localhost'
 phpsyscheck_vhostip: Null
 phpsyscheck_vhostport: Null
 phpsyscheck_ssl: False
-http_auth_syscheck: False
+phpsyscheck_http_auth: False
 
 php_config:
   date.timezone: 'Europe/Paris'
@@ -61,13 +61,13 @@ phpmyadmin_vhostname: 'pma.localhost'
 phpmyadmin_vhostip: Null
 phpmyadmin_vhostport: Null
 phpmyadmin_ssl: False
-http_auth_phpmyadmin: False
+phpmyadmin_http_auth: False
 
 with_phppgadmin: False
 phppgadmin_vhostname: 'pga.localhost'
 phppgadmin_vhostip: Null
 phppgadmin_vhostport: 80
-http_auth_phppgadmin: False
+phppgadmin_http_auth: False
 
 http_auth_admin_password: Null
 http_auth_user_name: Null

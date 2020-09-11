@@ -15,7 +15,7 @@
     DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php
 
-{% if http_auth_syscheck %}
+{% if phpsyscheck_http_auth %}
     <Location />
         AuthType basic
         AuthName "Restricted Access"
@@ -54,7 +54,7 @@
     DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php
 
-{% if http_auth_syscheck %}
+{% if phpsyscheck_http_auth %}
     <Location />
         AuthType basic
         AuthName "Restricted Access"

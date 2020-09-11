@@ -15,7 +15,7 @@
     DocumentRoot /usr/share/phpmyadmin
     DirectoryIndex index.php
 
-{% if http_auth_phpmyadmin %}
+{% if phpmyadmin_http_auth %}
     <Location />
         AuthType basic
         AuthName "Restricted Access"
@@ -65,7 +65,7 @@
     DocumentRoot /usr/share/phpmyadmin
     DirectoryIndex index.php
 
-{% if http_auth_phpmyadmin %}
+{% if phpmyadmin_http_auth %}
     <Location />
         AuthType basic
         AuthName "Restricted Access"

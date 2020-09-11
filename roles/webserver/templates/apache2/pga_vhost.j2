@@ -10,7 +10,7 @@
     DocumentRoot /usr/share/phppgadmin
     DirectoryIndex index.php
 
-{% if http_auth_phppgadmin %}
+{% if phppgadmin_http_auth %}
     <Location />
         AuthType basic
         AuthName "Restricted Access"

@@ -16,7 +16,7 @@ server {
     index index.php;
     try_files $uri $uri/ /index.php;
 
-{% if http_auth_phppgadmin %}
+{% if phppgadmin_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
 {% endif %}
