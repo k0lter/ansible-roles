@@ -23,6 +23,7 @@ fpm_pool_count: 1
 fpm_user: 'www-data'
 fpm_group: 'www-data'
 # fpm_max_children ~= (total RAM - RAM used by other process) / (average amount of RAM used by a PHP process)
+fpm_pm: 'dynamic'
 fpm_start_servers: 2
 fpm_max_children: 5
 fpm_min_spare_servers: 1
