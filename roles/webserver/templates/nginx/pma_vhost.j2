@@ -28,15 +28,17 @@ server {
     try_files $uri $uri/ /index.php;
 
 {% if phpmyadmin_http_auth %}
-    auth_basic "Restricted Access";
-    auth_basic_user_file /etc/nginx/auth_admin;
+    location / {
+        auth_basic "Restricted Access";
+        auth_basic_user_file /etc/nginx/auth_admin;
 {% if phpmyadmin_http_whitelist_ip|length > 0 %}
 {% for ip in phpmyadmin_http_whitelist_ip %}
-    allow {{ ip }};
+        allow {{ ip }};
 {% endfor %}
-    deny all;
-    satisfy any;
+        deny all;
+        satisfy any;
 {% endif %}
+    }
 {% endif %}
 
     client_max_body_size 128m;
