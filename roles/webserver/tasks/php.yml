@@ -362,6 +362,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+    trim_blocks: 'no'
   notify:
       - 'Reload FPM for PHP'
   when: with_fpm|bool and not (fpm_pools is defined and fpm_pools) and ansible_lsb.major_release|int >= 9
@@ -376,6 +377,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+    trim_blocks: 'no'
   notify:
       - 'Reload FPM for PHP'
   when: with_fpm|bool and fpm_pools is defined and fpm_pools and ansible_lsb.major_release|int >= 9

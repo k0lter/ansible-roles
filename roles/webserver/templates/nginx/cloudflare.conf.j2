@@ -1,7 +1,8 @@
-{% if ansible_prolog -%}
-{% from 'templates/ansible/prolog.j2' import prolog with context %}
-{{ prolog() }}
-{% endif -%}
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
 
 set_real_ip_from 103.21.244.0/22;
 set_real_ip_from 103.22.200.0/22;

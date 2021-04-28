@@ -7,7 +7,7 @@ block/{{ disk }}/queue/scheduler = none
 {% endfor %}
 {% endif %}
 {% if sysfs_disk_settings %}
-{% for disk in ansible_devices -%}
+{% for disk in ansible_devices %}
 {% for key in sysfs_disk_settings %}
 block/{{ disk }}/{{ key }} = {{ sysfs_disk_settings[key] }}
 {% endfor %}

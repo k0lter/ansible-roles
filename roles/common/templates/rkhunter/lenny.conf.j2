@@ -1,7 +1,8 @@
-{% if ansible_prolog -%}
-{% from 'templates/ansible/prolog.j2' import prolog with context %}
-{{ prolog() }}
-{% endif -%}
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
 #
 # This is the configuration file for Rootkit Hunter.
 #
@@ -201,10 +202,10 @@ ALLOW_SSH_PROT_V1=0
 # package in Debian.
 ENABLE_TESTS="all"
 {% set disable_tests = [] %}
-{% if not ansible_virtualization_role is defined or ansible_virtualization_role != 'guest' -%}
+{% if not ansible_virtualization_role is defined or ansible_virtualization_role != 'guest' %}
   {% if disable_tests.append('os_specific') %}{% endif %}
 {%- endif %}
-{% if not ansible_virtualization_role is defined or ansible_virtualization_role != 'host' -%}
+{% if not ansible_virtualization_role is defined or ansible_virtualization_role != 'host' %}
     {% if disable_tests.append('promisc') %}{% endif %}
 {%- endif %}
 DISABLE_TESTS="suspscan hidden_procs deleted_files packet_cap_apps apps {{ disable_tests|join(' ') }}"

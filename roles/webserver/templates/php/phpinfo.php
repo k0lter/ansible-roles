@@ -1,8 +1,8 @@
 <?php
-{% if ansible_prolog -%}
-{% from 'templates/ansible/prolog.j2' import prolog with context %}
-{{ prolog() }}
-{% endif -%}
-
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
 phpinfo();
 ?>
