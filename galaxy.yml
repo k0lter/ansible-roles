@@ -1,0 +1,13 @@
+namespace: kolter
+name: roles
+version: 1.0.0
+readme: README.md
+authors:
+  - Emmanuel Bouthenot <kolter@openics.org>
+description: Various hosting roles
+license_file: LICENSE
+tags: [dbserver, ftpservey, hypervisor, monitoring, rsyncserver, webserver]
+repository: https://github.com/k0lter/ansible-roles.git
+documentation: null
+homepage: https://github.com/k0lter/ansible-roles
+issues: https://github.com/k0lter/ansible-roles/issues
