@@ -10,7 +10,11 @@ upstream fpm-backend-{{ pool }} {
     # Depending on the IP ensure that the same server will handle the request
     #ip_hash;
 {% for num in range(0, fpm_pools[pool].count, 1) %}
+{% if ansible_lsb.major_release|int >= 9 %}
     server unix:/run/php/php{{ php_version }}-fpm-pool-{{ pool }}{{ num }}.sock;
+{% else %}
+    server unix:/var/run/php5-fpm-pool-{{ pool }}{{ num }}.sock;
+{% endif %}
 {% endfor %}
 }
 {% endfor %}
