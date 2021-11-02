@@ -4,6 +4,7 @@
       - 'php5-cli'
       - 'php5-curl'
       - 'php5-gd'
+      - 'php5-imagick'
       - 'php5-intl'
       - 'php-soap'
       - 'php5-mcrypt'
@@ -28,6 +29,7 @@
       - 'php{{ php_version }}-pgsql'
       - 'php{{ php_version }}-sqlite3'
       - 'php{{ php_version }}-zip'
+      - 'php-imagick'
     state: 'present'
   when: with_php|bool and ansible_lsb.major_release|int >= 9
   tags:
