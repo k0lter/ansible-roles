@@ -1,0 +1,19 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+deb {{ debian_mirror }}/debian bullseye main contrib non-free
+#deb-src {{ debian_mirror }}/debian bullseye main contrib non-free
+
+deb http://deb.debian.org/debian-security bullseye-security main contrib non-free
+#deb-src http://deb.debian.org/debian-security bullseye-security main contrib non-free
+
+deb {{ debian_mirror }}/debian bullseye-updates main contrib non-free
+#deb-src {{ debian_mirror }}/debian bullseye-updates main contrib non-free
+
+#deb {{ debian_mirror }}/debian bullseye-backports main contrib non-free
+#deb-src {{ debian_mirror }}/debian/ bullseye-backports main contrib non-free
+
+#deb {{ debian_mirror }}/debian bullseye-backports-sloppy main contrib non-free
+#deb-src {{ debian_mirror }}/debian/ bullseye-backports-sloppy main contrib non-free
