@@ -11,4 +11,4 @@ SHELL=/bin/sh
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 MAILTO=root
 
-42 0-7 * * *    root    dehydrated --cron 2>&1 1>/dev/null | grep -v 'WARNING.*Extra configuration directory.*exists, but no configuration found'
+42 0-7 * * *    root    cd /etc/dehydrated && dehydrated --cron 2>&1 1>/dev/null | grep -v 'WARNING.*Extra configuration directory.*exists, but no configuration found'
