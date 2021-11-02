@@ -1,11 +1,22 @@
-- name: 'Create ssl certificates directory for in /etc/ssl'
+- name: 'Create ssl certificates directory'
+  file:
+    path: '/etc/ssl/local/certs'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  when: ssl_certs|length > 0 or ssl_certs_auto|length > 0
+  tags:
+    - 'ssl'
+
+- name: 'Create ssl certificates directories for each domain'
   file:
     path: '/etc/ssl/local/certs/{{ item }}'
     state: 'directory'
     owner: 'root'
     group: 'root'
     mode: '0755'
-  with_items: '{{ ssl_certs }}'
+  with_items: "{{ ssl_certs }}"
   when: ssl_certs|length > 0
   tags:
     - 'ssl'
@@ -153,7 +164,20 @@
   register: ssl_certs_auto_installed
   changed_when: False
   ignore_errors: True
+  check_mode: no
   when: ssl_certs_auto|length > 0
+  tags:
+    - 'ssl'
+
+- name: 'Create generic symlinks to Lets Encrypt SSL certificates'
+  file:
+    src: '/var/lib/dehydrated/certs/{{ item }}'
+    dest: '/etc/ssl/local/certs/{{ item }}'
+    owner: 'root'
+    group: 'root'
+    state: link
+  with_items: "{{ ssl_certs_auto_installed.stdout_lines }}"
+  when: ssl_certs_auto|length > 0 and ssl_certs_auto_installed.stdout_lines
   tags:
     - 'ssl'
 
