@@ -202,12 +202,4 @@
     - 'web'
     - 'apache2'
 
-- name: 'Ensure apache2 is running'
-  service:
-    name: 'apache2'
-    state: 'started'
-  tags:
-    - 'web'
-    - 'apache2'
-
 # vim: ft=yaml.ansible

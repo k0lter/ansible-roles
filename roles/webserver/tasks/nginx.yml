@@ -239,12 +239,4 @@
     - 'web'
     - 'nginx'
 
-- name: 'Ensure nginx is running'
-  service:
-    name: 'nginx'
-    state: 'started'
-  tags:
-    - 'web'
-    - 'nginx'
-
 # vim: ft=yaml.ansible
