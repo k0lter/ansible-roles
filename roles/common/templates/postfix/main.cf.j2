@@ -37,9 +37,19 @@ smtpd_tls_mandatory_ciphers = high
 smtpd_tls_mandatory_exclude_ciphers = aNULL, RC4, MD5
 smtpd_tls_protocols = !SSLv2, !SSLv3
 smtpd_tls_dh1024_param_file = /etc/ssl/private/dh2048.pem
+{% if postfix_fqdn is defined and ssl_certs_auto_installed is defined and postfix_fqdn in ssl_certs_auto_installed.stdout_lines %}
+smtpd_tls_cert_file = /etc/ssl/local/certs/{{ postfix_fqdn }}/cert.pem
+smtpd_tls_key_file = /etc/ssl/local/certs/{{ postfix_fqdn }}/privkey.pem
+smtpd_tls_CAfile = /etc/ssl/local/certs/{{ postfix_fqdn }}/fullchain.pem
+{% elif ssl_certs_auto_installed is defined and ansible_fqdn in ssl_certs_auto_installed.stdout_lines %}
+smtpd_tls_cert_file = /etc/ssl/local/certs/{{ ansible_fqdn }}/cert.pem
+smtpd_tls_key_file = /etc/ssl/local/certs/{{ ansible_fqdn }}/privkey.pem
+smtpd_tls_CAfile = /etc/ssl/local/certs/{{ ansible_fqdn }}/fullchain.pem
+{% else %}
 smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
 smtpd_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
 smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+{% endif %}
 smtpd_tls_session_cache_timeout = 3600
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 
