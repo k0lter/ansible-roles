@@ -1,0 +1,6 @@
+- name: 'Restart rspamd'
+  systemd:
+    name: 'rspamd'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

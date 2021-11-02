@@ -1,0 +1,80 @@
+- name: 'Install upstream apt key for rspamd'
+  apt_key:
+    id: '3FA347D5E599BE4595CA2576FFA232EDBF21E25E'
+    url: 'https://rspamd.com/apt-stable/gpg.key'
+    state: 'present'
+  when: with_rspamd|bool and with_rspamd_upstream|bool
+  tags:
+    - 'rspamd'
+
+- name: 'Install upstream apt repository for rspamd'
+  apt_repository:
+    repo: 'deb http://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
+    state: 'present'
+  when: with_rspamd|bool and with_rspamd_upstream|bool
+  tags:
+    - 'rspamd'
+
+- name: 'Install rspamd packages'
+  apt:
+    pkg:
+      - 'rspamd'
+      - 'redis-server'
+    install_recommends: 'no'
+    state: 'present'
+    update_cache: 'yes'
+  when: with_rspamd|bool
+  tags:
+    - 'rspamd'
+
+- name: 'Install local or overrides configurations files for rspamd'
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - src: 'templates/rspamd/local.d/actions.conf.j2'
+      dest: '/etc/rspamd/local.d/actions.conf'
+      installed: '{{ rspamd_actions }}'
+    - src: 'templates/rspamd/local.d/multimap.conf.j2'
+      dest: '/etc/rspamd/local.d/multimap.conf'
+      installed: '{{ rspamd_multimap }}'
+    - src: 'templates/rspamd/local.d/external_relay.conf.j2'
+      dest: '/etc/rspamd/local.d/external_relay.conf'
+      installed: '{{ rspamd_external_relay|length > 0 }}'
+    - src: 'templates/rspamd/local.d/maps.d/external_relay_hostname.map.j2'
+      dest: '/etc/rspamd/local.d/maps.d/external_relay_hostname.map'
+      installed: '{{ rspamd_external_relay|length > 0 }}'
+    - src: 'templates/rspamd/override.d/rbl_group.conf.j2'
+      dest: '/etc/rspamd/override.d/rbl_group.conf'
+      installed: '{{ rspamd_rbl_group  }}'
+    - src: 'templates/rspamd/override.d/surbl_group.conf.j2'
+      dest: '/etc/rspamd/override.d/surbl_group.conf'
+      installed: '{{ rspamd_surbl_group  }}'
+  when: item.installed|bool
+  notify:
+    - 'Restart rspamd'
+  tags:
+    - 'rspamd'
+
+- name: 'Check if rspamd default and empty local maps have already been installed'
+  template:
+    src: 'templates/rspamd/local.d/maps.d/{{ item }}.j2'
+    dest: '/etc/rspamd/local.d/maps.d/{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'body_spammy.inc'
+    - 'headers_spammy.inc'
+    - 'whitelist_sender.inc'
+    - 'whitelist_sender_domain.inc'
+  when: rspamd_multimap
+  notify:
+    - 'Restart rspamd'
+  tags:
+    - 'rspamd'
+
+# vim: ft=yaml.ansible

@@ -29,6 +29,10 @@
   when: with_opendkim|bool
   tags:
     - 'dkim'
+- include_tasks: rspamd.yml
+  when: with_rspamd|bool
+  tags:
+    - 'rspamd'
 - include_tasks: ssh.yml
   tags:
     - 'ssh'

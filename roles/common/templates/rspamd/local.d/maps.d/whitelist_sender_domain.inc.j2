@@ -1,0 +1,11 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local whitelist for domain senders (as regular expressions)
+#
+{% for rule in rspamd_multimap_whitelist_sender_domain %}
+{{ rule }}
+{% endfor %}

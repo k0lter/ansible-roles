@@ -1,0 +1,19 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local Actions settings
+#
+
+reject = {{ rspamd_actions_score_reject}}; # Reject when reaching this score
+add_header = {{ rspamd_actions_score_add_header }}; # Add header when reaching this score
+greylist = {{ rspamd_actions_score_greylist }}; # Apply greylisting when reaching this score (will emit `soft reject action`)
+rewrite_subject = {{ rspamd_actions_score_rewrite_subject }}; # Rewrite subject when reaching this score
+
+#unknown_weight = 1.0; # Enable if need to set score for all symbols implicitly
+# Each new symbol is added multiplied by gf^N, where N is the number of spammy symbols
+#grow_factor = 1.1;
+# Set rewrite subject to this value (%s is replaced by the original subject)
+subject = "***SPAM*** %s"

@@ -1,0 +1,82 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local Multimap settings
+#
+
+{{ rspamd_multimap_prefix }}WHITELIST_ENVFROM {
+  group = "Custom Rules";
+  description = "Envelope sender address in sender whitelist.";
+  type = "selector";
+  selector = "from('smtp')";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender.inc"
+  ];
+  score = -9.0;
+}
+
+{{ rspamd_multimap_prefix }}WHITELIST_ENVFROM_DOMAIN {
+  group = "Custom Rules";
+  description = "Envelope sender domain in sender whitelist.";
+  type = "selector";
+  selector = "from('smtp'):domain";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.dmaps.d/whitelist_sender_domain.inc"
+  ];
+  score = -9.0;
+}
+
+{{ rspamd_multimap_prefix }}WHITELIST_FROM {
+  group = "Custom Rules";
+  description = "From: header address in sender whitelist.";
+  type = "selector";
+  selector = "from('mime')";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender.inc"
+  ];
+  score = -1.0;
+}
+
+{{ rspamd_multimap_prefix }}WHITELIST_FROM_DOMAIN {
+  group = "Custom Rules";
+  description = "From: header domain in sender whitelist.";
+  type = "selector";
+  selector = "from('mime'):domain";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender_domain.inc"
+  ];
+  score = -1.0;
+}
+
+{{ rspamd_multimap_prefix }}SPAMMY_BODY {
+  group = "Custom Rules";
+  description = "Email body contains spammy content";
+  type = "content";
+  filter = "text";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/body_spammy.inc"
+  ];
+  multi = true;
+  score = 1.0;
+}
+
+{{ rspamd_multimap_prefix }}CHECK_HEADERS {
+  group = "Custom Rules";
+  description = "Email headers checks";
+  type = "content";
+  filter = "headers";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/headers_spammy.inc"
+  ];
+  multi = true;
+  score = 1.0;
+}

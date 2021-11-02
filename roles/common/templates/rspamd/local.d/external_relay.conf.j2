@@ -1,0 +1,16 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local External Relay settings
+
+enabled = true;
+
+rules {
+  EXTERNAL_RELAY_BY_HOSTNAME {
+    strategy = "hostname_map";
+    hostname_map = "/etc/rspamd/local.d/maps.d/external_relay_hostname.map";
+  }
+}

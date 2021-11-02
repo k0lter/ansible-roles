@@ -1,0 +1,11 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local map for external relay
+#
+{% for host in rspamd_external_relay %}
+{{ host }} direct
+{% endfor %}

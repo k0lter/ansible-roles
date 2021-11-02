@@ -3,6 +3,7 @@
 - include: security.yml
 - include: smtp.yml
 - include: dkim.yml
+- include: rspamd.yml
 - include: ssh.yml
 - include: ssl.yml
 - include: smartd.yml

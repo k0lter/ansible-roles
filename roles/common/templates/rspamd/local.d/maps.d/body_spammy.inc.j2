@@ -1,0 +1,12 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local rules to score SPAM patterns in email body
+#
+#
+{% for rule in rspamd_multimap_rules_body_spammy %}
+{{ rule.pattern }} {{ rspamd_multimap_prefix }}{{ rule.symbol }}:{{ rule.score }}
+{% endfor %}

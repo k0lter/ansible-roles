@@ -60,6 +60,27 @@ postfix_external_smtp_credentials: Null
 postfix_external_smtp_relays: Null
 postfix_external_sender_rewrites: Null
 
+dkim_domains: []
+dkim_selector: 'default'
+with_opendkim: False
+
+with_rspamd: False
+with_rspamd_upstream: False
+rspamd_actions: True
+rspamd_actions_score_reject: 30
+rspamd_actions_score_add_header: 6
+rspamd_actions_score_greylist: 4
+rspamd_actions_score_rewrite_subject: 8
+rspamd_multimap: True
+rspamd_multimap_prefix: ''
+rspamd_external_relay: []
+rspamd_rbl_group: True
+rspamd_surbl_group: True
+rspamd_multimap_rules_body_spammy: []
+rspamd_multimap_rules_headers_spammy: []
+rspamd_multimap_whitelist_sender: []
+rspamd_multimap_whitelist_sender_domain: []
+
 with_ssh: True
 ssh_strengthened: True
 ssh_ports:
@@ -82,9 +103,5 @@ dotfiles_lcsshvars: 0
 
 ssl_certs: []
 ssl_certs_auto: []
-
-dkim_domains: []
-dkim_selector: 'default'
-with_opendkim: False
 
 # vim: ft=yaml.ansible
