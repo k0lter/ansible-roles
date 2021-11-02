@@ -22,6 +22,7 @@
     - 'jessie'
     - 'stretch'
     - 'buster'
+    - 'bullseye'
   tags:
     - 'hypervisor'
     - 'ganeti'
@@ -38,6 +39,7 @@
     - 'jessie'
     - 'stretch'
     - 'buster'
+    - 'bullseye'
   tags:
     - 'hypervisor'
     - 'ganeti'
