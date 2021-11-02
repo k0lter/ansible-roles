@@ -53,6 +53,7 @@ php_config_web:
   display_startup_errors: 'off'
   log_errors: 'on'
   html_errors: 'off'
+  session.cookie_secure: 'on'
 # Set with /etc/default/php5-fpm (see https://bugs.php.net/bug.php?id=66239)
 #  error_log: 'syslog'
 
