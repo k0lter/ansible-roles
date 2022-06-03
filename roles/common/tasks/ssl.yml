@@ -155,6 +155,7 @@
   with_items:
     - 'nginx'
     - 'apache2'
+    - 'dovecot'
   when: ssl_certs_auto|length > 0
   tags:
     - 'ssl'
