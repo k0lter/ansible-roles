@@ -49,7 +49,7 @@
     - 'sql'
 
 - name: 'Add MySQL or MariaDB admin account'
-  raw: if ! echo "SELECT VERSION();" | mysql -u admin --password='{{ mysql_admin_password }}' >/dev/null 2>&1 ; then echo "CREATE USER 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}'; GRANT ALL PRIVILEGES ON * . * TO 'admin'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
+  raw: if ! echo "SELECT VERSION();" | mysql -u admin --password='{{ mysql_admin_password }}' >/dev/null 2>&1 ; then echo "CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}'; ALTER USER 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}' ; GRANT ALL PRIVILEGES ON * . * TO 'admin'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
   changed_when: False
   when: mysql_admin_password|length > 0
   tags:
