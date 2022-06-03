@@ -13,6 +13,7 @@ nginx_security_xframeoptions: True
 nginx_security_xxssprotection: True
 nginx_security_xcontenttypeoptions: True
 nginx_fpm_openbasedir_enforced: False
+nginx_logfmt_json: False
 
 with_modphp5: False
 with_modphp: False

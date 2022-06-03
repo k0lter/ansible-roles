@@ -77,11 +77,36 @@ http {
     include       /etc/nginx/mime.types.custom;
     default_type  application/octet-stream;
 
-    # Format to use in log files
+    # Format(s) to use in log files
     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
                     '$status $body_bytes_sent "$http_referer" '
                     '"$http_user_agent" "$http_x_forwarded_for" '
                     '$host ${request_time} ${scheme}';
+{% if nginx_logfmt_json %}
+    log_format fulljson escape=json
+        '{'
+            '"request_id":"$request_id",'
+            '"time_iso8601":"$time_iso8601",'
+            '"remote_addr":"$remote_addr",'
+            '"remote_user":"$remote_user",'
+            '"request_uri":"$request_uri",'
+            '"request_method":"$request_method",'
+            '"request_protocol":"$server_protocol",'
+            '"request_time":"$request_time",'
+            '"request_length":"$request_length",'
+            '"request_completion":"$request_completion",'
+            '"status":"$status",'
+            '"scheme":"$scheme",'
+            '"http_host":"$http_host",'
+            '"http_referrer":"$http_referer",'
+            '"http_user_agent":"$http_user_agent",'
+            '"http_x_forwarded_for":"$http_x_forwarded_for",'
+            '"body_bytes_sent":"$body_bytes_sent",'
+            '"upstream_connect_time":"$upstream_connect_time",'
+            '"upstream_response_length":"$upstream_response_length",'
+            '"upstream_response_time":"$upstream_response_time"'
+        '}';
+{% endif %}
 
     ### Default log files ###
 
@@ -89,7 +114,7 @@ http {
     access_log /var/log/nginx/access.log;
     error_log /var/log/nginx/error.log;
 
-    # Compression
+    ### Compression ###
 
     # Enable Gzip compressed.
     gzip on;
@@ -168,11 +193,6 @@ http {
     # Make it a symlink to the most important certificate you have, so that users of IE 8 and below on WinXP can see your main site without SSL errors.
     #ssl_certificate      /etc/nginx/default_ssl.crt;
     #ssl_certificate_key  /etc/nginx/default_ssl.key;
-
-    ### Passenger ###
-
-    #passenger_root /usr;
-    #passenger_ruby /usr/bin/ruby;
 
     ### Extended configuration ###
 
