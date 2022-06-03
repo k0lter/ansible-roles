@@ -1,0 +1,13 @@
+- name: 'Install webstats related packages'
+  apt:
+    pkg:
+      - 'goaccess'
+      - 'mergelog'
+      - 'geoip-database'
+    state: 'installed'
+  when: with_webstats
+  tags:
+    - 'web'
+    - 'webstats'
+
+# vim: ft=yaml.ansible
