@@ -24,6 +24,7 @@ debian_mirror: 'http://deb.debian.org'
 apt_keys: []
 apt_repositories: []
 apt_additional_packages: []
+apt_additional_packages_local: []
 
 hosts_deny_nfs: False
 host_deny_paranoid: False

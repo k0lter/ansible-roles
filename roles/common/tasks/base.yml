@@ -111,6 +111,15 @@
   tags:
     - 'base'
 
+- name: 'Install additional packages (local)'
+  apt:
+    pkg: '{{ apt_additional_packages_local }}'
+    install_recommends: 'no'
+    state: 'present'
+  when: apt_additional_packages_local|length > 0
+  tags:
+    - 'base'
+
 - name: 'Install ntp daemon'
   apt:
     pkg: 'ntp'
