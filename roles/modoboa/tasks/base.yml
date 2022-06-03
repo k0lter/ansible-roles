@@ -1,0 +1,47 @@
+- name: 'Install PostgreSQL bindings for Perl'
+  ansible.builtin.apt:
+    pkg:
+      - 'libdbd-pg-perl'
+    state: 'present'
+  when:  modoboa_db_driver == 'postgres'
+  tags:
+    - 'modoboa'
+
+- name: 'Install MySQL bindings for Perl'
+  ansible.builtin.apt:
+    pkg:
+      - 'libdbd-mysql-perl'
+    state: 'present'
+  when: modoboa_db_driver == 'mysql'
+  tags:
+    - 'modoboa'
+
+- name: 'Install PostgreSQL bindings for Python'
+  ansible.builtin.apt:
+    pkg:
+      - 'python-psycopg2'
+    state: 'present'
+  when:  modoboa_db_driver == 'postgres'
+  tags:
+    - 'modoboa'
+
+- name: 'Install MySQL bindings for Python'
+  ansible.builtin.apt:
+    pkg:
+      - 'python-mysqldb'
+    state: 'present'
+  when: modoboa_db_driver == 'mysql'
+  tags:
+    - 'modoboa'
+
+- name: 'Creating Modoboa user: {{ modoboa_user }}'
+  ansible.builtin.user:
+    name: '{{ modoboa_user }}'
+    home: '{{ modoboa_home }}'
+    state: 'present'
+    shell: '{{ modoboa_shell }}'
+    comment: 'Modoboa User'
+  tags:
+    - 'modoboa'
+
+# vim: ft=yaml.ansible

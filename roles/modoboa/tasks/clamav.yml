@@ -1,0 +1,88 @@
+- name: 'Install Clamav FreshClam daemon'
+  ansible.builtin.apt:
+    pkg:
+      - 'clamav-freshclam'
+    state: 'present'
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Checking if Clamav daily updated database (/var/lib/clamav/daily.cvd) exists'
+  ansible.builtin.stat:
+    path: '/var/lib/clamav/daily.cvd'
+  register: clamav_daily_db
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Stopping Clamav FreshClam daemon'
+  ansible.builtin.service:
+    name: 'clamav-freshclam'
+    state: stopped
+  when: not clamav_daily_db.stat.exists
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Updating Clamav FreshClam database'
+  become: 'yes'
+  become_user: 'clamav'
+  ansible.builtin.command:
+    cmd: '/usr/bin/freshclam --quiet'
+  when: not clamav_daily_db.stat.exists
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Starting Clamav FreshClam daemon'
+  ansible.builtin.service:
+    name: 'clamav-freshclam'
+    state: started
+  when: not clamav_daily_db.stat.exists
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Install Clamav daemon and utilities'
+  ansible.builtin.apt:
+    pkg:
+      - 'clamav-daemon'
+    state: 'present'
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Add Amavis in Clamav user additionnal groups'
+  ansible.builtin.user:
+    name: 'clamav'
+    groups: 'amavis'
+    append: 'yes'
+  notify:
+    - 'Restart Clamav Daemon'
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+- name: 'Ensure Clamav Daemons are running'
+  ansible.builtin.service:
+    name: '{{ item }}'
+    state: 'started'
+  with_items:
+    - 'clamav-daemon'
+    - 'clamav-freshclam'
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+#- name: 'Change Clamav configuration to set AllowSupplementaryGroups=true'
+#  ansible.builtin.lineinfile:
+#    path: '/etc/clamav/clamd.conf'
+#    regexp: '^AllowSupplementaryGroups '
+#    line: 'AllowSupplementaryGroups true'
+#  notify:
+#    - 'Restart Clamav Daemon'
+#  tags:
+#    - 'modoboa'
+#    - 'clamav'
+
+# vim: ft=yaml.ansible

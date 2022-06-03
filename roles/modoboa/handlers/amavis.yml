@@ -1,0 +1,6 @@
+- name: 'Restart Amavis Daemon'
+  ansible.builtin.service:
+    name: 'amavis'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

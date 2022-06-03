@@ -1,0 +1,106 @@
+- name: 'Install Amavis daemon and recommended utilities'
+  ansible.builtin.apt:
+    pkg:
+      - 'amavisd-new'
+      - 'arc'
+      - 'arj'
+      - 'bzip2'
+      - 'cabextract'
+      - 'libdbi-perl'
+      - 'liblz4-tool'
+      - 'lhasa'
+      - 'nomarch'
+      - 'lrzip'
+      - 'lzop'
+      - 'p7zip-full'
+      - 'rpm2cpio'
+      - 'unrar-free'
+      - 'unzip'
+      - 'zip'
+    install_recommends: 'yes'
+    state: 'present'
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+- name: 'Creating Amavis database user: {{ amavis_db_user }}'
+  become: 'yes'
+  become_user: 'postgres'
+  community.postgresql.postgresql_user:
+    name: '{{ amavis_db_user }}'
+    password: '{{ amavis_db_pass }}'
+    state: 'present'
+  when: modoboa_db_driver == 'postgresql'
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+- name: 'Creating Amavis database: {{ amavis_db_name }}'
+  become: 'yes'
+  become_user: 'postgres'
+  community.postgresql.postgresql_db:
+    name: '{{ amavis_db_name }}'
+    owner: '{{ amavis_db_user }}'
+    encoding: 'UTF-8'
+    lc_collate: 'en_US.UTF-8'
+    lc_ctype: 'en_US.UTF-8'
+    template: 'template0'
+  when: modoboa_db_driver == 'postgresql'
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+- name: 'Detecting if the Amavis SQL Schema is already installed'
+  community.postgresql.postgresql_query:
+    login_host: '{{ modoboa_db_host }}'
+    port: '{{ modoboa_db_port }}'
+    login_user: '{{ amavis_db_user }}'
+    login_password: '{{ amavis_db_pass }}'
+    db: '{{ amavis_db_name }}'
+    query: "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
+  register: amavis_schema_result
+  when: modoboa_db_driver == 'postgresql'
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+- name: 'Copying Amavis SQL Schema (if needed)'
+  ansible.builtin.template:
+    src: 'amavis/amavis-{{ modoboa_db_driver }}.sql.j2'
+    dest: '/tmp/modoboa-amavis.sql'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: amavis_schema_result.rowcount == 0
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+- name: 'Installing Amavis SQL Schema (if needed)'
+  community.postgresql.postgresql_query:
+    login_host: '{{ modoboa_db_host }}'
+    port: '{{ modoboa_db_port }}'
+    login_user: '{{ amavis_db_user }}'
+    login_password: '{{ amavis_db_pass }}'
+    db: '{{ amavis_db_name }}'
+    path_to_script: '/tmp/modoboa-amavis.sql'
+    as_single_query: yes
+  when: modoboa_db_driver == 'postgresql' and amavis_schema_result.rowcount == 0
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+- name: 'Install Amavis configuration'
+  ansible.builtin.template:
+    src: 'amavis/modoboa.j2'
+    dest: '/etc/amavis/conf.d/99-modoboa'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  notify:
+    - 'Restart Amavis Daemon'
+  tags:
+    - 'modoboa'
+    - 'amavis'
+
+# vim: ft=yaml.ansible

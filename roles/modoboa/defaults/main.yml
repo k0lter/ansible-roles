@@ -1,0 +1,26 @@
+#
+# Default variables modoboa
+#
+
+modoboa_user: 'modoboa'
+modoboa_home:  '/srv/files'
+modoboa_shell:  '/bin/bash'
+
+modoboa_amavis_max_servers:  2
+
+# modoboa_sql_driver in [postgresql, mysql]
+modoboa_db_driver:  'postgresql'
+
+amavis_db_host:  'localhost'
+amavis_db_port:  '5432'
+amavis_db_name:  'amavis'
+amavis_db_user:  'amavis'
+amavis_db_pass:  'amavis'
+
+spamassassin_db_host:  'localhost'
+spamassassin_db_port:  '5432'
+spamassassin_db_name:  'spamassassin'
+spamassassin_db_user:  'spamassassin'
+spamassassin_db_pass:  'spamassassin'
+
+# vim: ft=yaml.ansible

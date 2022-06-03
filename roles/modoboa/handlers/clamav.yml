@@ -1,0 +1,6 @@
+- name: 'Restart Clamav Daemon'
+  ansible.builtin.service:
+    name: 'clamav-daemon'
+    state: 'restarted'
+
+# vim: ft=yaml.ansible

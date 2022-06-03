@@ -1,0 +1,5 @@
+- include: 'base.yml'
+- include: 'amavis.yml'
+- include: 'clamav.yml'
+
+# vim: ft=yaml.ansible

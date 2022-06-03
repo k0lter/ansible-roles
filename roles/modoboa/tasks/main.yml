@@ -1,0 +1,21 @@
+- include_tasks: 'base.yml'
+  when: with_modoboa is defined and with_modoboa|bool is true
+  tags:
+    - 'modoboa'
+- include_tasks: 'spamassassin.yml'
+  when: with_modoboa is defined and with_modoboa|bool is true
+  tags:
+    - 'modoboa'
+    - 'spamassassin'
+- include_tasks: 'amavis.yml'
+  when: with_modoboa is defined and with_modoboa|bool is true
+  tags:
+    - 'modoboa'
+    - 'amavis'
+- include_tasks: 'clamav.yml'
+  when: with_modoboa is defined and with_modoboa|bool is true
+  tags:
+    - 'modoboa'
+    - 'clamav'
+
+# vim: ft=yaml.ansible

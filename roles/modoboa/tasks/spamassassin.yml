@@ -1,0 +1,65 @@
+- name: 'Install Spamassassin daemon and recommended utilities'
+  ansible.builtin.apt:
+    pkg:
+      - 'spamassassin'
+      - 'pyzor'
+    state: 'present'
+  tags:
+    - 'modoboa'
+    - 'spamassassin'
+
+- name: 'Creating Spamassassin database user: {{ spamassassin_db_user }}'
+  become: 'yes'
+  become_user: 'postgres'
+  community.postgresql.postgresql_user:
+    name: '{{ spamassassin_db_user }}'
+    password: '{{ spamassassin_db_pass }}'
+    state: 'present'
+  tags:
+    - 'modoboa'
+    - 'spamassassin'
+
+- name: 'Creating Spamassassin database: {{ spamassassin_db_name }}'
+  become: 'yes'
+  become_user: 'postgres'
+  community.postgresql.postgresql_db:
+    name: '{{ spamassassin_db_name }}'
+    owner: '{{ spamassassin_db_user }}'
+    encoding: 'UTF-8'
+    lc_collate: 'en_US.UTF-8'
+    lc_ctype: 'en_US.UTF-8'
+    template: 'template0'
+  when: modoboa_db_driver == 'postgresql'
+  tags:
+    - 'modoboa'
+    - 'spamassassin'
+
+- name: 'Detecting if the Spamassassin SQL Schema is already installed'
+  community.postgresql.postgresql_query:
+    login_host: '{{ modoboa_db_host }}'
+    port: '{{ modoboa_db_port }}'
+    login_user: '{{ spamassassin_db_user }}'
+    login_password: '{{ spamassassin_db_pass }}'
+    db: '{{ spamassassin_db_name }}'
+    query: "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
+  register: spamassassin_schema_result
+  when: modoboa_db_driver == 'postgresql'
+  tags:
+    - 'modoboa'
+    - 'spamassassin'
+
+- name: 'Installing Spamassassin SQL Schema (if needed)'
+  community.postgresql.postgresql_query:
+    login_host: '{{ modoboa_db_host }}'
+    port: '{{ modoboa_db_port }}'
+    login_user: '{{ spamassassin_db_user }}'
+    login_password: '{{ spamassassin_db_pass }}'
+    db: '{{ spamassassin_db_name }}'
+    path_to_script: "/usr/share/doc/spamassassin/sql/bayes_{{ modoboa_db_driver.replace('postgresql', 'pg') }}.sql"
+    as_single_query: yes
+  when: modoboa_db_driver == 'postgresql' and spamassassin_schema_result.rowcount == 0
+  tags:
+    - 'modoboa'
+    - 'spamassassin'
+
+# vim: ft=yaml.ansible
