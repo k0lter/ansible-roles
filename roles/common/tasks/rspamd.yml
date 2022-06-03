@@ -10,6 +10,7 @@
 - name: 'Install upstream apt repository for rspamd'
   apt_repository:
     repo: 'deb http://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
+    filename: 'rspamd'
     state: 'present'
   when: with_rspamd|bool and with_rspamd_upstream|bool
   tags:
@@ -47,6 +48,9 @@
     - src: 'templates/rspamd/local.d/maps.d/external_relay_hostname.map.j2'
       dest: '/etc/rspamd/local.d/maps.d/external_relay_hostname.map'
       installed: '{{ rspamd_external_relay|length > 0 }}'
+    - src: 'templates/rspamd/local.d/history_redis.conf.j2'
+      dest: '/etc/rspamd/local.d/history_redis.conf'
+      installed: '{{ rspamd_redis_history }}'
     - src: 'templates/rspamd/override.d/rbl_group.conf.j2'
       dest: '/etc/rspamd/override.d/rbl_group.conf'
       installed: '{{ rspamd_rbl_group  }}'
@@ -71,6 +75,8 @@
     - 'headers_spammy.inc'
     - 'whitelist_sender.inc'
     - 'whitelist_sender_domain.inc'
+    - 'blacklist_sender.inc'
+    - 'blacklist_sender_domain.inc'
   when: rspamd_multimap
   notify:
     - 'Restart rspamd'

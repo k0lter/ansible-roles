@@ -16,7 +16,7 @@
   map = [
     "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender.inc"
   ];
-  score = -9.0;
+  score = {{ rspamd_multimap_score_whitelist_envfrom }};
 }
 
 {{ rspamd_multimap_prefix }}WHITELIST_ENVFROM_DOMAIN {
@@ -28,7 +28,7 @@
   map = [
     "$LOCAL_CONFDIR/local.dmaps.d/whitelist_sender_domain.inc"
   ];
-  score = -9.0;
+  score = {{ rspamd_multimap_score_whitelist_envfrom_domain }};
 }
 
 {{ rspamd_multimap_prefix }}WHITELIST_FROM {
@@ -40,7 +40,7 @@
   map = [
     "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender.inc"
   ];
-  score = -1.0;
+  score = {{ rspamd_multimap_score_whitelist_from }};
 }
 
 {{ rspamd_multimap_prefix }}WHITELIST_FROM_DOMAIN {
@@ -52,7 +52,31 @@
   map = [
     "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender_domain.inc"
   ];
-  score = -1.0;
+  score = {{ rspamd_multimap_score_whitelist_from_domain }};
+}
+
+{{ rspamd_multimap_prefix }}BLACKLIST_FROM {
+  group = "Custom Rules";
+  description = "From: header address in sender blacklist.";
+  type = "selector";
+  selector = "from('mime')";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/blacklist_sender.inc"
+  ];
+  score = {{ rspamd_multimap_score_blacklist_from }};
+}
+
+{{ rspamd_multimap_prefix }}BLACKLIST_FROM_DOMAIN {
+  group = "Custom Rules";
+  description = "From: header domain in sender blacklist.";
+  type = "selector";
+  selector = "from('mime'):domain";
+  regexp = "true";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/blacklist_sender_domain.inc"
+  ];
+  score = {{ rspamd_multimap_score_blacklist_from_domain }};
 }
 
 {{ rspamd_multimap_prefix }}SPAMMY_BODY {
@@ -65,7 +89,7 @@
     "$LOCAL_CONFDIR/local.d/maps.d/body_spammy.inc"
   ];
   multi = true;
-  score = 1.0;
+  score = {{ rspamd_multimap_score_spammy_body }};
 }
 
 {{ rspamd_multimap_prefix }}CHECK_HEADERS {
@@ -78,5 +102,5 @@
     "$LOCAL_CONFDIR/local.d/maps.d/headers_spammy.inc"
   ];
   multi = true;
-  score = 1.0;
+  score = {{ rspamd_multimap_score_check_headers }};
 }

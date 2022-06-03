@@ -76,11 +76,23 @@ rspamd_multimap: True
 rspamd_multimap_prefix: ''
 rspamd_external_relay: []
 rspamd_rbl_group: True
+rspamd_redis_history: True
+rspamd_redis_history_nrows: 200
 rspamd_surbl_group: True
 rspamd_multimap_rules_body_spammy: []
 rspamd_multimap_rules_headers_spammy: []
 rspamd_multimap_whitelist_sender: []
 rspamd_multimap_whitelist_sender_domain: []
+rspamd_multimap_blacklist_sender: []
+rspamd_multimap_blacklist_sender_domain: []
+rspamd_multimap_score_whitelist_envfrom: -9.0
+rspamd_multimap_score_whitelist_envfrom_domain: -9.0
+rspamd_multimap_score_whitelist_from: -2.2
+rspamd_multimap_score_whitelist_from_domain: -2.2
+rspamd_multimap_score_blacklist_from: 20.0
+rspamd_multimap_score_blacklist_from_domain: 20.0
+rspamd_multimap_score_spammy_body: 1.0
+rspamd_multimap_score_check_headers: 1.0
 
 with_ssh: True
 ssh_strengthened: True
