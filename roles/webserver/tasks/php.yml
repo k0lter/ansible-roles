@@ -31,37 +31,90 @@
       - 'php-mime-type'
       - 'php5-pgsql'
       - 'php5-sqlite'
+      - 'php-apc'
     state: 'present'
   when: with_php|bool and ansible_lsb.major_release|int <= 8
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies (Debian >= 9, PHP version {{ php_version }})'
+- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 7.0'
   apt:
     pkg:
       - 'php{{ php_version }}-cli'
       - 'php{{ php_version }}-curl'
       - 'php{{ php_version }}-gd'
       - 'php{{ php_version }}-intl'
-      - 'php{{ php_version }}-soap'
+      - 'php{{ php_version }}-mbstring'
       - 'php{{ php_version }}-mysql'
+      - 'php{{ php_version }}-opcache'
       - 'php{{ php_version }}-pgsql'
+      - 'php{{ php_version }}-soap'
       - 'php{{ php_version }}-sqlite3'
+      - 'php{{ php_version }}-xml'
       - 'php{{ php_version }}-zip'
-      - 'php-imagick'
     state: 'present'
-  when: with_php|bool and ansible_lsb.major_release|int >= 9
+  when: with_php|bool and php_version|float >= 7.0
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies (Debian >= 9, PHP < 7.2, PHP version {{ php_version }})'
+- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 7.0 and PHP({{ php_version }}) != 8.0'
+  apt:
+    pkg:
+      - 'php{{ php_version }}-json'
+    state: 'present'
+  when: with_php|bool and php_version|float >= 7.0 and php_version|float != 8.0
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install common PHP dependencies for 7.0 <= PHP({{ php_version }}) < 7.2'
   apt:
     pkg:
       - 'php{{ php_version }}-mcrypt'
     state: 'present'
-  when: with_php|bool and ansible_lsb.major_release|int >= 9 and php_version|float < 7.2
+  when: with_php|bool and php_version|float >= 7.0 and php_version|float < 7.2
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install common PHP dependencies for 7.0 <= PHP({{ php_version }}) <= 7.3'
+  apt:
+    pkg:
+      - 'php{{ php_version }}-imagick'
+    state: 'present'
+  when: with_php|bool and php_version|float >= 7.0 and php_version|float <= 7.3
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install common PHP dependencies for 7.0 <= PHP({{ php_version }}) <= 7.4'
+  apt:
+    pkg:
+      - 'php-apcu'
+    state: 'present'
+  when: with_php|bool and php_version|float >= 7.0 and php_version|float <= 7.4
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 7.4'
+  apt:
+    pkg:
+      - 'php{{ php_version }}-imagick'
+    state: 'present'
+  when: with_php|bool and php_version|float >= 7.4
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 8.0'
+  apt:
+    pkg:
+      - 'php{{ php_version }}-apcu'
+    state: 'present'
+  when: with_php|bool and php_version|float >= 8.0
   tags:
     - 'web'
     - 'php'
@@ -147,7 +200,7 @@
 - name: 'Configure Apache2 modules for php-fpm{{ php_version }}'
   shell: a2dismod php{{ php_version }} mpm_prefork ; a2enmod mpm_event proxy_fcgi
   changed_when: False
-  when: with_fpm|bool and with_apache2|bool
+  when: with_fpm|bool and not with_modphp|bool and with_apache2|bool
   notify:
       - 'Reload apache2'
   tags:
@@ -157,7 +210,7 @@
 - name: 'Configure Apache2 modules for modphp{{ php_version }}'
   shell: a2dismod mpm_event ; a2enmod mpm_prefork php{{ php_version }}
   changed_when: False
-  when: with_modphp|bool
+  when: with_modphp|bool and with_apache2|bool
   notify:
       - 'Reload apache2'
   tags:
@@ -226,26 +279,6 @@
     group: 'root'
     mode: '0644'
   when: with_phpsyscheck|bool
-  tags:
-    - 'web'
-    - 'php'
-
-- name: 'Install PHP APC extension (Debian <= 8)'
-  apt:
-    pkg:
-      - 'php-apc'
-    state: 'present'
-  when: with_php_apc|bool and ansible_lsb.major_release|int <= 8
-  tags:
-    - 'web'
-    - 'php'
-
-- name: 'Install PHP APC extension (Debian >= 9)'
-  apt:
-    pkg:
-      - 'php-apcu'
-    state: 'present'
-  when: with_php_apc|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
