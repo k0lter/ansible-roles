@@ -156,7 +156,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin|bool
+  when: with_phpmyadmin|bool and phpmyadmin_nginx_enabled|bool
   tags:
     - 'web'
     - 'nginx'
@@ -168,7 +168,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin|bool
+  when: with_phpmyadmin|bool and phpmyadmin_nginx_enabled|bool
   tags:
     - 'web'
     - 'nginx'
@@ -208,7 +208,7 @@
     mode: '0644'
   notify:
     - 'Reload nginx'
-  when: with_phpsyscheck and with_php|bool
+  when: with_phpsyscheck|bool and phpsyscheck_nginx_enabled|bool and with_php|bool
   tags:
     - 'web'
     - 'nginx'
@@ -220,7 +220,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phpsyscheck and with_php|bool
+  when: with_phpsyscheck|bool and phpsyscheck_nginx_enabled|bool and with_php|bool
   tags:
     - 'web'
     - 'nginx'
