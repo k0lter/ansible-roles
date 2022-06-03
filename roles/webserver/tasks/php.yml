@@ -388,7 +388,7 @@
     - { key: 'emergency_restart_interval', value: '5s' }
     - { key: 'rlimit_files', value: '262144' }
     - { key: 'events.mechanism', value: 'epoll' }
-    - { key: 'include', value: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf' }
+    - { key: 'include', value: '/etc/php/{{ php_version }}/fpm/pool.d/{{ fpm_pools_include_pattern }}' }
   notify:
       - 'Reload FPM for PHP'
   when: with_fpm|bool and ansible_lsb.major_release|int >= 9

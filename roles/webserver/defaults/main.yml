@@ -31,6 +31,7 @@ fpm_min_spare_servers: 1
 fpm_max_spare_servers: 3
 
 fpm_pools: Null
+fpm_pools_include_pattern: 'local-pool.cnf'
 
 with_php: False
 php_version: '7.0'
