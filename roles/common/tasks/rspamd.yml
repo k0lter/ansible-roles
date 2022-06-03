@@ -57,7 +57,7 @@
     - src: 'templates/rspamd/override.d/surbl_group.conf.j2'
       dest: '/etc/rspamd/override.d/surbl_group.conf'
       installed: '{{ rspamd_surbl_group  }}'
-  when: item.installed|bool
+  when: with_rspamd|bool and item.installed|bool
   notify:
     - 'Restart rspamd'
   tags:
@@ -77,7 +77,7 @@
     - 'whitelist_sender_domain.inc'
     - 'blacklist_sender.inc'
     - 'blacklist_sender_domain.inc'
-  when: rspamd_multimap
+  when: with_rspamd|bool and rspamd_multimap
   notify:
     - 'Restart rspamd'
   tags:
