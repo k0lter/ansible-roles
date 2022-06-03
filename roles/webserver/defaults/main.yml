@@ -35,6 +35,7 @@ fpm_pools: Null
 with_php: False
 php_version: '7.0'
 with_php_mysql_legacy: False
+with_php_sury: False
 
 with_phpsyscheck: True
 phpsyscheck_vhostname: 'sys.localhost'
