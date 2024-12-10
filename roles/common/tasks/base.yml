@@ -196,6 +196,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+  when: with_logrotate4rsyslog_override
   tags:
     - 'base'
 

@@ -39,6 +39,8 @@ with_logcheck: False
 with_rkhunter: False
 with_chkrootkit: False
 
+with_logrotate4rsyslog_override: True
+
 with_hideproc: False
 hideproc_gid: ''
 
