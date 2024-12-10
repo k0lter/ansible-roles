@@ -117,6 +117,7 @@
       - 'ncdu'
     install_recommends: 'no'
     state: 'present'
+  when: with_base_packages
   tags:
     - 'base'
 
