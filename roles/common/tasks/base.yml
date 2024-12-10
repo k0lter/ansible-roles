@@ -67,10 +67,10 @@
     - 'base'
 
 - name: 'Install apt key for custom Debian repositories'
-  apt_key:
-    id: '{{ item.id }}'
+  ansible.builtin.get_url:
     url: '{{ item.url }}'
-    state: 'present'
+    dest: '/etc/apt/keyrings/{{ item.name }}.asc'
+    checksum: '{{ item.checksum }}'
   with_items: '{{ apt_keys }}'
   when: apt_keys|length > 0
   tags:
@@ -78,17 +78,33 @@
     - 'base'
 
 - name: 'Add apt sources for custom Debian repositories'
-  apt_repository:
-    repo: 'deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
-    state: 'present'
-  with_items: '{{ apt_repositories }}'
+  block:
+    - name: 'Remove Debian repository {{ item.name  }} (without signed-by)'
+      apt_repository:
+        repo: 'deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
+        state: 'absent'
+      with_items: '{{ apt_repositories }}'
+    - name: 'Add Debian repository {{ item.name }} (with signed-by)'
+      apt_repository:
+        repo: 'deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
+        filename: '{{ item.name }}'
+        state: 'present'
+      with_items: '{{ apt_repositories }}'
   when: apt_repositories|length > 0
   tags:
     - 'apt'
     - 'base'
 
+- name: 'Remove old format apt key for custom Debian repositories'
+  ansible.builtin.apt_key:
+    id: '{{ item.id }}'
+    state: 'absent'
+  with_items: '{{ apt_keys }}'
+  when: apt_keys|length > 0
+  tags:
     - 'apt'
     - 'base'
+
 - name: 'Install base packages'
   apt:
     pkg:
