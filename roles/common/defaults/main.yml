@@ -42,6 +42,8 @@ with_chkrootkit: False
 with_hideproc: False
 hideproc_gid: ''
 
+with_sudo: True
+
 with_ntp: True
 
 with_firewall: False

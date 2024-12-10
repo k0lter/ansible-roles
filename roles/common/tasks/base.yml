@@ -240,6 +240,7 @@
     owner: 'root'
     group: 'root'
     mode: '0440'
+  when: with_sudo
   tags:
     - 'base'
 
