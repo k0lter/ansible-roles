@@ -252,7 +252,7 @@
     shell: '/bin/zsh'
     state: 'present'
   with_items: '{{ admins }}'
-  when: admins|length > 0
+  when: admins|length > 0 and with_admins_accounts
   tags:
     - 'base'
 
@@ -262,7 +262,7 @@
     key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
     state: 'present'
   with_items: '{{ admins }}'
-  when: admins|length > 0
+  when: admins|length > 0 and with_admins_accounts
   tags:
     - 'base'
 
