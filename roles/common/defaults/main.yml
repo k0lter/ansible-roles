@@ -25,6 +25,7 @@ apt_keys: []
 apt_repositories: []
 apt_additional_packages: []
 apt_additional_packages_local: []
+with_apt_backports: False
 
 hosts_deny_nfs: False
 host_deny_paranoid: False

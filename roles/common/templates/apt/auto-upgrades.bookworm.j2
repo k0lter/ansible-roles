@@ -1,0 +1,27 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+//
+// {{ ansible_controlled }}
+//
+{% endif %}
+
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+Unattended-Upgrade::Mail "root";
+//Unattended-Upgrade::MailOnlyOnError "true";
+
+// Automatically upgrade packages from these origin patterns
+Unattended-Upgrade::Origins-Pattern {
+    // Archive or Suite based matching:
+    // Note that this will silently match a different release after
+    // migration to the specified archive (e.g. testing becomes the
+    // new stable).
+    "o=Debian,a=bookworm";
+    "o=Debian,a=bookworm-updates";
+//  "o=Debian,a=bookworm-proposed-updates";
+    "origin=Debian,archive=bookworm,label=Debian-Security";
+{% if auto_upgrade_additional_patterns %}
+{% for pattern in auto_upgrade_additional_patterns %}
+    "{{ pattern }}";
+{% endfor %}
+{% endif %}
+};

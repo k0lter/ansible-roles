@@ -1,5 +1,6 @@
 - include_tasks: base.yml
   tags:
+    - 'apt'
     - 'base'
     - 'ipv6'
 - include_tasks: dotfiles.yml
@@ -40,5 +41,3 @@
   when: with_smartd|bool
   tags:
     - 'smartd'
-
-# vim: ft=yaml.ansible

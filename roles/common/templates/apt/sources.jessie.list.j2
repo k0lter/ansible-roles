@@ -4,16 +4,7 @@
 #
 {% endif %}
 deb {{ debian_mirror }}/debian jessie main contrib non-free
-#deb-src {{ debian_mirror }}/debian jessie main contrib non-free
-
 deb http://deb.debian.org/debian-security jessie/updates main contrib non-free
-#deb-src http://deb.debian.org/debian-security jessie/updates main contrib non-free
-
 deb {{ debian_mirror }}/debian jessie-updates main contrib non-free
-#deb-src {{ debian_mirror }}/debian jessie-updates main contrib non-free
-
-#deb {{ debian_mirror }}/debian jessie-backports main contrib non-free
-#deb-src {{ debian_mirror }}/debian jessie-backports main contrib non-free
-
-#deb {{ debian_mirror }}/debian jessie-backports-sloppy main contrib non-free
-#deb-src {{ debian_mirror }}/debian jessie-backports-sloppy main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb {{ debian_mirror }}/debian jessie-backports main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb {{ debian_mirror }}/debian jessie-backports-sloppy main contrib non-free

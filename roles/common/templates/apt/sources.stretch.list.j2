@@ -3,17 +3,7 @@
 # {{ ansible_controlled }}
 #
 {% endif %}
-deb {{ debian_mirror }}/debian stretch main contrib non-free
-#deb-src {{ debian_mirror }}/debian stretch main contrib non-free
-
-deb http://deb.debian.org/debian-security stretch/updates main contrib non-free
-#deb-src http://deb.debian.org/debian-security stretch/updates main contrib non-free
-
-deb {{ debian_mirror }}/debian/ stretch-updates main contrib non-free
-#deb-src {{ debian_mirror }}/debian/ stretch-updates main contrib non-free
-
-#deb {{ debian_mirror }}/debian/ stretch-backports main contrib non-free
-#deb-src {{ debian_mirror }}/debian/ stretch-backports main contrib non-free
-
-#deb {{ debian_mirror }}/debian/ stretch-backports-sloppy main contrib non-free
-#deb-src {{ debian_mirror }}/debian/ stretch-backports-sloppy main contrib non-free
+deb http://archive.debian.org/debian stretch main contrib non-free
+deb http://archive.debian.org/debian-security stretch/updates main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb http://archive.debian.org/debian/ stretch-backports main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb http://archive.debian.org/debian/ stretch-backports-sloppy main contrib non-free

@@ -4,10 +4,5 @@
 #
 {% endif %}
 deb http://archive.debian.org/debian lenny main contrib non-free
-#deb-src http://archive.debian.org/debian lenny main contrib non-free
-
-deb http://archive.debian.org/debian-backports lenny-backports main contrib non-free
-#deb-src http://archive.debian.org/debian-backports lenny-backports main contrib non-free
-
-deb http://archive.debian.org/debian-backports lenny-backports-sloppy main contrib non-free
-#deb-src http://archive.debian.org/debian-backports lenny-backports-sloppy main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb http://archive.debian.org/debian-backports lenny-backports main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb http://archive.debian.org/debian-backports lenny-backports-sloppy main contrib non-free

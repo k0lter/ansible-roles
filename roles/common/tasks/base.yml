@@ -29,6 +29,7 @@
     mode: '0644'
   register: apt_sources
   tags:
+    - 'apt'
     - 'base'
 
 - name: 'Refresh apt cache'
@@ -36,6 +37,18 @@
     update_cache: yes
   when: apt_sources.changed
   tags:
+    - 'apt'
+    - 'base'
+
+- name: 'Create /etc/apt/keyrings directory for external repositories'
+  file:
+    path: '/etc/apt/keyrings'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  tags:
+    - 'apt'
     - 'base'
 
 - name: 'Write /etc/apt/apt.conf.d configuration files'
@@ -50,6 +63,7 @@
     - 'norecommends'
     - 'progressbar'
   tags:
+    - 'apt'
     - 'base'
 
 - name: 'Install apt key for custom Debian repositories'
@@ -60,6 +74,7 @@
   with_items: '{{ apt_keys }}'
   when: apt_keys|length > 0
   tags:
+    - 'apt'
     - 'base'
 
 - name: 'Add apt sources for custom Debian repositories'
@@ -69,8 +84,11 @@
   with_items: '{{ apt_repositories }}'
   when: apt_repositories|length > 0
   tags:
+    - 'apt'
     - 'base'
 
+    - 'apt'
+    - 'base'
 - name: 'Install base packages'
   apt:
     pkg:
