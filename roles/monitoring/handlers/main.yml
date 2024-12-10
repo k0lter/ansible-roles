@@ -1,4 +1,4 @@
-- include: mon.yml
-- include: zabbix.yml
+- import_tasks: mon.yml
+- import_tasks: zabbix.yml
 
 # vim: ft=yaml.ansible

@@ -1,9 +1,9 @@
-- include_tasks: 'xen.yml'
+- import_tasks: 'xen.yml'
   when: with_xen|bool
   tags:
     - 'hypervisor'
     - 'xen'
-- include_tasks: 'ganeti.yml'
+- import_tasks: 'ganeti.yml'
   when: with_ganeti|bool
   tags:
     - 'hypervisor'

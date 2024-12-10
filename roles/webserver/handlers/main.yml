@@ -1,6 +1,3 @@
-- include: apache2.yml
-- include: nginx.yml
-- include: fpm.yml
-- include: php.yml
-
-# vim: ft=yaml.ansible
+- import_tasks: apache2.yml
+- import_tasks: nginx.yml
+- import_tasks: fpm.yml

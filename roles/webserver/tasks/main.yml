@@ -1,14 +1,19 @@
-- include_tasks: apache2.yml
+- import_tasks: common.yml
+  tags:
+    - 'web'
+    - 'apache2'
+    - 'nginx'
+- import_tasks: apache2.yml
   when: with_apache2|bool
   tags:
     - 'web'
     - 'apache2'
-- include_tasks: nginx.yml
+- import_tasks: nginx.yml
   when: with_nginx|bool
   tags:
     - 'web'
     - 'nginx'
-- include_tasks: php.yml
+- import_tasks: php.yml
   when: with_php|bool
   tags:
     - 'web'

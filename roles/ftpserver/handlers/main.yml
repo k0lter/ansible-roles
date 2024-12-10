@@ -1,4 +1,4 @@
-- include: 'common.yml'
-- include: 'pure-ftpd.yml'
+- import_tasks: 'common.yml'
+- import_tasks: 'pure-ftpd.yml'
 
 # vim: ft=yaml.ansible

@@ -5,5 +5,3 @@
   service:
     name: 'nginx'
     state: 'restarted'
-
-# vim: ft=yaml.ansible

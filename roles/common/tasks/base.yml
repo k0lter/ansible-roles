@@ -1,3 +1,7 @@
+- name: 'Gather packages facts'
+  ansible.builtin.package_facts:
+    manager: auto
+
 - name: 'Install hosts file'
   template:
     src: 'hosts.j2'

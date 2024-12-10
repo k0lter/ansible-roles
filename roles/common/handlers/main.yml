@@ -1,11 +1,10 @@
-- include: base.yml
-- include: firewall.yml
-- include: security.yml
-- include: smtp.yml
-- include: dkim.yml
-- include: rspamd.yml
-- include: ssh.yml
-- include: ssl.yml
-- include: smartd.yml
-
-# vim: ft=yaml.ansible
+- import_tasks: base.yml
+- import_tasks: utils.yml
+- import_tasks: firewall.yml
+- import_tasks: security.yml
+- import_tasks: smtp.yml
+- import_tasks: dkim.yml
+- import_tasks: rspamd.yml
+- import_tasks: ssh.yml
+- import_tasks: ssl.yml
+- import_tasks: smartd.yml

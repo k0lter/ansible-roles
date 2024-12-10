@@ -122,4 +122,3 @@ dotfiles_lcsshvars: 0
 ssl_certs: []
 ssl_certs_auto: []
 
-# vim: ft=yaml.ansible
