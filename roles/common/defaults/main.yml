@@ -44,6 +44,8 @@ hideproc_gid: ''
 
 with_sudo: True
 
+with_dhparam: True
+
 with_ntp: True
 
 with_firewall: False

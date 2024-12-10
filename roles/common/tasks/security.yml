@@ -179,6 +179,7 @@
     creates: '/etc/ssl/private/dh{{ item }}.pem'
   with_items:
     - '2048'
+  when: with_dhparam
   tags:
     - 'security'
 
