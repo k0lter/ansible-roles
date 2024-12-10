@@ -62,6 +62,7 @@ firewall_public:
 with_smartd: False
 
 with_postfix: False
+postfix_ssl_fortify: False
 with_postfix_slowsmtp: False
 with_mail_aliases: False
 with_postfix_external_smtp: False
