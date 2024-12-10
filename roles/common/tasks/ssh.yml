@@ -30,7 +30,33 @@
     mode: 0644
   notify:
     - Restart ssh
-  when: with_ssh|bool and ansible_lsb.major_release|int >= 9
+  when: with_ssh|bool and ansible_lsb.major_release|int >= 9 and ansible_lsb.major_release|int <= 10
+  tags:
+    - 'ssh'
+
+- name: 'Install sshd default configuration (Debian >= 11)'
+  template:
+    src: 'ssh/sshd_config.{{ ansible_lsb.codename }}.j2'
+    dest: '/etc/ssh/sshd_config'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  notify:
+    - Restart ssh
+  when: with_ssh|bool and ansible_lsb.major_release|int >= 11
+  tags:
+    - 'ssh'
+
+- name: 'Install sshd configuration overrides (Debian >= 11)'
+  template:
+    src: 'ssh/sshd_config.overrides.j2'
+    dest: '/etc/ssh/sshd_config.d/local.conf'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  notify:
+    - Restart ssh
+  when: with_ssh|bool and ansible_lsb.major_release|int >= 11
   tags:
     - 'ssh'
 

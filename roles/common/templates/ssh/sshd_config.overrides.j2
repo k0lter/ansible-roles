@@ -1,0 +1,25 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+
+{% for port in ssh_ports %}
+# Override Ports to listen
+Port {{ port }}
+{% endfor %}
+
+{% if ssh_allowed_users %}
+# Define users allowed to login
+AllowUsers {{ ssh_allowed_users | join(' ') }}
+{% endif %}
+
+{% if not ssh_allowed_users and ssh_allowed_groups %}
+# Define users groups allowed to login
+AllowGroups {{ ssh_allowed_groups | join(' ') }}
+{% endif %}
+
+{% if ssh_local_config is defined and ssh_local_config %}
+# Additional parameters
+{{ ssh_local_config|join('\n') }}
+{% endif %}
