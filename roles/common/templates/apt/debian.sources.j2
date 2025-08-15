@@ -1,0 +1,16 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+Types: deb{% if with_apt_sources %} deb-src{%+ endif +%}
+URIs: mirror+file:///etc/apt/mirrors/debian.list
+Suites: {{ ansible_lsb.codename }} {{ ansible_lsb.codename }}-updates{%if with_apt_backports %} {{ ansible_lsb.codename }}-backports{%+ endif +%}
+Components: main contrib non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb{% if with_apt_sources %} deb-src{%+ endif +%}
+URIs: mirror+file:///etc/apt/mirrors/debian-security.list
+Suites: {{ ansible_lsb.codename }}-security
+Components: main contrib non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg

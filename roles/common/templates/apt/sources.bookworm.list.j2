@@ -1,10 +1,1 @@
-{% if ansible_controlled is defined and ansible_controlled != "" %}
-#
-# {{ ansible_controlled }}
-#
-{% endif %}
-deb {{ debian_mirror }}/debian bookworm main contrib non-free non-free-firmware
-deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
-deb {{ debian_mirror }}/debian bookworm-updates main contrib non-free non-free-firmware
-{% if not with_apt_backports %}#{% endif %}deb {{ debian_mirror }}/debian bookworm-backports main contrib non-free non-free-firmware
-{% if not with_apt_backports %}#{% endif %}deb {{ debian_mirror }}/debian bookworm-backports-sloppy main contrib non-free non-free-firmware
+# See /etc/apt/sources.list.d/debian.sources

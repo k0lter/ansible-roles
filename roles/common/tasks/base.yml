@@ -25,37 +25,6 @@
   tags:
     - 'base'
 
-- name: 'Write /etc/apt/sources.list'
-  template:
-    src: 'apt/sources.{{ ansible_lsb.codename }}.list.j2'
-    dest: '/etc/apt/sources.list'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  register: apt_sources
-  tags:
-    - 'apt'
-    - 'base'
-
-- name: 'Refresh apt cache'
-  apt:
-    update_cache: yes
-  when: apt_sources.changed
-  tags:
-    - 'apt'
-    - 'base'
-
-- name: 'Create /etc/apt/keyrings directory for external repositories'
-  file:
-    path: '/etc/apt/keyrings'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
-  tags:
-    - 'apt'
-    - 'base'
-
 - name: 'Write /etc/apt/apt.conf.d configuration files'
   template:
     src: 'apt/apt-{{ item }}.j2'
@@ -67,6 +36,69 @@
     - 'nopdiffs'
     - 'norecommends'
     - 'progressbar'
+  tags:
+    - 'apt'
+    - 'base'
+
+- name: 'Create directories for apt sources'
+  file:
+    path: '{{ item }}'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  with_items:
+    - '/etc/apt/keyrings'
+    - '/etc/apt/sources.list.d'
+    - '/etc/apt/mirrors'
+  tags:
+    - 'apt'
+    - 'base'
+
+- name: 'Create apt mirrors files'
+  template:
+    src: 'apt/mirrors/{{ item }}.list.j2'
+    dest: '/etc/apt/mirrors/{{ item }}.list'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'debian'
+    - 'debian-security'
+  tags:
+    - 'apt'
+    - 'base'
+
+- name: 'Write /etc/apt/sources.list'
+  template:
+    src: 'apt/sources.{{ ansible_lsb.codename }}.list.j2'
+    dest: '/etc/apt/sources.list'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: apt_sources
+  when: ansible_lsb.major_release|int <= 12
+  tags:
+    - 'apt'
+    - 'base'
+
+- name: 'Write /etc/apt/sources.list.d/debian.sources'
+  template:
+    src: 'apt/debian.sources.j2'
+    dest: '/etc/apt/sources.list.d/debian.sources'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: apt_sources
+  when: ansible_lsb.major_release|int >= 12
+  tags:
+    - 'apt'
+    - 'base'
+
+- name: 'Refresh apt cache'
+  apt:
+    update_cache: yes
+  when: apt_sources.changed
   tags:
     - 'apt'
     - 'base'
