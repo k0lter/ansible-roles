@@ -3,8 +3,8 @@
 # {{ ansible_controlled }}
 #
 {% endif %}
-deb {{ debian_mirror }}/debian buster main contrib non-free
-deb http://deb.debian.org/debian-security buster/updates main contrib non-free
-deb {{ debian_mirror }}/debian buster-updates main contrib non-free
-{% if not with_apt_backports %}#{% endif %}deb {{ debian_mirror }}/debian buster-backports main contrib non-free
-{% if not with_apt_backports %}#{% endif %}deb {{ debian_mirror }}/debian buster-backports-sloppy main contrib non-free
+deb https://archive.debian.org/debian buster main contrib non-free
+deb https://archive.debian.org/debian-security buster/updates main contrib non-free
+deb https://archive.debian.org/debian buster-updates main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb https://archive.debian.org/debian buster-backports main contrib non-free
+{% if not with_apt_backports %}#{% endif %}deb https://archive.debian.org/debian buster-backports-sloppy main contrib non-free
