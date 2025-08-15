@@ -1,15 +1,14 @@
 - name: 'Install upstream apt key for rspamd'
-  apt_key:
-    id: '3FA347D5E599BE4595CA2576FFA232EDBF21E25E'
+  ansible.builtin.get_url:
     url: 'https://rspamd.com/apt-stable/gpg.key'
-    state: 'present'
+    dest: /etc/apt/keyrings/rspamd.asc
   when: with_rspamd|bool and with_rspamd_upstream|bool
   tags:
     - 'rspamd'
 
 - name: 'Install upstream apt repository for rspamd'
   apt_repository:
-    repo: 'deb http://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
+    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] http://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
     filename: 'rspamd'
     state: 'present'
   when: with_rspamd|bool and with_rspamd_upstream|bool
