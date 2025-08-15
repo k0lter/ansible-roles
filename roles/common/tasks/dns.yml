@@ -12,6 +12,7 @@
   apt:
     pkg:
       - 'unbound'
+      - 'dns-root-data'
     state: 'present'
   when: with_dnscache|bool
   tags:
