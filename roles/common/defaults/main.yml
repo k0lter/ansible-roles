@@ -130,3 +130,7 @@ dotfiles_lcsshvars: 0
 ssl_certs: []
 ssl_certs_auto: []
 
+with_geoip: False
+geoip_accountid: Null
+geoip_licencekey: Null
+geoip_editionids: []

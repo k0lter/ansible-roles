@@ -1,0 +1,40 @@
+- name: 'Install GeoIP packages'
+  apt:
+    pkg:
+      - 'geoip-bin'
+      - 'geoipupdate'
+    install_recommends: 'no'
+    state: 'present'
+  when: with_geoip
+  tags:
+    - 'utils'
+    - 'geoip'
+
+- name: 'Checking if GeoIP credentials file exists'
+  stat:
+    path: '/etc/GeoIP.conf'
+  register: geoip_conf
+  when: with_geoip
+  tags:
+    - 'utils'
+    - 'geoip'
+
+- name: 'Configure GeoIP credentials (AccountID and LicenseKey)'
+  lineinfile:
+    path: '/etc/GeoIP.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    regexp: '^{{ item.key }}'
+    insertafter: '^#\s*{{ item.key }}'
+    line: '{{ item.key }} {{ item.value }}'
+  loop:
+    - '{"key": "AccountID", "value": "{{ geoip_accountid }}" }'
+    - '{"key": "LicenseKey", "value": "{{ geoip_licensekey }}" }'
+    - '{"key": "EditionIDs", "value": "{{ geoip_editionids|join(" ") }}" }'
+  when: with_geoip and geoip_conf.stat.exists and item.value|length > 0
+  notify:
+    - 'Refresh GeoIP database'
+  tags:
+    - 'utils'
+    - 'geoip'

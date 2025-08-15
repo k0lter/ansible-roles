@@ -3,6 +3,10 @@
     - 'apt'
     - 'base'
     - 'ipv6'
+- include_tasks: utils.yml
+  tags:
+    - 'utils'
+    - 'geoip'
 - include_tasks: dotfiles.yml
   when: with_dotfiles|bool
   tags:
