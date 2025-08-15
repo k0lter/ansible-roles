@@ -1,5 +1,6 @@
 - include_tasks: base.yml
   tags:
+    - 'hosts'
     - 'apt'
     - 'base'
     - 'ipv6'
