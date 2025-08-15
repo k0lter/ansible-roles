@@ -23,6 +23,7 @@
   when: with_firewall|bool
   tags:
     - 'firewall'
+    - 'firewall-rules'
 - include_tasks: security.yml
   tags:
     - 'security'

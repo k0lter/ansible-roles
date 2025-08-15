@@ -26,6 +26,7 @@
     - 'Apply firewall rules (ferm)'
   tags:
     - 'firewall'
+    - 'firewall-rules'
 
 - name: 'Rely on iptables-legacy for firewall configuration (Debian >= 10)'
   community.general.alternatives:
@@ -36,5 +37,4 @@
     - 'Apply firewall rules (ferm)'
   tags:
     - 'firewall'
-
-# vim: ft=yaml.ansible
+    - 'firewall-rules'
