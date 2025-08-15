@@ -45,12 +45,14 @@ domain (ip ip6) table filter chain (INPUT OUTPUT) mod state state (ESTABLISHED R
 domain (ip ip6) {
     table filter {
         chain INPUT {
+{% if firewall_public|length > 0 %}
             # standard ports we allow from the outside
             @if @not(@eq(@length(NETDEV),0)) {
                 interface ($NETDEV) {
                     proto (udp tcp) dport ({{ firewall_public | join(' ') }}) ACCEPT;
                 }
             }
+{% endif %}
 {% if firewall_private is defined %}
 {% for fwconf in firewall_private %}
             interface {{ fwconf.interface }}{% if fwconf.networks is defined %} saddr ({{ fwconf.networks | join(' ') }}){% endif %} {
