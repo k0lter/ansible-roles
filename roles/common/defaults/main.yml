@@ -20,7 +20,7 @@ hosts_static_lookup: []
 
 ipv6_disabled: False
 
-debian_mirror: 'http://deb.debian.org'
+debian_mirror: 'https://deb.debian.org'
 
 apt_keys: []
 apt_repositories: []
