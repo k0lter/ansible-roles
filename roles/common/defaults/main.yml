@@ -117,6 +117,9 @@ ssh_allowed_groups:
 
 with_dnscache: False
 
+with_docker: False
+with_docker_upstream: False
+
 sysfs_disk_settings: False
 
 with_dotfiles: False

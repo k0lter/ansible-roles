@@ -1,0 +1,43 @@
+- name: Install upstream apt key for docker
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /etc/apt/keyrings/docker.asc
+  when: with_docker|bool and with_docker_upstream|bool
+  tags:
+    - docker
+
+- name: Install upstream apt repository for docker
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable'
+    filename: docker
+    state: present
+  when: with_docker|bool and with_docker_upstream|bool
+  tags:
+    - docker
+
+- name: Install docker upstream packages
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    install_recommends: no
+    state: present
+    update_cache: yes
+  when: with_docker|bool and with_docker_upstream|bool
+  tags:
+    - docker
+
+- name: Install docker packages
+  ansible.builtin.apt:
+    pkg:
+      - docker.io
+      - containerd
+      - docker-compose
+    install_recommends: no
+    state: present
+    update_cache: yes
+  when: with_docker|bool and not with_docker_upstream|bool
+  tags:
+    - docker

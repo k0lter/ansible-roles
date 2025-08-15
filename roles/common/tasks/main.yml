@@ -41,3 +41,7 @@
   when: with_smartd|bool
   tags:
     - 'smartd'
+- include_tasks: docker.yml
+  when: with_docker|bool
+  tags:
+    - 'docker'
