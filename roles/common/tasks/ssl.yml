@@ -9,6 +9,13 @@
   tags:
     - 'ssl'
 
+- name: 'Add {{ rspamd_web_vhostname }} to SSL certs to install'
+  set_fact:
+    ssl_certs_auto: "{{ ssl_certs_auto + [rspamd_web_vhostname] }}"
+  when: with_rspamd|bool and with_rspamd_web|bool and rspamd_web_ssl is defined and rspamd_web_ssl|bool
+  tags:
+    - 'ssl'
+
 - name: 'Create ssl certificates directories for each domain'
   file:
     path: '/etc/ssl/local/certs/{{ item }}'

@@ -131,4 +131,86 @@
     - 'rspamd'
     - 'rspamd-rules'
 
-# vim: ft=yaml.ansible
+- name: 'Install Web Interface virtual host for Nginx (sites-available)'
+  template:
+    src: 'rspamd/nginx/rspamd_vhost.j2'
+    dest: '/etc/nginx/sites-available/rspamd'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload nginx'
+  when: with_rspamd|bool and with_rspamd_web|bool and with_nginx is defined and with_nginx|bool
+  tags:
+    - 'rspamd'
+    - 'nginx'
+
+- name: 'Install Web Interface virtual host for Nginx (sites-enabled)'
+  file:
+    src: '/etc/nginx/sites-available/rspamd'
+    path: '/etc/nginx/sites-enabled/rspamd'
+    state: 'link'
+  notify:
+    - 'Reload nginx'
+  when: not ansible_check_mode and with_rspamd|bool and with_rspamd_web|bool and with_nginx is defined and with_nginx|bool
+  tags:
+    - 'rspamd'
+    - 'nginx'
+
+- name: 'Add HTTP authentication for web interface (Nginx)'
+  htpasswd:
+    path: '/etc/nginx/rspamd_admin'
+    name: '{{ item.name }}'
+    password: '{{ item.password }}'
+    owner: 'root'
+    group: 'www-data'
+    mode: '0640'
+    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+  with_items:
+    - '{ "name": "admin", "password": "{{ rspamd_web_http_auth_admin_password }}", "enabled": {{ rspamd_web_http_auth_admin_password|length > 0 }} }'
+  when: item.enabled|bool
+  tags:
+    - 'rspamd'
+    - 'nginx'
+
+- name: 'Install Web Interface virtual host for Apache2 (sites-available)'
+  template:
+    src: 'rspamd/apache2/rspamd_vhost.j2'
+    dest: '/etc/apache2/sites-available/rspamd'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload apache2'
+  when: with_rspamd|bool and with_rspamd_web|bool and with_apache2 is defined and with_apache2|bool
+  tags:
+    - 'rspamd'
+    - 'apache2'
+
+- name: 'Install Web Interface virtual host for Apache2 (sites-enabled)'
+  file:
+    src: '/etc/apache2/sites-available/rspamd'
+    path: '/etc/apache2/sites-enabled/rspamd'
+    state: 'link'
+  notify:
+    - 'Reload apache2'
+  when: not ansible_check_mode and with_rspamd|bool and with_rspamd_web|bool and with_apache2 is defined and with_apache2|bool
+  tags:
+    - 'rspamd'
+    - 'apache2'
+
+- name: 'Add HTTP authentication for web interface (Apache2)'
+  htpasswd:
+    path: '/etc/apache2/rspamd_admin'
+    name: '{{ item.name }}'
+    password: '{{ item.password }}'
+    owner: 'root'
+    group: 'www-data'
+    mode: '0640'
+    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+  with_items:
+    - '{ "name": "admin", "password": "{{ rspamd_web_http_auth_admin_password }}", "enabled": {{ rspamd_web_http_auth_admin_password|length > 0 }} }'
+  when: item.enabled|bool
+  tags:
+    - 'rspamd'
+    - 'apache2'

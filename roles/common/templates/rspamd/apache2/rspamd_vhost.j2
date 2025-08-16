@@ -1,0 +1,71 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+# Apache vhost for PHP system checks
+
+<VirtualHost {%if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}{% else %}*{% endif %}:{%if rspamd_web_vhostport %}{{ rspamd_web_vhostport }}{% else %}80{% endif %}>
+    ServerName {{ rspamd_web_vhostname }}
+
+    Include conf-available/letsencrypt.conf
+
+{% if rspamd_web_ssl and ssl_certs_auto_installed.stdout_lines is defined and rspamd_web_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    RedirectMatch 301 ^(?!/\.well-known/acme-challenge/).* https://{{ rspamd_web_vhostname }}$0
+{% else %}
+{% if rspamd_web_http_auth or rspamd_web_http_whitelist_ip|length > 0 %}
+    <Location />
+{% if rspamd_web_http_auth %}
+        AuthType basic
+        AuthName "Restricted Access"
+        AuthUserFile /etc/apache2/rspamd_admin
+{% endif %}
+        <RequireAny>
+{% if rspamd_web_http_whitelist_ip|length > 0 %}
+            Require ip {{ rspamd_web_http_whitelist_ip | join(' ')  }}
+{% endif %}
+            Require valid-user
+        </RequireAny>
+        ProxyPass http://127.0.0.1:11334/
+    </Location>
+{% endif %}
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/rspamd.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/rspamd.error.log
+{% endif %}
+</VirtualHost>
+{% if rspamd_web_ssl and ssl_certs_auto_installed.stdout_lines is defined and rspamd_web_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+<VirtualHost {%if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}{% else %}*{% endif %}:{%if rspamd_web_vhostport %}{{ rspamd_web_vhostport }}{% else %}443{% endif %}>
+    ServerName {{ rspamd_web_vhostname }}
+
+    <IfModule http2_module>
+        Protocols h2 http/1.1
+    </IfModule>
+
+    Include vhost_ssl_auto-{{ rspamd_web_vhostname }}.conf
+
+{% if rspamd_web_http_auth or rspamd_web_http_whitelist_ip|length > 0 %}
+    <Location />
+{% if rspamd_web_http_auth %}
+        AuthType basic
+        AuthName "Restricted Access"
+        AuthUserFile /etc/apache2/rspamd_admin
+{% endif %}
+        <RequireAny>
+{% if rspamd_web_http_whitelist_ip|length > 0 %}
+            Require ip {{ rspamd_web_http_whitelist_ip | join(' ')  }}
+{% endif %}
+            Require valid-user
+        </RequireAny>
+        ProxyPass http://127.0.0.1:11334/
+    </Location>
+{% endif %}
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/rspamd.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/rspamd.error.log
+</VirtualHost>
+{% endif %}
+

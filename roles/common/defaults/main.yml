@@ -112,6 +112,15 @@ rspamd_metrics: {}
 rspamd_regexp: True
 rspamd_milter_headers: True
 
+with_rspamd_web: False
+rspamd_web_vhostname: 'rspamd.localhost'
+rspamd_web_vhostip: ''
+rspamd_web_vhostport: 0
+rspamd_web_ssl: False
+rspamd_web_http_auth: True
+rspamd_web_http_whitelist_ip: []
+rspamd_web_http_auth_admin_password: ''
+
 with_ssh: True
 ssh_strengthened: True
 ssh_ports:

@@ -1,0 +1,78 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+# Nginx vhost for rspamd
+
+server {
+{% if rspamd_web_vhostip or rspamd_web_vhostport %}
+    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}{% endif %}{% if rspamd_web_vhostip and rspamd_web_vhostport %}:{% endif %}{% if rspamd_web_vhostport %}{{ rspamd_web_vhostport }}{% endif %};
+{% endif %}
+
+    server_name {{ rspamd_web_vhostname }};
+
+    access_log  /var/log/nginx/rspamd.access.log main;
+    error_log   /var/log/nginx/rspamd.error.log;
+
+{% if rspamd_web_ssl %}
+    include letsencrypt;
+{% endif %}
+
+{% if rspamd_web_ssl and ssl_certs_auto_installed.stdout_lines is defined and rspamd_web_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    location / {
+        return 301 https://{{ rspamd_web_vhostname }}$request_uri;
+    }
+{% else %}
+    client_max_body_size 128m;
+
+    location / {
+        proxy_pass http://127.0.0.1:11334/;
+{% if rspamd_web_http_auth %}
+        auth_basic "Restricted Access";
+        auth_basic_user_file /etc/nginx/rspamd_admin;
+{% endif %}
+{% if rspamd_web_http_whitelist_ip|length > 0 %}
+{% for ip in rspamd_web_http_whitelist_ip %}
+        allow {{ ip }};
+{% endfor %}
+        deny all;
+{% endif %}
+{% if rspamd_web_http_auth and rspamd_web_http_whitelist_ip|length > 0 %}
+        satisfy any;
+{% endif %}
+    }
+{% endif %}
+}
+{% if rspamd_web_ssl and ssl_certs_auto_installed.stdout_lines is defined and rspamd_web_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+server {
+    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}:{% endif %}{% if rspamd_web_vhostport %}{{ rspamd_web_vhostport }}{% else %}443{% endif %} ssl;
+
+    server_name {{ rspamd_web_vhostname }};
+
+    include vhost_ssl_auto-{{ rspamd_web_vhostname }};
+
+    access_log  /var/log/nginx/rspamd.access.log main;
+    error_log   /var/log/nginx/rspamd.error.log;
+
+    client_max_body_size 128m;
+
+    location / {
+        proxy_pass http://127.0.0.1:11334/;
+{% if rspamd_web_http_auth %}
+        auth_basic "Restricted Access";
+        auth_basic_user_file /etc/nginx/rspamd_admin;
+{% endif %}
+{% if rspamd_web_http_whitelist_ip|length > 0 %}
+{% for ip in rspamd_web_http_whitelist_ip %}
+        allow {{ ip }};
+{% endfor %}
+        deny all;
+{% endif %}
+{% if rspamd_web_http_auth and rspamd_web_http_whitelist_ip|length > 0 %}
+        satisfy any;
+{% endif %}
+    }
+}
+{% endif %}
