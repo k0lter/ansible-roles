@@ -16,7 +16,7 @@
     dest: '/etc/default/grub'
     regexp: '^GRUB_CMDLINE_XEN_DEFAULT='
     insertafter: '^GRUB_CMDLINE_LINUX='
-    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M dom0_max_vcpus=1 dom0_vcpus_pin {{ xen_grub_opts }}"'
+    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M dom0_max_vcpus={{ xendom0_vcpus }} dom0_vcpus_pin {{ xen_grub_opts }}"'
   notify:
     - 'Update GRUB'
   tags:
