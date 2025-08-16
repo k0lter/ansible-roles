@@ -81,12 +81,12 @@ TraceEnable Off
 # Forbid access to version control directories
 #
 # If you use version control systems in your document root, you should
-# probably deny access to their directories. For example, for subversion:
+# probably deny access to their directories.
 #
-<DirectoryMatch "/\.(svn|git)">
-    Deny from all
-    Satisfy all
-</DirectoryMatch>
+# Examples:
+#
+RedirectMatch 404 (\.svn|\.git|composer\.(lock|json)|docker-compose\.yml|Dockerfile)
+RedirectMatch 404 \.(bak|config|sql|sql\..+|fla|psd|xd|ini|log|sh|inc|swp|dist|env)$
 
 #
 # Setting this header will prevent MSIE from interpreting files as something
@@ -94,7 +94,7 @@ TraceEnable Off
 # Requires mod_headers to be enabled.
 #
 <IfModule mod_headers.c>
-    Header set X-Content-Type-Options: "nosniff"
+    Header setifempty X-Content-Type-Options "nosniff"
 </IfModule>
 
 #
@@ -106,7 +106,7 @@ TraceEnable Off
 # Requires mod_headers to be enabled.
 #
 <IfModule mod_headers.c>
-    Header set X-XSS-Protection: "1; mode=block"
+    Header setifempty X-XSS-Protection "1; mode=block"
 </IfModule>
 
 #
@@ -115,7 +115,15 @@ TraceEnable Off
 # Requires mod_headers to be enabled.
 #
 <IfModule mod_headers.c>
-    Header set X-Frame-Options: "sameorigin"
+    Header setifempty X-Frame-Options "sameorigin"
+</IfModule>
+
+#
+# Setting this header will prevent cross-origin information leakage and
+# preserve web users' privacy.
+#
+<IfModule mod_headers.c>
+    Header setifempty Referrer-Policy "same-origin"
 </IfModule>
 
 #
