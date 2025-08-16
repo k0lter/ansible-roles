@@ -89,8 +89,8 @@ phpmyadmin_nginx_enabled: True
 
 with_phppgadmin: False
 phppgadmin_vhostname: 'pga.localhost'
-phppgadmin_vhostip: Null
-phppgadmin_vhostport: 80
+phppgadmin_vhostip: ''
+phppgadmin_vhostport: 0
 phppgadmin_http_auth: False
 phppgadmin_http_whitelist_ip: []
 

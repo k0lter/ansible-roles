@@ -217,7 +217,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phppgadmin|bool
+  when: not ansible_check_mode and with_phppgadmin|bool
   tags:
     - 'web'
     - 'nginx'

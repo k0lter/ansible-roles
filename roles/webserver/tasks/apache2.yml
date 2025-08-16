@@ -176,7 +176,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phppgadmin|bool
+  when: not ansible_check_mode and with_phppgadmin|bool
   tags:
     - 'web'
     - 'apache2'
