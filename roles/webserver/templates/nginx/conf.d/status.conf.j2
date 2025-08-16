@@ -4,6 +4,9 @@
 #
 {% endif %}
 server {
+{% if nginx_status_port is defined %}
+    listen {{ nginx_status_port }};
+{% endif %}
     server_name localhost;
     location /nginx_status {
         stub_status on;
