@@ -8,9 +8,13 @@
 #
 
 location ~* (?:^|/)\.(?!well-known) {
-    deny all;
+    return 404;
 }
 
 location ~* (?:\.(?:bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)|~)$ {
-    deny all;
+    return 404;
+}
+
+location ~* /(?:composer\.(?:lock|json)|docker-compose\.yml|Dockerfile)$ {
+    return 404;
 }

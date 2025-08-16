@@ -29,7 +29,7 @@ location ~* \.(?:jpg|jpeg|webp|gif|png|ico|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ {
 
 # Web fonts
 location ~* \.(?:ttf|ttc|otf|eot|woff|woff2)$ {
-    expires 1M;
+    expires 6M;
     access_log off;
     add_header Cache-Control "public";
     add_header "Access-Control-Allow-Origin" "*";
