@@ -3,4 +3,7 @@
     name: 'zabbix-agent'
     state: 'restarted'
 
-# vim: ft=yaml.ansible
+- name: 'Restart zabbix agent 2'
+  service:
+    name: 'zabbix-agent2'
+    state: 'restarted'

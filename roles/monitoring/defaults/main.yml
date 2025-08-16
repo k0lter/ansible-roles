@@ -5,6 +5,7 @@
 with_mon: False
 
 with_zabbix_agent: False
+with_zabbix_agent2: False
 zabbix_remote_server: 'zabbix.domain.tld'
 zabbix_plugins_config: []
 
