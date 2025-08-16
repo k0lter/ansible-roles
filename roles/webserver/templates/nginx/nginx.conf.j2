@@ -22,6 +22,11 @@ worker_processes {{ nginx_workers }};
 # should be > worker_connections.
 worker_rlimit_nofile 16384;
 
+#
+# Include more global diretives (mail, rtmp, plugins, etc.)
+#
+include /etc/nginx/conf.d/*.inc;
+
 events {
     # When you need > 8000 * cpu_cores connections, you start optimizing your OS,
     # and this is probably the point at where you hire people who are smarter than
@@ -82,6 +87,10 @@ http {
                     '$status $body_bytes_sent "$http_referer" '
                     '"$http_user_agent" "$http_x_forwarded_for" '
                     '$host ${request_time} ${scheme}';
+
+    log_format post '$remote_addr - [$time_local] "$request" '
+                    '$status $body_bytes_sent '
+                    '$host ${request_time} ${scheme} [${request_body}]';
 {% if nginx_logfmt_json %}
     log_format fulljson escape=json
         '{'
@@ -209,10 +218,3 @@ http {
     # Virtual hosts inclusion
     include /etc/nginx/sites-enabled/*;
 }
-
-#
-# Include more global diretives (mail, rtmp, etc.)
-#
-
-include /etc/nginx/conf.d/*.inc;
-
