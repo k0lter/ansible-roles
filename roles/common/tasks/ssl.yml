@@ -1,3 +1,10 @@
+- name: 'Add {{ selfvhost_vhostname }} to SSL certs to install'
+  set_fact:
+    ssl_certs_auto: "{{ ssl_certs_auto + [selfvhost_vhostname] }}"
+  when: with_selfvhost is defined and selfvhost_vhostname != 'localhost' and with_selfvhost|bool
+  tags:
+    - 'ssl'
+
 - name: 'Add {{ phpsyscheck_vhostname }} to SSL certs to install'
   set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [phpsyscheck_vhostname] }}"

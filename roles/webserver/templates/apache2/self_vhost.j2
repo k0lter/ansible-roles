@@ -1,0 +1,54 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+# Apache Self vhost
+
+<VirtualHost {%if selfvhost_vhostip %}{{ selfvhost_vhostip }}{% else %}*{% endif %}:{%if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% else %}80{% endif %}>
+    ServerName {{ selfvhost_vhostname }}
+
+    Include conf-available/letsencrypt.conf
+
+{% if selfvhost_ssl and ssl_certs_auto_installed.stdout_lines is defined and selfvhost_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    RedirectMatch 301 ^(?!/\.well-known/acme-challenge/).* https://{{ selfvhost_vhostname }}$0
+{% else %}
+    DocumentRoot /var/www
+    DirectoryIndex index.html
+
+    <Directory /var/www>
+        Options None
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/self.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/self.error.log
+{% endif %}
+</VirtualHost>
+{% if selfvhost_ssl and ssl_certs_auto_installed.stdout_lines is defined and selfvhost_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+<VirtualHost {%if selfvhost_vhostip %}{{ selfvhost_vhostip }}{% else %}*{% endif %}:{%if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% else %}443{% endif %}>
+    ServerName {{ selfvhost_vhostname }}
+
+    <IfModule http2_module>
+        Protocols h2 http/1.1
+    </IfModule>
+
+    Include vhost_ssl_auto-{{ selfvhost_vhostname }}.conf
+
+    DocumentRoot /var/www
+    DirectoryIndex index.html
+
+    <Directory /var/www>
+        Options None
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/self.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/self.error.log
+</VirtualHost>
+{% endif %}

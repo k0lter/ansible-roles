@@ -225,6 +225,32 @@
     - 'web'
     - 'nginx'
 
+- name: 'Install Self virtual host for nginx (sites-available)'
+  template:
+    src: 'nginx/self_vhost.j2'
+    dest: '/etc/nginx/sites-available/self'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload nginx'
+  when: with_selfvhost|bool and selfvhost_nginx_enabled|bool
+  tags:
+    - 'web'
+    - 'nginx'
+
+- name: 'Install Self virtual host for nginx (sites-enabled)'
+  file:
+    src: '/etc/nginx/sites-available/self'
+    path: '/etc/nginx/sites-enabled/self'
+    state: 'link'
+  notify:
+    - 'Reload nginx'
+  when: not ansible_check_mode and with_selfvhost|bool and selfvhost_nginx_enabled|bool
+  tags:
+    - 'web'
+    - 'nginx'
+
 - name: 'Install Cloudflare configuration to set the real ip in logs'
   template:
     src: 'nginx/cloudflare.conf.j2'

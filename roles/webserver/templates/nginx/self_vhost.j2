@@ -1,0 +1,48 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+# Nginx Self vhost
+
+server {
+{% if selfvhost_vhostip or selfvhost_vhostport %}
+    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}{% endif %}{% if selfvhost_vhostip and selfvhost_vhostport %}:{% endif %}{% if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% endif %};
+{% endif %}
+
+    server_name {{ selfvhost_vhostname }};
+
+    access_log  /var/log/nginx/self.access.log main;
+    error_log   /var/log/nginx/self.error.log;
+
+{% if selfvhost_ssl %}
+    include letsencrypt;
+{% endif %}
+
+{% if selfvhost_ssl and ssl_certs_auto_installed.stdout_lines is defined and selfvhost_vhostname in ssl_certs_auto_installed.stdout_lines %}
+    location / {
+        return 301 https://{{ selfvhost_vhostname }}$request_uri;
+    }
+{% else %}
+    root /var/www;
+    index index.html;
+    try_files $uri $uri/ /index.html;
+{% endif %}
+}
+{% if selfvhost_ssl and ssl_certs_auto_installed.stdout_lines is defined and selfvhost_vhostname in ssl_certs_auto_installed.stdout_lines %}
+
+server {
+    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}:{% endif %}{% if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% else %}443{% endif %} ssl;
+
+    server_name {{ selfvhost_vhostname }};
+
+    include vhost_ssl_auto-{{ selfvhost_vhostname }};
+
+    access_log  /var/log/nginx/self.access.log main;
+    error_log   /var/log/nginx/self.error.log;
+
+    root /var/www;
+    index index.html;
+    try_files $uri $uri/ /index.html;
+}
+{% endif %}

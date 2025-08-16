@@ -48,6 +48,14 @@ phpsyscheck_http_whitelist_ip: []
 phpsyscheck_apache2_enabled: True
 phpsyscheck_nginx_enabled: True
 
+with_selfvhost: True
+selfvhost_vhostname: 'localhost'
+selfvhost_vhostip: ''
+selfvhost_vhostport: 0
+selfvhost_ssl: False
+selfvhost_apache2_enabled: True
+selfvhost_nginx_enabled: True
+
 php_config:
   date.timezone: 'Europe/Paris'
   short_open_tag: 'off'

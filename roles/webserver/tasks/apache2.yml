@@ -202,3 +202,28 @@
     - 'web'
     - 'apache2'
 
+- name: 'Install Self virtual host for Apache2 (sites-available)'
+  template:
+    src: 'apache2/self_vhost.j2'
+    dest: '/etc/apache2/sites-available/self.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Reload apache2'
+  when: with_selfvhost|bool and selfvhost_apache2_enabled|bool and with_php|bool
+  tags:
+    - 'web'
+    - 'apache2'
+
+- name: 'Install Self virtual host for Apache2 (sites-enabled)'
+  file:
+    src: '/etc/apache2/sites-available/self.conf'
+    path: '/etc/apache2/sites-enabled/0000-self.conf'
+    state: 'link'
+  notify:
+    - 'Reload apache2'
+  when: not ansible_check_mode and with_selfvhost|bool and selfvhost_apache2_enabled|bool and with_php|bool
+  tags:
+    - 'web'
+    - 'apache2'
