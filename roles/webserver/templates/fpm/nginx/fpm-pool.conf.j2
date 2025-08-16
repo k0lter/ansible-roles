@@ -4,30 +4,20 @@
 #
 {% endif %}
 
-{% if fpm_pools is defined and fpm_pools %}
+{% for php_version in php_versions %}
+{% set version = php_version|float -%}
 {% for pool in fpm_pools %}
-upstream fpm-backend-{{ pool }} {
-    # Depending on the IP ensure that the same server will handle the request
-    #ip_hash;
-{% for num in range(0, fpm_pools[pool].count, 1) %}
-{% if ansible_lsb.major_release|int >= 9 %}
-    server unix:/run/php/php{{ php_version }}-fpm-pool-{{ pool }}{{ num }}.sock;
+{% if fpm_pools[pool].count is not defined %}
+{% set count = 1 %}
 {% else %}
-    server unix:/var/run/php5-fpm-pool-{{ pool }}{{ num }}.sock;
+{% set count = fpm_pools[pool].count %}
 {% endif %}
-{% endfor %}
-}
-{% endfor %}
-{% else %}
-upstream fpm-backend {
-    # Depending on the IP ensure that the same server will handle the request
-    #ip_hash;
-{% for num in range(0, fpm_pool_count, 1) %}
-{% if ansible_lsb.major_release|int >= 9 %}
-    server unix:/run/php/php{{ php_version }}-fpm-pool-www{{ num }}.sock;
-{% else %}
-    server unix:/var/run/php5-fpm-pool-www{{ num }}.sock;
-{% endif %}
+{% if fpm_pools[pool].version is not defined or (fpm_pools[pool].version is defined and fpm_pools[pool].version == php_version) %}
+upstream fpm{{ php_version|replace('_', '') }}-{{ pool }} {
+{% for num in range(0, count, 1) %}
+    server unix:/run/php/php{% if version >= 5.6 %}{{ version }}{% else %}5{% endif %}-fpm-pool-{{ pool }}{{ num }}.sock;
 {% endfor %}
 }
 {% endif %}
+{% endfor %}
+{% endfor %}

@@ -20,7 +20,9 @@ with_modphp5: False
 with_modphp: False
 
 with_fpm: False
+with_fpm_config: True
 
+fpm_pool_name: 'www'
 fpm_pool_count: 1
 fpm_user: 'www-data'
 fpm_group: 'www-data'
@@ -30,8 +32,9 @@ fpm_start_servers: 2
 fpm_max_children: 5
 fpm_min_spare_servers: 1
 fpm_max_spare_servers: 3
+fpm_process_idle_timeout: 10
 
-fpm_pools: Null
+fpm_pools: []
 fpm_pools_include_pattern: 'local-pool.cnf'
 
 with_php: False

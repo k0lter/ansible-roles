@@ -16,7 +16,13 @@
 ; the variable $pool can be used in any directive and will be replaced by the
 ; pool name ('www' here)
 {% for pool in fpm_pools %}
-{% for num in range(0, fpm_pools[pool].count, 1) %}
+{% if fpm_pools[pool].version is not defined or (fpm_pools[pool].version is defined and fpm_pools[pool].version == php_version) %}
+{% if fpm_pools[pool].count is not defined %}
+{% set count = 1 %}
+{% else %}
+{% set count = fpm_pools[pool].count %}
+{% endif %}
+{% for num in range(0, count, 1) %}
 [{{ pool }}{{ num }}]
 
 ; Per pool prefix
@@ -140,7 +146,7 @@ pm.max_spare_servers = {% if fpm_pools[pool].max_spare_servers is defined %}{{ f
 ; The number of seconds after which an idle process will be killed.
 ; Note: Used only when pm is set to 'ondemand'
 ; Default Value: 10s
-;pm.process_idle_timeout = 10s;
+pm.process_idle_timeout = {% if fpm_pools[pool].process_idle_timeout is defined %}{{ fpm_pools[pool].process_idle_timeout }}{% else %}{{ fpm_process_idle_timeout }}{% endif %}s
 
 ; The number of requests each child process should execute before respawning.
 ; This can be useful to work around memory leaks in 3rd party libraries. For
@@ -419,7 +425,13 @@ catch_workers_output = yes
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 php_admin_flag[cgi.fix_pathinfo] = on
+{% if fpm_pools[pool].config is defined -%}
+{% for cnf in fpm_pools[pool].config -%}
+php_admin_{% if fpm_pools[pool].config[cnf] | regex_search('^(on|On|off|Off)$') %}flag{% else %}value{% endif %}[{{ cnf }}] = {{ fpm_pools[pool].config[cnf] }}
+{% endfor %}
+{% endif %}
 
 {% endfor %}
+{% endif %}
 {% endfor %}
 ; vim: ft=dosini

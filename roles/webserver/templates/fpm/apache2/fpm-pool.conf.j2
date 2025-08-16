@@ -3,29 +3,39 @@
 # {{ ansible_controlled }}
 #
 {% endif %}
-<IfModule proxy_fcgi_module>
-    <FilesMatch ".+\.ph(p[3457]?|t|tml)$">
-    {% if ansible_lsb.major_release|int >= 9 %}
-        SetHandler "proxy:unix:/run/php/php{{ php_version }}-fpm-pool-www0.sock|fcgi://localhost"
-    {% else %}
-        SetHandler "proxy:unix:/var/run/php5-fpm-pool-www0.sock|fcgi://localhost"
-    {% endif %}
-    </FilesMatch>
-    <FilesMatch ".+\.phps$">
-        <IfVersion >= 2.4>
-            Require all denied
-        </IfVersion>
-        <IfVersion < 2.4>
-            Deny From All
-        </IfVersion>
-    </FilesMatch>
-    # Deny access to files without filename (e.g. '.php')
-    <FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
-        <IfVersion >= 2.4>
-            Require all denied
-        </IfVersion>
-        <IfVersion < 2.4>
-            Deny From All
-        </IfVersion>
-    </FilesMatch>
+{%- set pool = namespace(name="www") -%}
+{%- if fpm_pools_defaults is defined -%}
+{%- for p in fpm_pools_defaults -%}
+{%- if fpm_pools_defaults[p].default is defined and fpm_pools_defaults[p].default -%}
+{%- set pool.name = p -%}
+{%- endif -%}
+{%- endfor -%}
+{%- endif -%}
+<IfModule !mod_php{{ php_versions|first|float|int }}.c>
+    <IfModule proxy_fcgi_module>
+        <FilesMatch ".+\.ph(p[34578]?|t|tml)$">
+        {% if php_versions|first()|float >= 5.6 %}
+            SetHandler "proxy:unix:/run/php/php{{ php_versions|first() }}-fpm-pool-{{ pool.name }}0.sock|fcgi://localhost"
+        {% else %}
+            SetHandler "proxy:unix:/var/run/php5-fpm-pool-{{ pool.name }}0.sock|fcgi://localhost"
+        {% endif %}
+        </FilesMatch>
+        <FilesMatch ".+\.phps$">
+            <IfVersion >= 2.4>
+                Require all denied
+            </IfVersion>
+            <IfVersion < 2.4>
+                Deny From All
+            </IfVersion>
+        </FilesMatch>
+        # Deny access to files without filename (e.g. '.php')
+        <FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
+            <IfVersion >= 2.4>
+                Require all denied
+            </IfVersion>
+            <IfVersion < 2.4>
+                Deny From All
+            </IfVersion>
+        </FilesMatch>
+    </IfModule>
 </IfModule>

@@ -23,7 +23,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies (Debian <= 8)'
+- name: 'Install common PHP dependencies PHP5'
   apt:
     pkg:
       - 'php5-cli'
@@ -38,88 +38,97 @@
       - 'php5-sqlite'
       - 'php-apc'
     state: 'present'
-  when: with_php|bool and ansible_lsb.major_release|int <= 8
+  when: with_php|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 7.0'
+- name: 'Install common PHP dependencies for PHP({{ php_versions|join(", ") }}) >= 5.6'
   apt:
     pkg:
-      - 'php{{ php_version }}-cli'
-      - 'php{{ php_version }}-curl'
-      - 'php{{ php_version }}-gd'
-      - 'php{{ php_version }}-intl'
-      - 'php{{ php_version }}-mbstring'
-      - 'php{{ php_version }}-mysql'
-      - 'php{{ php_version }}-opcache'
-      - 'php{{ php_version }}-pgsql'
-      - 'php{{ php_version }}-soap'
-      - 'php{{ php_version }}-sqlite3'
-      - 'php{{ php_version }}-xml'
-      - 'php{{ php_version }}-zip'
+      - 'php{{ item }}-cli'
+      - 'php{{ item }}-curl'
+      - 'php{{ item }}-gd'
+      - 'php{{ item }}-intl'
+      - 'php{{ item }}-mbstring'
+      - 'php{{ item }}-mysql'
+      - 'php{{ item }}-opcache'
+      - 'php{{ item }}-pgsql'
+      - 'php{{ item }}-soap'
+      - 'php{{ item }}-sqlite3'
+      - 'php{{ item }}-xml'
+      - 'php{{ item }}-zip'
+      - 'php{{ item }}-bcmath'
     state: 'present'
-  when: with_php|bool and php_version|float >= 7.0
+  when: with_php|bool and item|float >= 5.6
+  with_items: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 7.0 and PHP({{ php_version }}) != 8.0'
+- name: 'Install common PHP dependencies for PHP({{ php_versions|join(", ") }}) >= 5.6 and PHP({{ php_versions|join(", ") }}) <= 7.4'
   apt:
     pkg:
-      - 'php{{ php_version }}-json'
+      - 'php{{ item }}-json'
     state: 'present'
-  when: with_php|bool and php_version|float >= 7.0 and php_version|float != 8.0
+  when: with_php|bool and item|float >= 5.6 and item|float <= 7.4
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for 7.0 <= PHP({{ php_version }}) < 7.2'
+- name: 'Install common PHP dependencies for 5.6 <= PHP({{ php_versions|join(", ") }}) < 7.2'
   apt:
     pkg:
-      - 'php{{ php_version }}-mcrypt'
+      - 'php{{ item }}-mcrypt'
     state: 'present'
-  when: with_php|bool and php_version|float >= 7.0 and php_version|float < 7.2
+  when: with_php|bool and item|float >= 5.6 and item|float < 7.2
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for 7.0 <= PHP({{ php_version }}) <= 7.3'
+- name: 'Install common PHP dependencies for 5.6 <= PHP({{ php_versions|join(", ") }}) <= 7.4'
   apt:
     pkg:
-      - 'php{{ php_version }}-imagick'
+      - 'php{{ item }}-apcu'
     state: 'present'
-  when: with_php|bool and php_version|float >= 7.0 and php_version|float <= 7.3
+  when: with_php|bool and item|float >= 5.6 and item|float <= 7.4 and with_php_sury|bool
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for 7.0 <= PHP({{ php_version }}) <= 7.4'
+- name: 'Install common PHP dependencies for 5.6 <= PHP({{ php_versions|join(", ") }}) <= 7.4'
   apt:
     pkg:
       - 'php-apcu'
     state: 'present'
-  when: with_php|bool and php_version|float >= 7.0 and php_version|float <= 7.4
+  when: with_php|bool and item|float >= 5.6 and item|float <= 7.4 and not with_php_sury|bool
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 7.4'
+- name: 'Install common PHP dependencies for PHP({{ php_versions|join(", ") }}) >= 8.1'
   apt:
     pkg:
-      - 'php{{ php_version }}-imagick'
+      - 'php{{ item }}-imagick'
     state: 'present'
-  when: with_php|bool and php_version|float >= 7.4
+  when: with_php|bool and item|float >= 8.1
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install common PHP dependencies for PHP({{ php_version }}) >= 8.0'
+- name: 'Install common PHP dependencies for PHP({{ php_versions|join(", ") }}) >= 8.0'
   apt:
     pkg:
-      - 'php{{ php_version }}-apcu'
+      - 'php{{ item }}-apcu'
     state: 'present'
-  when: with_php|bool and php_version|float >= 8.0
+  when: with_php|bool and item|float >= 8.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
@@ -153,32 +162,33 @@
     - 'web'
     - 'php'
 
-
-- name: 'Install local PHP configuration overrides for php5-cli (Debian 8)'
+- name: 'Install local PHP configuration overrides for PHP5 cli'
   template:
     src: 'php/php-config-cli.ini.j2'
     dest: '/etc/php5/cli/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_php|bool and ansible_lsb.major_release|int == 8
+  when: with_php|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install local PHP configuration overrides for php{{ php_version }}-cli (Debian >= 9)'
+- name: 'Install local PHP configuration overrides for PHP ({{ php_versions|join(", ") }}) cli'
   template:
     src: 'php/php-config-cli.ini.j2'
-    dest: '/etc/php/{{ php_version }}/cli/conf.d/99-local-config.ini'
+    dest: '/etc/php/{{ item }}/cli/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_php|bool and ansible_lsb.major_release|int >= 9
+  when: with_php|bool and item|float >= 5.6
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install Apache2 module for php5'
+- name: 'Install Apache2 module for PHP5'
   apt:
     pkg:
       - 'libapache2-mod-php5'
@@ -190,20 +200,20 @@
     - 'web'
     - 'php'
 
-- name: 'Install Apache2 module for php{{ php_version }}'
+- name: 'Install Apache2 module for PHP ({{ php_versions|first }})'
   apt:
     pkg:
-      - 'libapache2-mod-php{{ php_version }}'
+      - 'libapache2-mod-php{{ php_versions|first }}'
     state: 'present'
   notify:
       - 'Reload apache2'
-  when: with_modphp|bool
+  when: with_modphp|bool and php_versions|length > 0
   tags:
     - 'web'
     - 'php'
 
-- name: 'Configure Apache2 modules for php-fpm{{ php_version }}'
-  shell: a2dismod php{{ php_version }} mpm_prefork ; a2enmod mpm_event proxy_fcgi
+- name: 'Configure Apache2 modules for PHP-FPM {{ php_versions|first }}'
+  shell: a2dismod php{{ php_versions|first }} mpm_prefork ; a2enmod mpm_event proxy_fcgi
   changed_when: False
   when: with_fpm|bool and not with_modphp|bool and with_apache2|bool
   notify:
@@ -212,8 +222,8 @@
     - 'web'
     - 'php'
 
-- name: 'Configure Apache2 modules for modphp{{ php_version }}'
-  shell: a2dismod mpm_event ; a2enmod mpm_prefork php{{ php_version }}
+- name: 'Configure Apache2 modules for ModPHP ({{ php_versions|first }})'
+  shell: a2dismod mpm_event ; a2enmod mpm_prefork php{{ php_versions|first }}
   changed_when: False
   when: with_modphp|bool and with_apache2|bool
   notify:
@@ -222,7 +232,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install local PHP configuration (Debian < 8)'
+- name: 'Install local PHP5 configuration'
   template:
     src: 'php/php-config-web.ini.j2'
     dest: '/etc/php5/conf.d/99-local-config.ini'
@@ -231,12 +241,13 @@
     mode: '0644'
   notify:
       - 'Reload apache2'
-  when: with_modphp5|bool and ansible_lsb.major_release|int < 8
+  when: with_modphp5|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install local PHP configuration for Apache 2 (Debian 8)'
+- name: 'Install local PHP5 configuration for Apache 2'
   template:
     src: 'php/php-config-web.ini.j2'
     dest: '/etc/php5/apache2/conf.d/99-local-config.ini'
@@ -245,21 +256,36 @@
     mode: '0644'
   notify:
       - 'Reload apache2'
-  when: with_modphp5|bool and ansible_lsb.major_release|int == 8
+  when: with_modphp5|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install local PHP configuration for Apache 2 (Debian >= 9)'
+- name: 'Create PHP ({{ php_versions|join(", ") }}) directories for Apache 2'
+  file:
+    path: '/etc/php/{{ item }}/apache2/conf.d'
+    state: directory
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  when: with_modphp|bool and item|float >= 5.6
+  loop: "{{ php_versions }}"
+  tags:
+    - 'web'
+    - 'php'
+
+- name: 'Install local PHP ({{ php_versions|join(", ") }}) configuration for Apache 2'
   template:
     src: 'php/php-config-web.ini.j2'
-    dest: '/etc/php/{{ php_version }}/apache2/conf.d/99-local-config.ini'
+    dest: '/etc/php/{{ item }}/apache2/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
     mode: '0644'
+  when: with_modphp|bool and item|float >= 5.6
+  loop: "{{ php_versions }}"
   notify:
       - 'Reload apache2'
-  when: with_modphp|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -300,21 +326,23 @@
     - 'web'
     - 'php'
 
-- name: 'Install MySQL extension for PHP - native driver (Debian 8)'
+- name: 'Install MySQL extension for PHP5 - native driver'
   apt:
     pkg:
       - 'php5-mysqlnd'
     state: 'present'
-  when: not with_php_mysql_legacy|bool and ansible_lsb.major_release|int == 8
+  when: not with_php_mysql_legacy|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install MySQL extension for PHP (old driver)'
+- name: 'Install MySQL extension for PHP5 (old driver)'
   apt:
     pkg: 'php5-mysql'
     state: 'present'
-  when: with_php_mysql_legacy|bool
+  when: with_php_mysql_legacy|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
@@ -339,134 +367,125 @@
     - 'web'
     - 'php'
 
-- name: 'Install FPM for PHP 5 (Debian <= 8)'
+- name: 'Install FPM for PHP5'
   apt:
     pkg:
       - 'php5-fpm'
     state: 'present'
-  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install FPM for PHP {{ php_version }} (Debian >= 9)'
+- name: 'Install FPM for PHP ({{ php_versions|join(", ") }})'
   apt:
     pkg:
-      - 'php{{ php_version }}-fpm'
+      - 'php{{ item }}-fpm'
     state: 'present'
-  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and item|float >= 5.6
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Configure FPM for PHP 5 (Debian <= 8)'
+- name: 'Configure FPM for PHP5'
   lineinfile:
     dest: '/etc/php5/fpm/php-fpm.conf'
-    regexp: '^{{ item.key }}\s*=.*$'
-    line: '{{ item.key }} = {{ item.value }}'
-    insertafter: '^;{{ item.key }}'
-  with_items:
-    - { key: 'error_log', value: 'syslog' }
-    - { key: 'log_level', value: 'warning' }
-    - { key: 'emergency_restart_threshold', value: '100' }
-    - { key: 'emergency_restart_interval', value: '5s' }
-    - { key: 'rlimit_files', value: '262144' }
-    - { key: 'events.mechanism', value: 'epoll' }
-    - { key: 'include', value: '/etc/php5/fpm/pool.d/local-pool.cnf' }
+    regexp: '^{{ item.1.key }}\s*=.*$'
+    line: '{{ item.1.key }} = {{ item.1.value }}'
+    insertafter: '^;{{ item.1.key }}'
+  with_nested:
+    - "{{ php_versions }}"
+    - [
+        { key: 'error_log', value: 'syslog' },
+        { key: 'log_level', value: 'warning' },
+        { key: 'emergency_restart_threshold', value: '100' },
+        { key: 'emergency_restart_interval', value: '5s' },
+        { key: 'rlimit_files', value: '262144' },
+        { key: 'events.mechanism', value: 'epoll' },
+        { key: 'include', value: '/etc/php5/fpm/pool.d/local-pool.cnf' }
+      ]
   notify:
-      - 'Reload FPM for PHP 5'
-  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
+      - 'Reload FPM for PHP5'
+  when: with_fpm|bool and with_fpm_config|bool and item.0|float <= 5.0
   tags:
     - 'web'
     - 'php'
 
-- name: 'Configure FPM for PHP {{ php_version }} (Debian >= 9)'
+- name: 'Configure FPM for PHP ({{ php_versions|join(", ") }})'
   lineinfile:
-    dest: '/etc/php/{{ php_version }}/fpm/php-fpm.conf'
-    regexp: '^{{ item.key }}\s*=.*$'
-    line: '{{ item.key }} = {{ item.value }}'
-    insertafter: '^;{{ item.key }}'
-  with_items:
-    - { key: 'error_log', value: 'syslog' }
-    - { key: 'log_level', value: 'warning' }
-    - { key: 'emergency_restart_threshold', value: '100' }
-    - { key: 'emergency_restart_interval', value: '5s' }
-    - { key: 'rlimit_files', value: '262144' }
-    - { key: 'events.mechanism', value: 'epoll' }
-    - { key: 'include', value: '/etc/php/{{ php_version }}/fpm/pool.d/{{ fpm_pools_include_pattern }}' }
+    dest: '/etc/php/{{ item.0 }}/fpm/php-fpm.conf'
+    regexp: '^{{ item.1.key }}\s*=.*$'
+    line: '{{ item.1.key }} = {{ item.1.value|replace("$PHP_VERSION$", item.0) }}'
+    insertafter: '^;{{ item.1.key }}'
+  when: with_fpm|bool and with_fpm_config|bool
+  register: php_versions_processed
+  with_nested:
+    - "{{ php_versions }}"
+    - [
+        { key: 'error_log', value: 'syslog' },
+        { key: 'log_level', value: 'warning' },
+        { key: 'emergency_restart_threshold', value: '100' },
+        { key: 'emergency_restart_interval', value: '5s' },
+        { key: 'rlimit_files', value: '262144' },
+        { key: 'events.mechanism', value: 'epoll' },
+        { key: 'include', value: '/etc/php/$PHP_VERSION$/fpm/pool.d/{{ fpm_pools_include_pattern }}' }
+      ]
   notify:
       - 'Reload FPM for PHP'
-  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install FPM pools configuration (legacy) for PHP 5 (Debian <= 8)'
-  template:
-    src: 'fpm/php5-fpm-pools.conf.j2'
-    dest: '/etc/php5/fpm/pool.d/local-pool.cnf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  notify:
-      - 'Reload FPM for PHP 5'
-  when: with_fpm|bool and not (fpm_pools is defined and fpm_pools) and ansible_lsb.major_release|int <= 8
-  tags:
-    - 'web'
-    - 'php'
+- name: 'Adding default configuration to FPM pools'
+  set_fact:
+    fpm_pools: "{{ fpm_pools_defaults|combine(fpm_pools) }}"
+  when: fpm_pools_defaults is defined
 
-- name: 'Install FPM pools configuration (legacy) for PHP {{ php_version }} (Debian > 9)'
-  template:
-    src: 'fpm/php-fpm-pools-legacy.conf.j2'
-    dest: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-    trim_blocks: 'no'
-  notify:
-      - 'Reload FPM for PHP'
-  when: with_fpm|bool and not (fpm_pools is defined and fpm_pools) and ansible_lsb.major_release|int >= 9
-  tags:
-    - 'web'
-    - 'php'
-
-- name: 'Install FPM pools configuration for PHP {{ php_version }} (Debian > 9)'
+- name: 'Install FPM pools configuration for PHP ({{ php_versions|join(", ") }})'
   template:
     src: 'fpm/php-fpm-pools.conf.j2'
-    dest: '/etc/php/{{ php_version }}/fpm/pool.d/local-pool.cnf'
+    dest: '/etc/php/{{ item }}/fpm/pool.d/local-pool.cnf'
     owner: 'root'
     group: 'root'
     mode: '0644'
     trim_blocks: 'no'
+  vars:
+    php_version: "{{ item }}"
+  when: with_fpm|bool and with_fpm_config|bool and fpm_pools is defined and fpm_pools
+  register: php_versions_processed
+  loop: "{{ php_versions }}"
   notify:
       - 'Reload FPM for PHP'
-  when: with_fpm|bool and fpm_pools is defined and fpm_pools and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install local PHP configuration overrides for php5-fpm (Debian 8)'
+- name: 'Install local PHP configuration overrides for PHP5 fpm'
   template:
     src: 'php/php-config-web.ini.j2'
     dest: '/etc/php5/fpm/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
     mode: '0644'
-  when: with_fpm|bool and ansible_lsb.major_release|int == 8
+  when: with_fpm|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Install local PHP configuration overrides for php{{ php_version }}-fpm (Debian >= 9)'
+- name: 'Install local PHP configuration overrides for PHP ({{ php_versions|join(", ") }}) fpm'
   template:
     src: 'php/php-config-web.ini.j2'
-    dest: '/etc/php/{{ php_version }}/fpm/conf.d/99-local-config.ini'
+    dest: '/etc/php/{{ item }}/fpm/conf.d/99-local-config.ini'
     owner: 'root'
     group: 'root'
     mode: '0644'
+  when: with_fpm|bool and item|float >= 5.6
+  loop: "{{ php_versions }}"
   notify:
       - 'Reload FPM for PHP'
-  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
   tags:
     - 'web'
     - 'php'
@@ -483,7 +502,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install Nginx config files for PHP FPM (fpm servers pool)'
+- name: 'Install Nginx config files for PHP FPM (servers pool)'
   template:
     src: 'fpm/nginx/fpm-pool.conf.j2'
     dest: '/etc/nginx/conf.d/fpm-pool.conf'
@@ -497,13 +516,17 @@
     - 'web'
     - 'php'
 
-- name: 'Install Nginx config files for PHP FPM (fpm fastcgi config)'
+- name: 'Install Nginx config files for PHP FPM (fastcgi config)'
   template:
-    src: 'fpm/nginx/fastcgi_pass_fpm.j2'
-    dest: '/etc/nginx/fastcgi_pass_fpm'
+    src: 'fpm/nginx/{{ item }}.j2'
+    dest: '/etc/nginx/{{ item }}'
     owner: 'root'
     group: 'root'
     mode: '0644'
+  with_items:
+    - 'fastcgi_pass_fpm_common'
+    - 'fastcgi_pass_fpm_custom'
+    - 'fastcgi_pass_fpm'
   notify:
       - 'Reload nginx'
   when: with_fpm|bool and with_nginx|bool
@@ -511,22 +534,27 @@
     - 'web'
     - 'php'
 
-- name: 'Ensure FPM for PHP 5 is running (Debian <= 8)'
+- name: 'Update alternative to use PHP the right PHP version ({{ php_versions|first }})'
+  alternatives:
+    name: 'php'
+    path: '/usr/bin/php{{ php_versions|first }}'
+
+- name: 'Ensure FPM for PHP5 is running'
   service:
     name: 'php5-fpm'
     state: 'started'
-  when: with_fpm|bool and ansible_lsb.major_release|int <= 8
+  when: with_fpm|bool and item|float <= 5.0
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
 
-- name: 'Ensure FPM for PHP {{ php_version }} is running (Debian >= 9)'
+- name: 'Ensure FPM for PHP ({{ php_versions|join(", ") }}) is running'
   service:
-    name: 'php{{ php_version }}-fpm'
+    name: 'php{{ item }}-fpm'
     state: 'started'
-  when: with_fpm|bool and ansible_lsb.major_release|int >= 9
+  when: with_fpm|bool and item|float >= 5.6
+  loop: "{{ php_versions }}"
   tags:
     - 'web'
     - 'php'
-
-# vim: ft=yaml.ansible
