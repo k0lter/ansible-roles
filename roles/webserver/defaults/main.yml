@@ -91,8 +91,8 @@ phppgadmin_vhostport: 80
 phppgadmin_http_auth: False
 phppgadmin_http_whitelist_ip: []
 
-http_auth_admin_password: Null
-http_auth_user_name: Null
-http_auth_user_password: Null
+http_auth_admin_password: ''
+http_auth_user_name: ''
+http_auth_user_password: ''
 
 # vim: ft=yaml.ansible

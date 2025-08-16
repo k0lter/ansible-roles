@@ -153,14 +153,19 @@
     - 'web'
     - 'nginx'
 
-- name: 'Create basic authentication file for admin (Nginx)'
-  template:
-    src: 'nginx/auth_admin.j2'
-    dest: '/etc/nginx/auth_admin'
+- name: 'Create basic authentication file (Nginx)'
+  htpasswd:
+    path: '/etc/nginx/auth_admin'
+    name: '{{ item.name }}'
+    password: '{{ item.password }}'
     owner: 'root'
     group: 'www-data'
     mode: '0640'
-  when: http_auth_admin_password is defined and http_auth_admin_password
+    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+  with_items:
+    - '{ "name": "admin", "password": "{{ http_auth_admin_password }}", "enabled": {{ http_auth_admin_password|length > 0 }} }'
+    - '{ "name": "{{ http_auth_user_name }}", "password": "{{ http_auth_user_password }}", "enabled": {{ http_auth_user_name|length > 0 and http_auth_user_password|length > 0 }} }'
+  when: item.enabled|bool
   tags:
     - 'web'
     - 'nginx'

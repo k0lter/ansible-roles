@@ -1,0 +1,20 @@
+- name: 'Install Python passlib'
+  apt:
+    pkg:
+      - 'python{{ ansible_python.version.major | replace("2", "") }}-passlib'
+    state: 'present'
+  tags:
+    - 'web'
+    - 'apache2'
+    - 'nginx'
+
+- name: 'Install website utilities'
+  apt:
+    pkg:
+      - 'imagemagick'
+    state: 'present'
+  when: with_php|bool
+  tags:
+    - 'web'
+    - 'apache2'
+    - 'nginx'
