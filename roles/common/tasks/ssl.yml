@@ -154,16 +154,16 @@
 
 - name: 'Install dehydrated hooks for various services'
   template:
-    src: 'dehydrated/hooks/{{ item }}.sh.j2'
-    dest: '/etc/dehydrated/hooks/{{ item }}.sh'
+    src: 'dehydrated/hooks/{{ item.name }}.sh.j2'
+    dest: '/etc/dehydrated/hooks/{{ item.name }}.sh'
     owner: 'root'
     group: 'root'
     mode: '0755'
   with_items:
-    - 'nginx'
-    - 'apache2'
-    - 'dovecot'
-  when: ssl_certs_auto|length > 0
+    - '{ "name": "nginx", "enabled": {{ with_nginx is defined and with_nginx|bool }} }'
+    - '{ "name": "apache2", "enabled": {{ with_apache2 is defined and with_apache2|bool }} }'
+    - '{ "name": "dovecot", "enabled": {{ with_dovecot is defined and with_dovecot|bool }} }'
+  when: ssl_certs_auto|length > 0 and item.enabled
   tags:
     - 'ssl'
 
@@ -193,6 +193,7 @@
   shell: egrep -v '^#' /etc/dehydrated/domains.txt | cut -d ' ' -f 1 | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem" || echo "${c}" ; done
   register: ssl_certs_auto_missing
   ignore_errors: True
+  check_mode: no
   changed_when: ssl_certs_auto_missing.stdout_lines != []
   notify:
     - 'Generate Lets Encrypt SSL certificates'

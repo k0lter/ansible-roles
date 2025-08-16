@@ -13,7 +13,6 @@
   tags:
     - 'base'
 - include_tasks: ssl.yml
-  when: ssl_certs|length > 0 or ssl_certs_auto|length > 0
   tags:
     - 'ssl'
 - include_tasks: dns.yml

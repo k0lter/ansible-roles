@@ -9,3 +9,17 @@
     uri: '{{ zabbix_plugins_config.discovery.ssl[key]['uri'] }}'
 {% endfor %}
 {% endif %}
+{% if ssl_certs_auto is defined %}
+{% for domains in ssl_certs_auto %}
+{% for domain in domains.split(' ') %}
+{{ domain }}:
+    uri: 'ssl://{{ domain }}:https'
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if ssl_certs is defined %}
+{% for domain in ssl_certs %}
+{{ domain }}:
+    uri: 'ssl://{{ domain }}:https'
+{% endfor %}
+{% endif %}
