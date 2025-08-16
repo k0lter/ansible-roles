@@ -28,15 +28,17 @@ server {
     index index.php;
     try_files $uri $uri/ /index.php;
 
-{% if phpsyscheck_http_auth %}
+{% if phpsyscheck_http_auth or phpsyscheck_http_whitelist_ip|length > 0 %}
     location / {
+{% if phpsyscheck_http_auth %}
         auth_basic "Restricted Access";
         auth_basic_user_file /etc/nginx/auth_admin;
-{% if phpsyscheck_http_whitelist_ip|length > 0 %}
+{% endif %}
 {% for ip in phpsyscheck_http_whitelist_ip %}
         allow {{ ip }};
 {% endfor %}
         deny all;
+{% if phpsyscheck_http_auth and phpsyscheck_http_whitelist_ip|length > 0 %}
         satisfy any;
 {% endif %}
     }
@@ -63,14 +65,16 @@ server {
     index index.php;
     try_files $uri $uri/ /index.php;
 
+{% if phpsyscheck_http_auth or phpsyscheck_http_whitelist_ip|length > 0 %}
 {% if phpsyscheck_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
-{% if phpsyscheck_http_whitelist_ip|length > 0 %}
+{% endif %}
 {% for ip in phpsyscheck_http_whitelist_ip %}
     allow {{ ip }};
 {% endfor %}
     deny all;
+{% if phpsyscheck_http_auth and phpsyscheck_http_whitelist_ip|length > 0 %}
     satisfy any;
 {% endif %}
 {% endif %}

@@ -220,7 +220,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phpsyscheck|bool and phpsyscheck_nginx_enabled|bool and with_php|bool
+  when: not ansible_check_mode and with_phpsyscheck|bool and phpsyscheck_nginx_enabled|bool and with_php|bool
   tags:
     - 'web'
     - 'nginx'

@@ -4,6 +4,7 @@
 #
 {% endif %}
 # Apache vhost for PHP system checks
+{% set php_major_version = php_versions|first|float|int %}
 
 <VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{%if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}80{% endif %}>
     ServerName {{ phpsyscheck_vhostname }}
@@ -16,11 +17,13 @@
     DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php
 
-{% if phpsyscheck_http_auth %}
+{% if phpsyscheck_http_auth or phpsyscheck_http_whitelist_ip|length > 0 %}
     <Location />
+{% if phpsyscheck_http_auth %}
         AuthType basic
         AuthName "Restricted Access"
         AuthUserFile /etc/apache2/auth_admin
+{% endif %}
         <RequireAny>
 {% if phpsyscheck_http_whitelist_ip|length > 0 %}
             Require ip {{ phpsyscheck_http_whitelist_ip | join(' ')  }}
@@ -37,7 +40,9 @@
     </Directory>
 
 {% if with_fpm|bool %}
-    Include conf-available/fpm-pool.conf
+    <IfModule !php{% if php_major_version <= 7 %}{{ php_major_version }}{% endif %}_module>
+        Include conf-available/fpm-pool.conf
+    </IfModule>
 {% endif %}
 
     LogLevel warn
@@ -59,11 +64,13 @@
     DocumentRoot /etc/phpsyscheck
     DirectoryIndex index.php
 
-{% if phpsyscheck_http_auth %}
+{% if phpsyscheck_http_auth or phpsyscheck_http_whitelist_ip|length > 0 %}
     <Location />
+{% if phpsyscheck_http_auth %}
         AuthType basic
         AuthName "Restricted Access"
         AuthUserFile /etc/apache2/auth_admin
+{% endif %}
         <RequireAny>
 {% if phpsyscheck_http_whitelist_ip|length > 0 %}
             Require ip {{ phpsyscheck_http_whitelist_ip | join(' ')  }}
@@ -79,14 +86,10 @@
         Require all granted
     </Directory>
 
-    <IfModule php7_module>
-        php_admin_value max_execution_time 240
-        php_admin_value upload_max_filesize 128M
-        php_admin_value post_max_size 128M
-    </IfModule>
-
 {% if with_fpm|bool %}
-    Include conf-available/fpm-pool.conf
+    <IfModule !php{% if php_major_version <= 7 %}{{ php_major_version }}{% endif %}_module>
+        Include conf-available/fpm-pool.conf
+    </IfModule>
 {% endif %}
 
     LogLevel warn

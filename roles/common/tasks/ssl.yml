@@ -1,3 +1,10 @@
+- name: 'Add {{ phpsyscheck_vhostname }} to SSL certs to install'
+  set_fact:
+    ssl_certs_auto: "{{ ssl_certs_auto + [phpsyscheck_vhostname] }}"
+  when: with_php is defined and with_php|bool and with_phpsyscheck is defined and with_phpsyscheck|bool and phpsyscheck_ssl is defined and phpsyscheck_ssl|bool
+  tags:
+    - 'ssl'
+
 - name: 'Create ssl certificates directory'
   file:
     path: '/etc/ssl/local/certs'

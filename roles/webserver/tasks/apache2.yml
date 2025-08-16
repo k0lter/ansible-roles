@@ -197,9 +197,8 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phpsyscheck|bool and phpsyscheck_apache2_enabled|bool and with_php|bool
+  when: not ansible_check_mode and with_phpsyscheck|bool and phpsyscheck_apache2_enabled|bool and with_php|bool
   tags:
     - 'web'
     - 'apache2'
 
-# vim: ft=yaml.ansible

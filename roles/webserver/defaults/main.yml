@@ -40,8 +40,8 @@ with_php_sury: False
 
 with_phpsyscheck: True
 phpsyscheck_vhostname: 'sys.localhost'
-phpsyscheck_vhostip: Null
-phpsyscheck_vhostport: Null
+phpsyscheck_vhostip: ''
+phpsyscheck_vhostport: 0
 phpsyscheck_ssl: False
 phpsyscheck_http_auth: False
 phpsyscheck_http_whitelist_ip: []
