@@ -11,6 +11,7 @@
 - include_tasks: dotfiles.yml
   when: with_dotfiles|bool
   tags:
+    - 'dotfiles'
     - 'base'
 - include_tasks: ssl.yml
   tags:
