@@ -6,10 +6,19 @@
 /var/log/nginx/*.log {
     daily
     missingok
-    rotate 1000
+    rotate {% if webserver_logs_maxdays is defined %}{{ webserver_logs_maxdays }}{% else %}1000{% endif +%}
     dateext
     dateyesterday
     compress
+{% if webserver_logs_compress_bin is defined %}
+    compresscmd {{ webserver_logs_compress_bin}}
+{% endif %}
+{% if webserver_logs_uncompress_bin is defined %}
+    uncompresscmd {{ webserver_logs_uncompress_bin}}
+{% endif %}
+{% if webserver_logs_compress_opts is defined %}
+    compressoptions {{ webserver_logs_compress_opts}}
+{% endif %}
     delaycompress
     notifempty
     create 0640 www-data adm
