@@ -1,0 +1,13 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local metrics
+#
+{% for metric in rspamd_metrics %}
+symbol "{{ metric }}" {
+    weight = {{ rspamd_metrics[metric] }};
+}
+{% endfor %}

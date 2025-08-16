@@ -1,0 +1,22 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local Composites
+#
+FREEMAIL_HARDFAIL_SPF {
+    expression = "(FREEMAIL_FROM or FREEMAIL_ENVFROM) and R_SPF_FAIL";
+    score = 25.0;
+}
+
+FREEMAIL_SOFTFAIL_SPF {
+    expression = "(FREEMAIL_FROM or FREEMAIL_ENVFROM) and R_SPF_SOFTFAIL";
+    score = 15.0;
+}
+
+FREEMAIL_SOFTFAIL_DMARC {
+    expression = "(FREEMAIL_FROM or FREEMAIL_ENVFROM) and DMARC_POLICY_SOFTFAIL";
+    score = 15.0;
+}

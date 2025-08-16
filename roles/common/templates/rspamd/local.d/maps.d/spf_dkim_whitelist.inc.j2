@@ -1,0 +1,13 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local whitelist for SPF+DKIM valid domains
+#
+freetelecom.fr
+c.swisslife.fr
+{% for domain in rspamd_whitelist_spfdkim %}
+{{ domain }}
+{% endfor %}

@@ -78,6 +78,7 @@ with_opendkim: False
 
 with_rspamd: False
 with_rspamd_upstream: False
+rspamd_composites: True
 rspamd_actions: True
 rspamd_actions_score_reject: 30
 rspamd_actions_score_add_header: 6
@@ -104,6 +105,12 @@ rspamd_multimap_score_blacklist_from: 20.0
 rspamd_multimap_score_blacklist_from_domain: 20.0
 rspamd_multimap_score_spammy_body: 1.0
 rspamd_multimap_score_check_headers: 1.0
+rspamd_whitelist: True
+rspamd_whitelist_dmarc: []
+rspamd_whitelist_spfdkim: []
+rspamd_metrics: {}
+rspamd_regexp: True
+rspamd_milter_headers: True
 
 with_ssh: True
 ssh_strengthened: True

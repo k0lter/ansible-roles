@@ -1,0 +1,47 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Local whitelist for DMARC valid domains
+#
+ca-aquitaine.fr
+ovh.com
+ovhcloud.com
+gandi.net
+free-mobile.fr
+bouygues-telecom.fr
+mail.systempay.fr
+bounce.stripe.com
+monetico-services.com
+votrepartenaire.laposte.info
+email.interepargne.natixis.com
+brevo.com
+groupe-ldlc.com
+invisionapp.com
+microsoft.com
+google.com
+dropbox.com
+dashlane.com
+wetransfer.com
+exaprint.fr
+webapp.yousign.com
+yousign.app
+notaires.fr
+pole-emploi.fr
+dgfip.finances.gouv.fr
+lettres-infos.bercy.gouv.fr
+developpement-durable.gouv.fr
+info.ameli.fr
+noreply-pole-emploi.fr
+s.myselogerpro.com
+a.seloger.com
+c.seloger.com
+p.seloger.com
+s.seloger.com
+leboncoin.fr
+bienici.com
+{% for domain in rspamd_whitelist_dmarc %}
+{{ domain }}
+{% endfor %}

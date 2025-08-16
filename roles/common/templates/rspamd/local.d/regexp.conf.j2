@@ -1,0 +1,16 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Custom Regexps
+#
+
+MISSING_MID_SAMSUNG_ANDROID {
+    re = "!header_exists(Message-Id) & Content-Type=/com\.samsung\.android\.email/Hi";
+    group = "headers";
+    description = "Message-ID header is missing on Samsung Android Email";
+    score = -2.0;
+}
+

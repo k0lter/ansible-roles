@@ -40,6 +40,7 @@
   when: with_rspamd|bool
   tags:
     - 'rspamd'
+    - 'rspamd-rules'
 - include_tasks: ssh.yml
   tags:
     - 'ssh'

@@ -27,7 +27,20 @@
   tags:
     - 'rspamd'
 
-- name: 'Install local or overrides configurations files for rspamd'
+- name: 'Create directories for local or overrides configuration files'
+  file:
+    path: '/etc/rspamd/{{ item }}'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  with_items:
+    - 'local.d/maps.d'
+  tags:
+    - 'rspamd'
+    - 'rspamd-rules'
+
+- name: 'Install local or overrides configuration files'
   template:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
@@ -35,36 +48,71 @@
     group: 'root'
     mode: '0644'
   with_items:
-    - src: 'templates/rspamd/local.d/actions.conf.j2'
+    - src: 'rspamd/local.d/composites.conf.j2'
+      dest: '/etc/rspamd/local.d/composites.conf'
+      installed: '{{ rspamd_composites }}'
+    - src: 'rspamd/local.d/actions.conf.j2'
       dest: '/etc/rspamd/local.d/actions.conf'
       installed: '{{ rspamd_actions }}'
-    - src: 'templates/rspamd/local.d/multimap.conf.j2'
+    - src: 'rspamd/local.d/multimap.conf.j2'
       dest: '/etc/rspamd/local.d/multimap.conf'
       installed: '{{ rspamd_multimap }}'
-    - src: 'templates/rspamd/local.d/external_relay.conf.j2'
+    - src: 'rspamd/local.d/regexp.conf.j2'
+      dest: '/etc/rspamd/local.d/regexp.conf'
+      installed: '{{ rspamd_regexp }}'
+    - src: 'rspamd/local.d/external_relay.conf.j2'
       dest: '/etc/rspamd/local.d/external_relay.conf'
       installed: '{{ rspamd_external_relay|length > 0 }}'
-    - src: 'templates/rspamd/local.d/maps.d/external_relay_hostname.map.j2'
+    - src: 'rspamd/local.d/maps.d/external_relay_hostname.map.j2'
       dest: '/etc/rspamd/local.d/maps.d/external_relay_hostname.map'
       installed: '{{ rspamd_external_relay|length > 0 }}'
-    - src: 'templates/rspamd/local.d/history_redis.conf.j2'
+    - src: 'rspamd/local.d/history_redis.conf.j2'
       dest: '/etc/rspamd/local.d/history_redis.conf'
       installed: '{{ rspamd_redis_history }}'
-    - src: 'templates/rspamd/override.d/rbl_group.conf.j2'
+    - src: 'rspamd/override.d/rbl_group.conf.j2'
       dest: '/etc/rspamd/override.d/rbl_group.conf'
       installed: '{{ rspamd_rbl_group  }}'
-    - src: 'templates/rspamd/override.d/surbl_group.conf.j2'
+    - src: 'rspamd/override.d/surbl_group.conf.j2'
       dest: '/etc/rspamd/override.d/surbl_group.conf'
       installed: '{{ rspamd_surbl_group  }}'
+    - src: 'rspamd/local.d/maps.d/dmarc_whitelist.inc.j2'
+      dest: '/etc/rspamd/local.d/maps.d/dmarc_whitelist.inc.local'
+      installed: '{{ rspamd_whitelist }}'
+    - src: 'rspamd/local.d/maps.d/spf_dkim_whitelist.inc.j2'
+      dest: '/etc/rspamd/local.d/maps.d/spf_dkim_whitelist.inc.local'
+      installed: '{{ rspamd_whitelist }}'
+    - src: 'rspamd/local.d/metrics.conf.j2'
+      dest: '/etc/rspamd/local.d/metrics.conf'
+      installed: '{{ rspamd_metrics != {} }}'
   when: with_rspamd|bool and item.installed|bool
   notify:
     - 'Restart rspamd'
   tags:
     - 'rspamd'
+    - 'rspamd-rules'
+
+- name: 'Install local or overrides configuration blocks'
+  blockinfile:
+    block: "{{ lookup('ansible.builtin.template', item.src) }}"
+    path: '{{ item.dest }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    create: True
+  with_items:
+    - src: 'rspamd/local.d/milter_headers-block.conf.j2'
+      dest: '/etc/rspamd/local.d/milter_headers.conf'
+      installed: '{{ rspamd_milter_headers }}'
+  when: with_rspamd|bool and item.installed|bool
+  notify:
+    - 'Restart rspamd'
+  tags:
+    - 'rspamd'
+    - 'rspamd-rules'
 
 - name: 'Check if rspamd default and empty local maps have already been installed'
   template:
-    src: 'templates/rspamd/local.d/maps.d/{{ item }}.j2'
+    src: 'rspamd/local.d/maps.d/{{ item }}.j2'
     dest: '/etc/rspamd/local.d/maps.d/{{ item }}'
     owner: 'root'
     group: 'root'
@@ -81,5 +129,6 @@
     - 'Restart rspamd'
   tags:
     - 'rspamd'
+    - 'rspamd-rules'
 
 # vim: ft=yaml.ansible
