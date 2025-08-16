@@ -23,6 +23,7 @@
     - 'stretch'
     - 'buster'
     - 'bullseye'
+    - 'bookworm'
   tags:
     - 'hypervisor'
     - 'ganeti'
@@ -40,6 +41,7 @@
     - 'stretch'
     - 'buster'
     - 'bullseye'
+    - 'bookworm'
   tags:
     - 'hypervisor'
     - 'ganeti'
