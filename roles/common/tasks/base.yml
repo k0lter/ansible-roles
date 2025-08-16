@@ -116,12 +116,12 @@
 
 - name: 'Add apt sources for custom Debian repositories'
   block:
-    - name: 'Remove Debian repository {{ item.name  }} (without signed-by)'
+    - name: 'Remove Debian repository (without signed-by)'
       apt_repository:
         repo: 'deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
         state: 'absent'
       with_items: '{{ apt_repositories }}'
-    - name: 'Add Debian repository {{ item.name }} (with signed-by)'
+    - name: 'Add Debian repository (with signed-by)'
       apt_repository:
         repo: 'deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
         filename: '{{ item.name }}'
