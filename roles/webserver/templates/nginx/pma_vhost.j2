@@ -24,19 +24,21 @@ server {
         return 301 https://{{ phpmyadmin_vhostname }}$request_uri;
     }
 {% else %}
-    root /usr/share/phpmyadmin;
+    root {{ phpmyadmin_rootdir }};
     index index.php;
     try_files $uri $uri/ /index.php;
 
-{% if phpmyadmin_http_auth %}
+{% if phpmyadmin_http_auth or phpmyadmin_http_whitelist_ip|length > 0 %}
     location / {
+{% if phpmyadmin_http_auth %}
         auth_basic "Restricted Access";
         auth_basic_user_file /etc/nginx/auth_admin;
-{% if phpmyadmin_http_whitelist_ip|length > 0 %}
+{% endif %}
 {% for ip in phpmyadmin_http_whitelist_ip %}
         allow {{ ip }};
 {% endfor %}
         deny all;
+{% if phpmyadmin_http_auth and phpmyadmin_http_whitelist_ip|length > 0 %}
         satisfy any;
 {% endif %}
     }
@@ -67,18 +69,20 @@ server {
     access_log  /var/log/nginx/pma.access.log main;
     error_log   /var/log/nginx/pma.error.log;
 
-    root /usr/share/phpmyadmin;
+    root {{ phpmyadmin_rootdir }};
     index index.php;
     try_files $uri $uri/ /index.php;
 
+{% if phpmyadmin_http_auth or phpmyadmin_http_whitelist_ip|length > 0 %}
 {% if phpmyadmin_http_auth %}
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
-{% if phpmyadmin_http_whitelist_ip|length > 0 %}
+{% endif %}
 {% for ip in phpmyadmin_http_whitelist_ip %}
     allow {{ ip }};
 {% endfor %}
     deny all;
+{% if phpmyadmin_http_auth and phpmyadmin_http_whitelist_ip|length > 0 %}
     satisfy any;
 {% endif %}
 {% endif %}

@@ -168,7 +168,7 @@
     state: 'link'
   notify:
     - 'Reload nginx'
-  when: with_phpmyadmin|bool and phpmyadmin_nginx_enabled|bool
+  when: not ansible_check_mode and with_phpmyadmin|bool and phpmyadmin_nginx_enabled|bool
   tags:
     - 'web'
     - 'nginx'

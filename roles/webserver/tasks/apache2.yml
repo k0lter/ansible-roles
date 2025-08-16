@@ -145,7 +145,7 @@
     state: 'link'
   notify:
     - 'Reload apache2'
-  when: with_phpmyadmin|bool and phpmyadmin_apache2_enabled|bool
+  when: not ansible_check_mode and with_phpmyadmin|bool and phpmyadmin_apache2_enabled|bool
   tags:
     - 'web'
     - 'apache2'

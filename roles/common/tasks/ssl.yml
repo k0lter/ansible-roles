@@ -5,6 +5,10 @@
   tags:
     - 'ssl'
 
+- name: 'Add {{ phpmyadmin_vhostname }} to SSL certs to install'
+  set_fact:
+    ssl_certs_auto: "{{ ssl_certs_auto + [phpmyadmin_vhostname] }}"
+  when: with_php is defined and with_php|bool and ((with_phpmyadmin is defined and with_phpmyadmin|bool) or (with_phpmyadmin4 is defined and with_phpmyadmin4|bool)) and phpmyadmin_ssl is defined and phpmyadmin_ssl|bool
 - name: 'Create ssl certificates directory'
   file:
     path: '/etc/ssl/local/certs'
