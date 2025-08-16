@@ -145,7 +145,7 @@
 - name: 'Install base packages'
   apt:
     pkg:
-      - 'apt-transport-https'
+      - 'rsyslog'
       - 'apticron'
       - 'locales-all'
       - 'locales'
@@ -168,6 +168,11 @@
       - 'etckeeper'
       - 'sharutils'
       - 'ncdu'
+      - 'bzip2'
+      - 'xz-utils'
+      - 'file'
+      - 'zstd'
+      - 'kitty-terminfo'
     install_recommends: 'no'
     state: 'present'
   when: with_base_packages
