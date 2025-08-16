@@ -1,18 +1,23 @@
-- name: 'Install upstream apt repository key for Ondrej Sury PHP packages'
-  apt_key:
-    id: '15058500A0235D97F5D10063B188E2B695BD4743'
-    url: 'https://packages.sury.org/php/apt.gpg'
-    state: 'present'
-  when: with_php|bool and with_php_sury|bool
+- name: 'Install upstream keyring package for Ondrej Sury PHP packages'
+  ansible.builtin.apt:
+    deb: 'https://packages.sury.org/debsuryorg-archive-keyring.deb'
+  when: with_php|bool and with_php_sury|bool and 'debsuryorg-archive-keyring' not in ansible_facts.packages
   tags:
     - 'web'
     - 'php'
 
 - name: 'Install upstream apt repository for Ondrej Sury PHP packages'
-  apt_repository:
-    repo: 'deb https://packages.sury.org/php/ {{ ansible_lsb.codename }} main'
-    filename: 'php-sury'
-    state: 'present'
+  block:
+    - name: 'Remove upstream apt repository for Ondrej Sury PHP packages (old format)'
+      apt_repository:
+        repo: 'deb https://packages.sury.org/php/ {{ ansible_lsb.codename }} main'
+        filename: 'php-sury'
+        state: 'absent'
+    - name: 'Add upstream apt repository for Ondrej Sury PHP packages (new format)'
+      apt_repository:
+        repo: 'deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ {{ ansible_lsb.codename }} main'
+        filename: 'php-sury'
+        state: 'present'
   when: with_php|bool and with_php_sury|bool
   tags:
     - 'web'
