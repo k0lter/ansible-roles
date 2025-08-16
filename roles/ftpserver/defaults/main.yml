@@ -4,6 +4,7 @@
 
 with_ftp: False
 with_ftp_tls: False
+ftp_tls_only: True
 ftp_tls_domain: Null
 ftp_accounts: []
 

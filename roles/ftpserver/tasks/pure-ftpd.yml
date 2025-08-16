@@ -14,7 +14,7 @@
     line: '{{ item.line }}'
     create: yes
   with_items:
-    - { dest: 'TLS', regexp: '^[0-9]+$', line: '3' }
+    - { dest: 'TLS', regexp: '^[0-9]+$', line: '{% if ftp_tls_only %}3{% else %}2{% endif %}' }
     - { dest: 'TLSCipherSuite', regexp: '^.*$', line: 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK:!SSLv3:!SSLv2:!TLSv1' }
   notify:
     - 'Restart pure-ftpd'
@@ -92,7 +92,7 @@
     path: '{{ item.home }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    mode: 0755
+    mode: '{% if item.perm is defined %}{{ item.perm }}{% else %}0755{% endif %}'
     state: 'directory'
   with_items: '{{ ftp_accounts }}'
   when: ftp_accounts|length > 0 and (item.create_home is not defined or (item.create_home is defined and item.create_home))
