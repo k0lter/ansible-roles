@@ -3,6 +3,7 @@
     pkg:
       - 'mysql-server'
       - 'mysql-client'
+      - 'python{{ ansible_python.version.major | replace("2", "") }}-mysqldb'
     state: 'present'
   when: with_mysql|bool and ansible_lsb.major_release|int < 10
   tags:
@@ -14,6 +15,7 @@
     pkg:
       - 'mariadb-server'
       - 'mariadb-client'
+      - 'python{{ ansible_python.version.major | replace("2", "") }}-mysqldb'
     state: 'present'
   when: with_mariadb|bool or (with_mysql|bool and ansible_lsb.major_release|int >= 10)
   tags:
@@ -49,8 +51,10 @@
     - 'sql'
 
 - name: 'Add MySQL or MariaDB admin account'
-  raw: if ! echo "SELECT VERSION();" | mysql -u admin --password='{{ mysql_admin_password }}' >/dev/null 2>&1 ; then echo "CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}'; ALTER USER 'admin'@'localhost' IDENTIFIED BY '{{ mysql_admin_password }}' ; GRANT ALL PRIVILEGES ON * . * TO 'admin'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
-  changed_when: False
+  community.mysql.mysql_user:
+    name: 'admin'
+    password: '{{ mysql_admin_password }}'
+    priv: '*.*:ALL,GRANT'
   when: mysql_admin_password|length > 0
   tags:
     - 'mysql'
