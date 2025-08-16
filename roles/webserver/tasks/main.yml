@@ -1,4 +1,5 @@
 - import_tasks: common.yml
+  when: with_apache2|bool or with_nginx|bool or with_php|bool
   tags:
     - 'web'
     - 'apache2'
@@ -18,5 +19,3 @@
   tags:
     - 'web'
     - 'php'
-
-# vim: ft=yaml.ansible

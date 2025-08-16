@@ -1,5 +1,7 @@
 - name: 'Reload nginx'
-  shell: nginx -t && nginx -s reload
+  shell:
+    cmd: nginx -t && nginx -s reload
+  check_mode: no
 
 - name: 'Restart nginx'
   service:

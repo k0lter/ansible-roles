@@ -1,5 +1,7 @@
 - name: 'Reload apache2'
-  shell: apache2ctl configtest && apache2ctl graceful
+  shell:
+    cmd: apache2ctl configtest && apache2ctl graceful
+  check_mode: no
 
 - name: 'Restart apache2'
   service:
