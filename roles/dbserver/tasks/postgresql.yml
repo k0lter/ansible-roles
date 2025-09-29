@@ -1,30 +1,29 @@
-- name: 'Install PostgreSQL server related packages'
-  apt:
+---
+- name: "Install PostgreSQL server related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'postgresql'
-      - 'postgresql-client'
-    state: 'present'
+      - "postgresql"
+      - "postgresql-client"
+    state: "present"
   tags:
-    - 'postgresql'
-    - 'sql'
+    - "postgresql"
+    - "sql"
 
-- name: 'Install AutoPostgreSQLBackup package'
-  apt:
+- name: "Install AutoPostgreSQLBackup package"
+  ansible.builtin.apt:
     pkg:
-      - 'autopostgresqlbackup'
-    state: 'present'
+      - "autopostgresqlbackup"
+    state: "present"
   when: with_postgresql_backup|bool
   tags:
-    - 'postgresql'
-    - 'sql'
+    - "postgresql"
+    - "sql"
 
-- name: 'Ensure PostgreSQL server is running'
-  service:
+- name: "Ensure PostgreSQL server is running"
+  ansible.builtin.service:
     name: postgresql
     state: started
   when: not ansible_check_mode
   tags:
-    - 'postgresql'
-    - 'sql'
-
-# vim: ft=yaml.ansible
+    - "postgresql"
+    - "sql"

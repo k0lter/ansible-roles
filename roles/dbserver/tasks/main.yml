@@ -1,10 +1,14 @@
-- include_tasks: mysql.yml
+---
+- name: "Importing MySQL/MariaDB tasks"
+  ansible.builtin.include_tasks: mysql.yml
   when: with_mysql|bool or with_mariadb|bool
   tags:
-    - 'mysql'
-    - 'sql'
-- include_tasks: postgresql.yml
+    - "mysql"
+    - "sql"
+
+- name: "Importing PostgreSQL tasks"
+  ansible.builtin.include_tasks: postgresql.yml
   when: with_postgresql|bool
   tags:
-    - 'postgresql'
-    - 'sql'
+    - "postgresql"
+    - "sql"

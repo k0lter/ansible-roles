@@ -1,68 +1,68 @@
-- name: 'Install MySQL server related packages'
-  apt:
+---
+- name: "Install MySQL server related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'mysql-server'
-      - 'mysql-client'
+      - "mysql-server"
+      - "mysql-client"
       - 'python{{ ansible_python.version.major | replace("2", "") }}-mysqldb'
-    state: 'present'
+    state: "present"
   when: with_mysql|bool and ansible_lsb.major_release|int < 10
   tags:
-    - 'mysql'
-    - 'sql'
+    - "mysql"
+    - "sql"
 
-- name: 'Install MariaDB server related packages'
-  apt:
+- name: "Install MariaDB server related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'mariadb-server'
-      - 'mariadb-client'
+      - "mariadb-server"
+      - "mariadb-client"
       - 'python{{ ansible_python.version.major | replace("2", "") }}-mysqldb'
-    state: 'present'
+    state: "present"
   when: with_mariadb|bool or (with_mysql|bool and ansible_lsb.major_release|int >= 10)
   tags:
-    - 'mysql'
-    - 'sql'
+    - "mysql"
+    - "sql"
 
-- name: 'Install MySQL or MariaDB backup related packages (automysqlbackup)'
-  apt:
+- name: "Install MySQL or MariaDB backup related packages (automysqlbackup)"
+  ansible.builtin.apt:
     pkg:
-      - 'automysqlbackup'
-    state: 'present'
+      - "automysqlbackup"
+    state: "present"
   when: with_mysql_backup|bool
   tags:
-    - 'mysql'
-    - 'sql'
+    - "mysql"
+    - "sql"
 
-- name: 'Fix automysqlbackup to handle events properly'
-  lineinfile:
-    dest: '/usr/sbin/automysqlbackup'
-    regexp: '^OPT='
+- name: "Fix automysqlbackup to handle events properly"
+  ansible.builtin.lineinfile:
+    dest: "/usr/sbin/automysqlbackup"
+    regexp: "^OPT="
     line: 'OPT="--quote-names --events" # OPT string for use with mysqldump ( see man mysqldump )'
   when: not ansible_check_mode and with_mysql_backup|bool
   tags:
-    - 'mysql'
-    - 'sql'
+    - "mysql"
+    - "sql"
 
-- name: 'Change MySQL or MariaDB root default password'
-  raw: if ! echo "SELECT VERSION();" | mysql -u root --password='{{ mysql_root_password }}' >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET Password=PASSWORD('{{ mysql_root_password }}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
-  changed_when: False
+- name: "Change MySQL or MariaDB root default password"
+  ansible.builtin.raw: if ! echo "SELECT VERSION();" | mysql -u root --password='{{ mysql_root_password }}' >/dev/null 2>&1 ; then echo "UPDATE mysql.user SET
+    Password=PASSWORD('{{ mysql_root_password }}') WHERE User IN ('', 'root'); FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf ; fi
+  changed_when: false
   when: mysql_root_password|length > 0
   tags:
-    - 'mysql'
-    - 'sql'
+    - "mysql"
+    - "sql"
 
-- name: 'Add MySQL or MariaDB admin account'
+- name: "Add MySQL or MariaDB admin account"
   community.mysql.mysql_user:
-    name: 'admin'
-    password: '{{ mysql_admin_password }}'
-    priv: '*.*:ALL,GRANT'
+    name: "admin"
+    password: "{{ mysql_admin_password }}"
+    priv: "*.*:ALL,GRANT"
   when: mysql_admin_password|length > 0
   tags:
-    - 'mysql'
-    - 'sql'
+    - "mysql"
+    - "sql"
 
-- name: 'Ensure MySQL or MariaDB is running'
-  service:
+- name: "Ensure MySQL or MariaDB is running"
+  ansible.builtin.service:
     name: mysql
     state: started
-
-# vim: ft=yaml.ansible

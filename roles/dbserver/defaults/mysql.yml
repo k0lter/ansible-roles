@@ -1,0 +1,10 @@
+---
+#
+# Default variables for MySQL
+#
+
+with_mysql: false
+with_mariadb: false
+with_mysql_backup: true
+mysql_root_password: ""
+mysql_admin_password: ""
