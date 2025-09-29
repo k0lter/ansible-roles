@@ -8,7 +8,7 @@
 
 - name: 'Install upstream apt repository for rspamd'
   apt_repository:
-    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] http://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
+    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] https://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
     filename: 'rspamd'
     state: 'present'
   when: with_rspamd|bool and with_rspamd_upstream|bool
@@ -167,7 +167,9 @@
     mode: '0640'
     state: '{% if item.enabled %}present{% else %}absent{% endif %}'
   with_items:
-    - '{ "name": "admin", "password": "{{ rspamd_web_http_auth_admin_password }}", "enabled": {{ rspamd_web_http_auth_admin_password|length > 0 }} }'
+    - name: "admin"
+      password: "{{ rspamd_web_http_auth_admin_password }}"
+      enabled: "{{ rspamd_web_http_auth_admin_password|length > 0 }}"
   when: item.enabled|bool
   tags:
     - 'rspamd'
@@ -209,7 +211,9 @@
     mode: '0640'
     state: '{% if item.enabled %}present{% else %}absent{% endif %}'
   with_items:
-    - '{ "name": "admin", "password": "{{ rspamd_web_http_auth_admin_password }}", "enabled": {{ rspamd_web_http_auth_admin_password|length > 0 }} }'
+    - name: "admin"
+      password: "{{ rspamd_web_http_auth_admin_password }}"
+      enabled: "{{ rspamd_web_http_auth_admin_password|length > 0 }}"
   when: item.enabled|bool
   tags:
     - 'rspamd'
