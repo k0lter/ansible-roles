@@ -31,10 +31,10 @@ domain (ip ip6) table filter {
 }
 
 # Allow ipv6 protocol specifics
-domain ip table filter chain (INPUT OUTPUT) protocol (ipv6 ipv6-icmp) ACCEPT;
+domain ip6 table filter chain (INPUT OUTPUT) protocol (ipv6 ipv6-icmp) ACCEPT;
 
 # Allow icmp-echo
-domain (ip ip6) table filter chain (INPUT OUTPUT) protocol icmp icmp-type echo-request ACCEPT;
+domain ip table filter chain (INPUT OUTPUT) protocol icmp icmp-type echo-request ACCEPT;
 
 # Drop invalid packets
 domain (ip ip6) table filter chain INPUT mod state state INVALID DROP;
