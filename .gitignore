@@ -1,2 +1,3 @@
-.gitignore
-roles/common/data/users/*
+/.gitignore
+/.ansible
+/roles/common/data/users/*
