@@ -1,6 +1,7 @@
 - name: 'Install Python passlib'
   apt:
     pkg:
+      - 'python{{ ansible_python.version.major | replace("2", "") }}-setuptools'
       - 'python{{ ansible_python.version.major | replace("2", "") }}-passlib'
     state: 'present'
   tags:

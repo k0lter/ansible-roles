@@ -37,7 +37,7 @@
     dest: '/usr/sbin/automysqlbackup'
     regexp: '^OPT='
     line: 'OPT="--quote-names --events" # OPT string for use with mysqldump ( see man mysqldump )'
-  when: with_mysql_backup|bool
+  when: not ansible_check_mode and with_mysql_backup|bool
   tags:
     - 'mysql'
     - 'sql'

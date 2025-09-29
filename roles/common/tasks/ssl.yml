@@ -178,9 +178,12 @@
     group: 'root'
     mode: '0755'
   with_items:
-    - '{ "name": "nginx", "enabled": {{ with_nginx is defined and with_nginx|bool }} }'
-    - '{ "name": "apache2", "enabled": {{ with_apache2 is defined and with_apache2|bool }} }'
-    - '{ "name": "dovecot", "enabled": {{ with_dovecot is defined and with_dovecot|bool }} }'
+    - name: "nginx"
+      enabled: "{{ with_nginx is defined and with_nginx|bool }}"
+    - name: "apache2"
+      enabled: "{{ with_apache2 is defined and with_apache2|bool }}"
+    - name: "dovecot"
+      enabled: "{{ with_dovecot is defined and with_dovecot|bool }}"
   when: ssl_certs_auto|length > 0 and item.enabled
   tags:
     - 'ssl'
@@ -203,7 +206,7 @@
     group: 'root'
     state: link
   with_items: "{{ ssl_certs_auto_installed.stdout_lines }}"
-  when: ssl_certs_auto|length > 0 and ssl_certs_auto_installed.stdout_lines
+  when: ssl_certs_auto|length > 0 and ssl_certs_auto_installed.stdout_lines|length > 0
   tags:
     - 'ssl'
 

@@ -200,7 +200,7 @@
     - 'web'
     - 'php'
 
-- name: 'Install Apache2 module for PHP ({{ php_versions|first }})'
+- name: 'Install Apache2 module for PHP ({{ php_versions|first if php_versions|length > 0 }})'
   apt:
     pkg:
       - 'libapache2-mod-php{{ php_versions|first }}'
@@ -212,7 +212,7 @@
     - 'web'
     - 'php'
 
-- name: 'Configure Apache2 modules for PHP-FPM {{ php_versions|first }}'
+- name: 'Configure Apache2 modules for PHP-FPM {{ php_versions|first if php_versions|length > 0 }}'
   shell: a2dismod php{{ php_versions|first }} mpm_prefork ; a2enmod mpm_event proxy_fcgi
   changed_when: False
   when: with_fpm|bool and not with_modphp|bool and with_apache2|bool
@@ -222,7 +222,7 @@
     - 'web'
     - 'php'
 
-- name: 'Configure Apache2 modules for ModPHP ({{ php_versions|first }})'
+- name: 'Configure Apache2 modules for ModPHP ({{ php_versions|first if php_versions|length > 0 }})'
   shell: a2dismod mpm_event ; a2enmod mpm_prefork php{{ php_versions|first }}
   changed_when: False
   when: with_modphp|bool and with_apache2|bool
@@ -453,7 +453,7 @@
     trim_blocks: 'no'
   vars:
     php_version: "{{ item }}"
-  when: with_fpm|bool and with_fpm_config|bool and fpm_pools is defined and fpm_pools
+  when: with_fpm|bool and with_fpm_config|bool and fpm_pools is defined and fpm_pools|length > 0
   register: php_versions_processed
   loop: "{{ php_versions }}"
   notify:
@@ -534,7 +534,7 @@
     - 'web'
     - 'php'
 
-- name: 'Update alternative to use PHP the right PHP version ({{ php_versions|first }})'
+- name: 'Update alternative to use PHP the right PHP version ({{ php_versions|first if php_versions|length > 0 }})'
   alternatives:
     name: 'php'
     path: '/usr/bin/php{{ php_versions|first }}'
