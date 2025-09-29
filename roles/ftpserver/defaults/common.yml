@@ -1,0 +1,6 @@
+---
+#
+# Default variables for FTP Server
+#
+
+with_ftp: false

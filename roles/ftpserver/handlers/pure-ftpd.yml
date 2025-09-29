@@ -1,6 +1,5 @@
-- name: 'Restart pure-ftpd'
-  service:
-    name: 'pure-ftpd'
-    state: 'restarted'
-
-# vim: ft=yaml.ansible
+---
+- name: "Restart pure-ftpd"
+  ansible.builtin.service:
+    name: "pure-ftpd"
+    state: "restarted"

@@ -1,4 +1,6 @@
-- import_tasks: 'common.yml'
-- import_tasks: 'pure-ftpd.yml'
+---
+- name: "Importing common FTP server handlers"
+  ansible.builtin.import_tasks: "common.yml"
 
-# vim: ft=yaml.ansible
+- name: "Importing Pure-FTP server handlers"
+  ansible.builtin.import_tasks: "pure-ftpd.yml"

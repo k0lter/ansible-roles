@@ -1,11 +1,13 @@
-- import_tasks: 'common.yml'
+---
+- name: "Importing common FTP server tasks"
+  ansible.builtin.import_tasks: "common.yml"
   when: with_ftp|bool
   tags:
-    - 'ftp'
-- import_tasks: 'pure-ftpd.yml'
-  when: with_ftp|bool
-  tags:
-    - 'ftp'
-    - 'pure-ftpd'
+    - "ftp"
 
-# vim: ft=yaml.ansible
+- name: "Importing Pure-FTP server tasks"
+  ansible.builtin.import_tasks: "pure-ftpd.yml"
+  when: with_ftp|bool
+  tags:
+    - "ftp"
+    - "pure-ftpd"

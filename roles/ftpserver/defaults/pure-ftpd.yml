@@ -1,0 +1,9 @@
+---
+#
+# Default variables for Pure-FTP Server
+#
+
+with_ftp_tls: false
+ftp_tls_only: true
+ftp_tls_domain:
+ftp_accounts: []
