@@ -38,14 +38,17 @@ fpm_pools: []
 fpm_pools_include_pattern: 'local-pool.cnf'
 
 with_php: False
+php_versions: []
 php_version: '7.0'
 with_php_mysql_legacy: False
 with_php_sury: False
 
-with_phpsyscheck: True
+with_phpsyscheck: False
 phpsyscheck_vhostname: 'sys.localhost'
-phpsyscheck_vhostip: ''
-phpsyscheck_vhostport: 0
+phpsyscheck_vhostip: Null
+phpsyscheck_vhostip6: Null
+phpsyscheck_vhostport: 80
+phpsyscheck_vhostport_ssl: 443
 phpsyscheck_ssl: False
 phpsyscheck_http_auth: False
 phpsyscheck_http_whitelist_ip: []
@@ -53,9 +56,12 @@ phpsyscheck_apache2_enabled: True
 phpsyscheck_nginx_enabled: True
 
 with_selfvhost: True
+selfvhost_isdefault: False
 selfvhost_vhostname: 'localhost'
-selfvhost_vhostip: ''
-selfvhost_vhostport: 0
+selfvhost_vhostip: Null
+selfvhost_vhostip6: Null
+selfvhost_vhostport: 80
+selfvhost_vhostport_ssl: 443
 selfvhost_ssl: False
 selfvhost_apache2_enabled: True
 selfvhost_nginx_enabled: True
@@ -79,8 +85,10 @@ with_php_apc: False
 with_phpmyadmin: False
 phpmyadmin_rootdir: '/usr/share/phpmyadmin'
 phpmyadmin_vhostname: 'pma.localhost'
-phpmyadmin_vhostip: ''
-phpmyadmin_vhostport: 0
+phpmyadmin_vhostip: Null
+phpmyadmin_vhostip6: Null
+phpmyadmin_vhostport: 80
+phpmyadmin_vhostport_ssl: 443
 phpmyadmin_ssl: False
 phpmyadmin_http_auth: False
 phpmyadmin_http_whitelist_ip: []

@@ -16,7 +16,26 @@
     - 'web'
     - 'nginx'
 
-- name: 'Install nginx package'
+- name: "Detect Nginx version"
+  ansible.builtin.shell:
+    cmd: apt policy nginx 2>/dev/null | sed -En 's/^\s*Candidate:\s*(.+)$/\1/p'
+  register: nginx_version
+  check_mode: no
+  changed_when: False
+  when: with_nginx|bool
+  tags:
+    - "web"
+    - "nginx"
+
+- name: "Detect if Nginx supports http/3"
+  ansible.builtin.set_fact:
+    with_http3: nginx_version.stdout_lines|first is version('1.25', '>='
+  when: with_nginx|bool and with_http3 is not defined
+  tags:
+    - "web"
+    - "nginx"
+
+- name: "Install nginx package"
   apt:
     pkg:
       - 'nginx'

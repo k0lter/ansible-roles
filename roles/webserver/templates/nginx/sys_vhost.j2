@@ -6,8 +6,9 @@
 # Nginx vhost for PHP system checks
 
 server {
-{% if phpsyscheck_vhostip or phpsyscheck_vhostport %}
-    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% endif %}{% if phpsyscheck_vhostip and phpsyscheck_vhostport %}:{% endif %}{% if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% endif %};
+    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{{ phpsyscheck_vhostport }};
+{% if phpsyscheck_vhostip6 %}
+    listen {% if phpsyscheck_vhostip6 %}{{ phpsyscheck_vhostip6 }}:{% endif %}{{ phpsyscheck_vhostport }};
 {% endif %}
 
     server_name {{ phpsyscheck_vhostname }};
@@ -34,10 +35,12 @@ server {
         auth_basic "Restricted Access";
         auth_basic_user_file /etc/nginx/auth_admin;
 {% endif %}
+{% if phpsyscheck_http_whitelist_ip|length > 0 %}
 {% for ip in phpsyscheck_http_whitelist_ip %}
         allow {{ ip }};
 {% endfor %}
         deny all;
+{% endif %}
 {% if phpsyscheck_http_auth and phpsyscheck_http_whitelist_ip|length > 0 %}
         satisfy any;
 {% endif %}
@@ -52,7 +55,10 @@ server {
 {% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
 server {
-    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{% if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}443{% endif %} ssl;
+    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{{ phpsyscheck_vhostporti_ssl }} ssl;
+{% if phpsyscheck_vhostip6 %}
+    listen {% if phpsyscheck_vhostip6 %}{{ phpsyscheck_vhostip6 }}:{% endif %}{{ phpsyscheck_vhostport_ssl }} ssl;
+{% endif %}
 
     server_name {{ phpsyscheck_vhostname }};
 
@@ -70,10 +76,12 @@ server {
     auth_basic "Restricted Access";
     auth_basic_user_file /etc/nginx/auth_admin;
 {% endif %}
+{% if phpsyscheck_http_whitelist_ip|length > 0 %}
 {% for ip in phpsyscheck_http_whitelist_ip %}
     allow {{ ip }};
 {% endfor %}
     deny all;
+{% endif %}
 {% if phpsyscheck_http_auth and phpsyscheck_http_whitelist_ip|length > 0 %}
     satisfy any;
 {% endif %}

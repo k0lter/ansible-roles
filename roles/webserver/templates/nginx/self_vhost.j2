@@ -6,8 +6,9 @@
 # Nginx Self vhost
 
 server {
-{% if selfvhost_vhostip or selfvhost_vhostport %}
-    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}{% endif %}{% if selfvhost_vhostip and selfvhost_vhostport %}:{% endif %}{% if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% endif %};
+    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}:{% endif %}{{ selfvhost_vhostport }}{% if selfvhost_isdefault %} default_server{% endif %};
+{% if selfvhost_vhostip6 %}
+    listen {% if selfvhost_vhostip6 %}{{ selfvhost_vhostip6 }}:{% endif %}{{ selfvhost_vhostport }}{% if selfvhost_isdefault %} default_server{% endif %};
 {% endif %}
 
     server_name {{ selfvhost_vhostname }};
@@ -32,7 +33,20 @@ server {
 {% if selfvhost_ssl and ssl_certs_auto_installed.stdout_lines is defined and selfvhost_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
 server {
-    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}:{% endif %}{% if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% else %}443{% endif %} ssl;
+    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}:{% endif %}{{ selfvhost_vhostport_ssl }}{% if selfvhost_isdefault %} default_server{% endif %} ssl;
+{% if with_http3 %}
+    listen {% if selfvhost_vhostip %}{{ selfvhost_vhostip }}:{% endif %}{{ selfvhost_vhostport_ssl }}{% if selfvhost_isdefault %} default_server{% endif %} quic{% if selfvhost_isdefault %} reuseport{% endif %};
+{% endif %}
+{% if selfvhost_vhostip6 %}
+    listen {% if selfvhost_vhostip6 %}{{ selfvhost_vhostip6 }}:{% endif %}{{ selfvhost_vhostport_ssl }}{% if selfvhost_isdefault %} default_server{% endif %} ssl;
+{% if with_http3 %}
+    listen {% if selfvhost_vhostip6 %}{{ selfvhost_vhostip6 }}:{% endif %}{{ selfvhost_vhostport_ssl }}{% if selfvhost_isdefault %} default_server{% endif %} quic{% if selfvhost_isdefault %} reuseport{% endif %};
+{% endif %}
+{% endif %}
+{% if with_http3 %}
+    http2 on;
+    http3 on;
+{% endif %}
 
     server_name {{ selfvhost_vhostname }};
 
@@ -40,6 +54,10 @@ server {
 
     access_log  /var/log/nginx/self.access.log main;
     error_log   /var/log/nginx/self.error.log;
+
+{% if with_http3 %}
+    add_header Alt-Svc 'h3=":$server_port"; ma=3600;';
+{% endif %}
 
     root /var/www;
     index index.html;
