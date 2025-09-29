@@ -399,7 +399,11 @@ catch_workers_output = yes
 ;env[TMP] = /tmp
 ;env[TMPDIR] = /tmp
 ;env[TEMP] = /tmp
-
+{% if fpm_pools[pool].env is defined -%}
+{% for env in fpm_pools[pool].env -%}
+env[{{ env }}] = {{ fpm_pools[pool].env[env] }}
+{% endfor %}
+{% endif %}
 ; Additional php.ini defines, specific to this pool of workers. These settings
 ; overwrite the values previously defined in the php.ini. The directives are the
 ; same as the PHP SAPI:
