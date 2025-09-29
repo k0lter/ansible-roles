@@ -1,10 +1,11 @@
-- name: 'Reload FPM for PHP5'
-  service:
-    name: 'php5-fpm'
-    state: 'reloaded'
+---
+- name: "Reload FPM for PHP5"
+  ansible.builtin.service:
+    name: "php5-fpm"
+    state: "reloaded"
 
-- name: 'Reload FPM for PHP'
-  service:
-    name: 'php{{ item }}-fpm'
-    state: 'reloaded'
+- name: "Reload FPM for PHP"
+  ansible.builtin.service:
+    name: "php{{ item }}-fpm"
+    state: "reloaded"
   loop: "{{ php_versions_processed.results | map(attribute='item') }}"

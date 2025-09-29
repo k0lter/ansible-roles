@@ -1,0 +1,45 @@
+---
+#
+# Default variables (common)
+#
+
+http_ssl_strengthened: false
+
+http_auth_admin_password: ""
+http_auth_user_name: ""
+http_auth_user_password: ""
+
+with_selfvhost: true
+selfvhost_isdefault: false
+selfvhost_vhostname: "localhost"
+selfvhost_vhostip:
+selfvhost_vhostip6:
+selfvhost_vhostport: 80
+selfvhost_vhostport_ssl: 443
+selfvhost_ssl: false
+
+with_phpmyadmin: false
+phpmyadmin_rootdir: "/usr/share/phpmyadmin"
+phpmyadmin_vhostname: "pma.localhost"
+phpmyadmin_vhostip:
+phpmyadmin_vhostip6:
+phpmyadmin_vhostport: 80
+phpmyadmin_vhostport_ssl: 443
+phpmyadmin_ssl: false
+phpmyadmin_http_auth: false
+phpmyadmin_http_whitelist_ip: []
+with_phpsyscheck: false
+phpsyscheck_vhostname: "sys.localhost"
+phpsyscheck_vhostip:
+phpsyscheck_vhostip6:
+phpsyscheck_vhostport: 80
+phpsyscheck_vhostport_ssl: 443
+phpsyscheck_ssl: false
+phpsyscheck_http_auth: false
+phpsyscheck_http_whitelist_ip: []
+with_phppgadmin: false
+phppgadmin_vhostname: "pga.localhost"
+phppgadmin_vhostip: ""
+phppgadmin_vhostport: 0
+phppgadmin_http_auth: false
+phppgadmin_http_whitelist_ip: []

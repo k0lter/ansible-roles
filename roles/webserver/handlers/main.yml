@@ -1,4 +1,9 @@
-- import_tasks: apache2.yml
-- import_tasks: nginx.yml
-- import_tasks: fpm.yml
-- import_tasks: php.yml
+---
+- name: "Importing Apache2 handlers"
+  ansible.builtin.import_tasks: apache2.yml
+- name: "Importing Nginx handlers"
+  ansible.builtin.import_tasks: nginx.yml
+- name: "Importing PHP-FPM handlers"
+  ansible.builtin.import_tasks: fpm.yml
+- name: "Importing PHP handlers"
+  ansible.builtin.import_tasks: php.yml

@@ -1,11 +1,12 @@
-- name: 'Reload apache2'
-  shell:
+---
+- name: "Reload apache2"
+  ansible.builtin.shell:
     cmd: apache2ctl configtest && apache2ctl graceful
-  check_mode: no
+  check_mode: false
+  register: result
+  changed_when: result.rc != 0
 
-- name: 'Restart apache2'
-  service:
-    name: 'apache2'
-    state: 'restarted'
-
-# vim: ft=yaml.ansible
+- name: "Restart apache2"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"

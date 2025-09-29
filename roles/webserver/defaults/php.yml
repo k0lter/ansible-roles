@@ -1,0 +1,44 @@
+---
+#
+# Default variables for PHP
+#
+
+with_fpm: false
+
+with_fpm_config: true
+
+fpm_pool_name: "www"
+fpm_pool_count: 1
+fpm_user: "www-data"
+fpm_group: "www-data"
+# fpm_max_children ~= (total RAM - RAM used by other process) / (average amount of RAM used by a PHP process)
+fpm_pm: "dynamic"
+fpm_start_servers: 2
+fpm_max_children: 5
+fpm_min_spare_servers: 1
+fpm_max_spare_servers: 3
+fpm_process_idle_timeout: 10
+
+fpm_pools: []
+fpm_pools_include_pattern: "local-pool.cnf"
+
+with_php: false
+with_php_apc: false
+php_versions: []
+php_version: "7.0"
+with_php_mysql_legacy: false
+with_php_sury: false
+
+php_config:
+  date.timezone: "Europe/Paris"
+  short_open_tag: "off"
+  expose_php: "off"
+
+php_config_web:
+  display_errors: "off"
+  display_startup_errors: "off"
+  log_errors: "on"
+  html_errors: "off"
+  session.cookie_secure: "on"
+# Set with /etc/default/php5-fpm (see https://bugs.php.net/bug.php?id=66239)
+#  error_log: 'syslog'

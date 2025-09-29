@@ -1,4 +1,5 @@
-- name: 'Reload rsyslog for php'
-  service:
-    name: 'rsyslog'
-    state: 'restarted'
+---
+- name: "Reload rsyslog for php"
+  ansible.builtin.service:
+    name: "rsyslog"
+    state: "restarted"

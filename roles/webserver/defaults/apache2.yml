@@ -1,0 +1,13 @@
+---
+#
+# Default variables for Apache2
+#
+
+with_apache2: false
+
+with_modphp5: false
+with_modphp: false
+
+selfvhost_apache2_enabled: true
+phpmyadmin_apache2_enabled: true
+phpsyscheck_apache2_enabled: true

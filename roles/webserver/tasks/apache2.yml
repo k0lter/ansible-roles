@@ -1,234 +1,240 @@
-- name: 'Install Apache2 packages'
-  apt:
+---
+- name: "Install Apache2 packages"
+  ansible.builtin.apt:
     pkg:
-      - 'apache2'
-    state: 'present'
+      - "apache2"
+    state: "present"
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Enable Apache2 default modules'
-  shell: a2enmod '{{ item }}'
+- name: "Enable Apache2 default modules"
+  ansible.builtin.command: a2enmod '{{ item }}'
   with_items:
-    - 'ssl'
-    - 'rewrite'
-    - 'expires'
-    - 'headers'
-  changed_when: False
+    - "ssl"
+    - "rewrite"
+    - "expires"
+    - "headers"
+  changed_when: false
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Enable Apache2 default modules (Debian >= 9)'
-  shell: a2enmod '{{ item }}'
+- name: "Enable Apache2 default modules (Debian >= 9)"
+  ansible.builtin.command: a2enmod '{{ item }}'
   with_items:
-    - 'http2'
-  changed_when: False
+    - "http2"
+  changed_when: false
   when: ansible_lsb.major_release|int >= 9
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install logrotate configuration for Apache2'
-  template:
-    src: 'logrotate/apache2.j2'
-    dest: '/etc/logrotate.d/apache2'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install logrotate configuration for Apache2"
+  ansible.builtin.template:
+    src: "logrotate/apache2.j2"
+    dest: "/etc/logrotate.d/apache2"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install SSL vhost configuration for Apache2'
-  template:
-    src: 'apache2/vhost_ssl.j2'
-    dest: '/etc/apache2/vhost_ssl-{{ item }}.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  with_items: '{{ ssl_certs }}'
+- name: "Install SSL vhost configuration for Apache2"
+  ansible.builtin.template:
+    src: "apache2/vhost_ssl.j2"
+    dest: "/etc/apache2/vhost_ssl-{{ item }}.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items: "{{ ssl_certs }}"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: ssl_certs|length > 0
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install SSL vhost configuration for Apache2 (Lets Encrypt certificates)'
-  template:
-    src: 'apache2/vhost_ssl_auto.j2'
+- name: "Install SSL vhost configuration for Apache2 (Lets Encrypt certificates)"
+  ansible.builtin.template:
+    src: "apache2/vhost_ssl_auto.j2"
     dest: '/etc/apache2/vhost_ssl_auto-{{ item.split(" ")[0] }}.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  with_items: '{{ ssl_certs_auto }}'
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items: "{{ ssl_certs_auto }}"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install Apache2 basic security configuration (Debian < 8)'
-  template:
-    src: 'apache2/conf.d/security.j2'
-    dest: '/etc/apache2/conf.d/security'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Apache2 basic security configuration (Debian < 8)"
+  ansible.builtin.template:
+    src: "apache2/conf.d/security.j2"
+    dest: "/etc/apache2/conf.d/security"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: ansible_lsb.major_release|int < 8
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install Apache2 basic security configuration (Debian >= 8)'
-  template:
-    src: 'apache2/conf.d/security.j2'
-    dest: '/etc/apache2/conf-available/security.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Apache2 basic security configuration (Debian >= 8)"
+  ansible.builtin.template:
+    src: "apache2/conf.d/security.j2"
+    dest: "/etc/apache2/conf-available/security.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: ansible_lsb.major_release|int >= 8
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install Lets Encrypt configuration for Apache2 (conf-available)'
-  template:
-    src: 'apache2/letsencrypt.j2'
-    dest: '/etc/apache2/conf-available/letsencrypt.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Lets Encrypt configuration for Apache2 (conf-available)"
+  ansible.builtin.template:
+    src: "apache2/letsencrypt.j2"
+    dest: "/etc/apache2/conf-available/letsencrypt.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Create basic authentication file (Apache2)'
-  htpasswd:
-    path: '/etc/apache2/auth_admin'
-    name: '{{ item.name }}'
-    password: '{{ item.password }}'
-    owner: 'root'
-    group: 'www-data'
-    mode: '0640'
-    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+- name: "Create basic authentication file (Apache2)"
+  community.general.htpasswd:
+    path: "/etc/apache2/auth_admin"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    owner: "root"
+    group: "www-data"
+    mode: "0640"
+    state: "{% if item.enabled %}present{% else %}absent{% endif %}"
   with_items:
-    - '{ "name": "admin", "password": "{{ http_auth_admin_password }}", "enabled": {{ http_auth_admin_password|length > 0 }} }'
-    - '{ "name": "{{ http_auth_user_name }}", "password": "{{ http_auth_user_password }}", "enabled": {{ http_auth_user_name|length > 0 and http_auth_user_password|length > 0 }} }'
+    - name: "admin"
+      password: "{{ http_auth_admin_password }}"
+      enabled: "{{ http_auth_admin_password | length > 0 }}"
+    - name: "{{ http_auth_user_name }}"
+      password: "{{ http_auth_user_password }}"
+      enabled: "{{ http_auth_user_name | length > 0 and http_auth_user_password | length > 0 }}"
   when: item.enabled|bool
+  no_log: true
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install PHPMyAdmin virtual host for Apache2 (sites-available)'
-  template:
-    src: 'apache2/pma_vhost.j2'
-    dest: '/etc/apache2/sites-available/pma.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install PHPMyAdmin virtual host for Apache2 (sites-available)"
+  ansible.builtin.template:
+    src: "apache2/pma_vhost.j2"
+    dest: "/etc/apache2/sites-available/pma.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: with_phpmyadmin|bool and phpmyadmin_apache2_enabled|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install PHPMyAdmin virtual host for Apache2 (sites-enabled)'
-  file:
-    src: '/etc/apache2/sites-available/pma.conf'
-    path: '/etc/apache2/sites-enabled/pma.conf'
-    state: 'link'
+- name: "Install PHPMyAdmin virtual host for Apache2 (sites-enabled)"
+  ansible.builtin.file:
+    src: "/etc/apache2/sites-available/pma.conf"
+    path: "/etc/apache2/sites-enabled/pma.conf"
+    state: "link"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: not ansible_check_mode and with_phpmyadmin|bool and phpmyadmin_apache2_enabled|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
 - name: "Install PHPPgAdmin virtual host for Apache2 (sites-available)"
-  template:
-    src: 'apache2/pga_vhost.j2'
-    dest: '/etc/apache2/sites-available/pga.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+  ansible.builtin.template:
+    src: "apache2/pga_vhost.j2"
+    dest: "/etc/apache2/sites-available/pga.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: with_phppgadmin|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install PHPPgAdmin virtual host for Apache2 (sites-enabled)'
-  file:
-    src: '/etc/apache2/sites-available/pga.conf'
-    path: '/etc/apache2/sites-enabled/pga.conf'
-    state: 'link'
+- name: "Install PHPPgAdmin virtual host for Apache2 (sites-enabled)"
+  ansible.builtin.file:
+    src: "/etc/apache2/sites-available/pga.conf"
+    path: "/etc/apache2/sites-enabled/pga.conf"
+    state: "link"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: not ansible_check_mode and with_phppgadmin|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install PHP system checks virtual host for Apache2 (sites-available)'
-  template:
-    src: 'apache2/sys_vhost.j2'
-    dest: '/etc/apache2/sites-available/sys.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install PHP system checks virtual host for Apache2 (sites-available)"
+  ansible.builtin.template:
+    src: "apache2/sys_vhost.j2"
+    dest: "/etc/apache2/sites-available/sys.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: with_phpsyscheck|bool and phpsyscheck_apache2_enabled|bool and with_php|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install PHP system checks virtual host for Apache2 (sites-enabled)'
-  file:
-    src: '/etc/apache2/sites-available/sys.conf'
-    path: '/etc/apache2/sites-enabled/sys.conf'
-    state: 'link'
+- name: "Install PHP system checks virtual host for Apache2 (sites-enabled)"
+  ansible.builtin.file:
+    src: "/etc/apache2/sites-available/sys.conf"
+    path: "/etc/apache2/sites-enabled/sys.conf"
+    state: "link"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: not ansible_check_mode and with_phpsyscheck|bool and phpsyscheck_apache2_enabled|bool and with_php|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install Self virtual host for Apache2 (sites-available)'
-  template:
-    src: 'apache2/self_vhost.j2'
-    dest: '/etc/apache2/sites-available/self.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Self virtual host for Apache2 (sites-available)"
+  ansible.builtin.template:
+    src: "apache2/self_vhost.j2"
+    dest: "/etc/apache2/sites-available/self.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: with_selfvhost|bool and selfvhost_apache2_enabled|bool and with_php|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"
 
-- name: 'Install Self virtual host for Apache2 (sites-enabled)'
-  file:
-    src: '/etc/apache2/sites-available/self.conf'
-    path: '/etc/apache2/sites-enabled/0000-self.conf'
-    state: 'link'
+- name: "Install Self virtual host for Apache2 (sites-enabled)"
+  ansible.builtin.file:
+    src: "/etc/apache2/sites-available/self.conf"
+    path: "/etc/apache2/sites-enabled/0000-self.conf"
+    state: "link"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: not ansible_check_mode and with_selfvhost|bool and selfvhost_apache2_enabled|bool and with_php|bool
   tags:
-    - 'web'
-    - 'apache2'
+    - "web"
+    - "apache2"

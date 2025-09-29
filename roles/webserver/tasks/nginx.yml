@@ -19,10 +19,11 @@
 
 - name: "Detect Nginx version"
   ansible.builtin.shell:
-    cmd: apt policy nginx 2>/dev/null | sed -En 's/^\s*Candidate:\s*(.+)$/\1/p'
+    cmd: set -o pipefail && apt policy nginx 2>/dev/null | sed -En 's/^\s*Candidate:\s*(.+)$/\1/p'
+    executable: /bin/bash
   register: nginx_version
-  check_mode: no
-  changed_when: False
+  check_mode: false
+  changed_when: false
   when: with_nginx|bool
   tags:
     - "web"
@@ -37,7 +38,7 @@
     - "nginx"
 
 - name: "Install nginx package"
-  apt:
+  ansible.builtin.apt:
     pkg:
       - "nginx"
     state: "present"
@@ -46,7 +47,7 @@
     - "nginx"
 
 - name: "Install logrotate configuration for nginx"
-  template:
+  ansible.builtin.template:
     src: "logrotate/nginx.j2"
     dest: "/etc/logrotate.d/nginx"
     owner: "root"
@@ -57,7 +58,7 @@
     - "nginx"
 
 - name: "Install nginx default file configuration"
-  template:
+  ansible.builtin.template:
     src: "nginx/default.j2"
     dest: "/etc/default/nginx"
     owner: "root"
@@ -70,7 +71,7 @@
     - "nginx"
 
 - name: "Install custom mime types for nginx"
-  template:
+  ansible.builtin.template:
     src: "nginx/mime.types.custom.j2"
     dest: "/etc/nginx/mime.types.custom"
     owner: "root"
@@ -83,7 +84,7 @@
     - "nginx"
 
 - name: "Install nginx configuration"
-  template:
+  ansible.builtin.template:
     src: "nginx/nginx.conf.j2"
     dest: "/etc/nginx/nginx.conf"
     owner: "root"
@@ -96,7 +97,7 @@
     - "nginx"
 
 - name: "Install additional nginx configuration params (conf.d/)"
-  template:
+  ansible.builtin.template:
     src: "nginx/conf.d/{{ item }}.conf.j2"
     dest: "/etc/nginx/conf.d/{{ item }}.conf"
     owner: "root"
@@ -111,7 +112,7 @@
     - "nginx"
 
 - name: "Install additional nginx configuration params (vhost_*)"
-  template:
+  ansible.builtin.template:
     src: "nginx/vhost_{{ item }}.j2"
     dest: "/etc/nginx/vhost_{{ item }}"
     owner: "root"
@@ -130,7 +131,7 @@
     - "nginx"
 
 - name: "Install SSL vhost configuration for Nginx"
-  template:
+  ansible.builtin.template:
     src: "nginx/vhost_ssl.j2"
     dest: "/etc/nginx/vhost_ssl-{{ item }}"
     owner: "root"
@@ -145,7 +146,7 @@
     - "nginx"
 
 - name: "Install SSL vhost configuration for Nginx (Lets Encrypt certificates)"
-  template:
+  ansible.builtin.template:
     src: "nginx/vhost_ssl_auto.j2"
     dest: '/etc/nginx/vhost_ssl_auto-{{ item.split(" ")[0] }}'
     owner: "root"
@@ -160,7 +161,7 @@
     - "nginx"
 
 - name: "Install Let Encrypt configuration for Nginx"
-  template:
+  ansible.builtin.template:
     src: "nginx/letsencrypt.j2"
     dest: "/etc/nginx/letsencrypt"
     owner: "root"
@@ -174,7 +175,7 @@
     - "nginx"
 
 - name: "Create basic authentication file (Nginx)"
-  htpasswd:
+  community.general.htpasswd:
     path: "/etc/nginx/auth_admin"
     name: "{{ item.name }}"
     password: "{{ item.password }}"
@@ -188,14 +189,15 @@
       enabled: "{{ http_auth_admin_password | length > 0 }}"
     - name: "{{ http_auth_user_name }}"
       password: "{{ http_auth_user_password }}"
-      enabled: "{{ http_auth_user_name | length > 0 and http_auth_user_password| length > 0 }}"
+      enabled: "{{ http_auth_user_name | length > 0 and http_auth_user_password | length > 0 }}"
   when: item.enabled|bool
+  no_log: true
   tags:
     - "web"
     - "nginx"
 
 - name: "Install PHPMyAdmin virtual host for nginx (sites-available)"
-  template:
+  ansible.builtin.template:
     src: "nginx/pma_vhost.j2"
     dest: "/etc/nginx/sites-available/pma"
     owner: "root"
@@ -209,7 +211,7 @@
     - "nginx"
 
 - name: "Install PHPMyAdmin virtual host for nginx (sites-enabled)"
-  file:
+  ansible.builtin.file:
     src: "/etc/nginx/sites-available/pma"
     path: "/etc/nginx/sites-enabled/pma"
     state: "link"
@@ -221,7 +223,7 @@
     - "nginx"
 
 - name: "Install PHPPgAdmin virtual host for nginx (sites-available)"
-  template:
+  ansible.builtin.template:
     src: "nginx/pga_vhost.j2"
     dest: "/etc/nginx/sites-available/pga"
     owner: "root"
@@ -235,7 +237,7 @@
     - "nginx"
 
 - name: "Install PHPPgAdmin virtual host for nginx (sites-enabled)"
-  file:
+  ansible.builtin.file:
     src: "/etc/nginx/sites-available/pga"
     path: "/etc/nginx/sites-enabled/pga"
     state: "link"
@@ -247,7 +249,7 @@
     - "nginx"
 
 - name: "Install PHP system checks virtual host for nginx (sites-available)"
-  template:
+  ansible.builtin.template:
     src: "nginx/sys_vhost.j2"
     dest: "/etc/nginx/sites-available/sys"
     owner: "root"
@@ -261,7 +263,7 @@
     - "nginx"
 
 - name: "Install PHP system checks virtual host for nginx (sites-enabled)"
-  file:
+  ansible.builtin.file:
     src: "/etc/nginx/sites-available/sys"
     path: "/etc/nginx/sites-enabled/sys"
     state: "link"
@@ -273,7 +275,7 @@
     - "nginx"
 
 - name: "Install Self virtual host for nginx (sites-available)"
-  template:
+  ansible.builtin.template:
     src: "nginx/self_vhost.j2"
     dest: "/etc/nginx/sites-available/self"
     owner: "root"
@@ -287,7 +289,7 @@
     - "nginx"
 
 - name: "Install Self virtual host for nginx (sites-enabled)"
-  file:
+  ansible.builtin.file:
     src: "/etc/nginx/sites-available/self"
     path: "/etc/nginx/sites-enabled/self"
     state: "link"
@@ -299,7 +301,7 @@
     - "nginx"
 
 - name: "Install Cloudflare configuration to set the real ip in logs"
-  template:
+  ansible.builtin.template:
     src: "nginx/cloudflare.conf.j2"
     dest: "/etc/nginx/snippets/cloudflare.conf"
     owner: "root"
@@ -311,5 +313,3 @@
   tags:
     - "web"
     - "nginx"
-
-# vim: ft=yaml.ansible

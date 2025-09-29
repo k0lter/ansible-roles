@@ -1,9 +1,12 @@
-- name: 'Reload nginx'
-  shell:
+---
+- name: "Reload nginx"
+  ansible.builtin.shell:
     cmd: nginx -t && nginx -s reload
-  check_mode: no
+  check_mode: false
+  register: result
+  changed_when: result.rc != 0
 
-- name: 'Restart nginx'
-  service:
-    name: 'nginx'
-    state: 'restarted'
+- name: "Restart nginx"
+  ansible.builtin.service:
+    name: "nginx"
+    state: "restarted"

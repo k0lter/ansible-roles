@@ -1,21 +1,29 @@
-- import_tasks: common.yml
+---
+- name: "Importing Apache2 tasks"
+  ansible.builtin.import_tasks: common.yml
   when: with_apache2|bool or with_nginx|bool or with_php|bool
   tags:
-    - 'web'
-    - 'apache2'
-    - 'nginx'
-- import_tasks: apache2.yml
+    - "web"
+    - "apache2"
+    - "nginx"
+
+- name: "Importing Nginx tasks"
+  ansible.builtin.import_tasks: apache2.yml
   when: with_apache2|bool
   tags:
-    - 'web'
-    - 'apache2'
-- import_tasks: nginx.yml
+    - "web"
+    - "apache2"
+
+- name: "Importing PHP tasks"
+  ansible.builtin.import_tasks: nginx.yml
   when: with_nginx|bool
   tags:
-    - 'web'
-    - 'nginx'
-- import_tasks: php.yml
+    - "web"
+    - "nginx"
+
+- name: "Importing PHP tasks"
+  ansible.builtin.import_tasks: php.yml
   when: with_php|bool
   tags:
-    - 'web'
-    - 'php'
+    - "web"
+    - "php"
