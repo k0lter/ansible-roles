@@ -1,10 +1,14 @@
-- include_tasks: zabbix.yml
+---
+- name: "Importing Mon tasks"
+  ansible.builtin.include_tasks: zabbix.yml
   when: with_zabbix_agent|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
-- include_tasks: mon.yml
+    - "monitoring"
+    - "zabbix"
+
+- name: "Importing Zabbix tasks"
+  ansible.builtin.include_tasks: mon.yml
   when: with_mon|bool
   tags:
-    - 'monitoring'
-    - 'mon'
+    - "monitoring"
+    - "mon"

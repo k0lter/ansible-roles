@@ -1,136 +1,138 @@
-- name: 'Install Zabbix agent'
-  apt:
+---
+- name: "Install Zabbix agent"
+  ansible.builtin.apt:
     pkg:
-      - 'zabbix-agent'
-    state: 'present'
+      - "zabbix-agent"
+    state: "present"
   when: with_zabbix_agent|bool and not with_zabbix_agent2|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Uninstall Zabbix agent'
-  apt:
+- name: "Uninstall Zabbix agent"
+  ansible.builtin.apt:
     pkg:
-      - 'zabbix-agent'
-    state: 'absent'
+      - "zabbix-agent"
+    state: "absent"
   when: with_zabbix_agent|bool and with_zabbix_agent2|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Install Zabbix agent2'
-  apt:
+- name: "Install Zabbix agent2"
+  ansible.builtin.apt:
     pkg:
-      - 'zabbix-agent2'
-    state: 'latest'
+      - "zabbix-agent2"
+    state: "latest"
+    only_upgrade: true
   when: with_zabbix_agent2|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Install Zabbix agent config file'
-  template:
-    src: 'zabbix/agent.conf.j2'
-    dest: '/etc/zabbix/zabbix_agentd.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Zabbix agent config file"
+  ansible.builtin.template:
+    src: "zabbix/agent.conf.j2"
+    dest: "/etc/zabbix/zabbix_agentd.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_zabbix_agent|bool
   notify:
-    - 'Restart zabbix agent'
+    - "Restart zabbix agent"
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Install Zabbix agent 2 config file'
-  template:
-    src: 'zabbix/agent2.conf.j2'
-    dest: '/etc/zabbix/zabbix_agent2.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Zabbix agent 2 config file"
+  ansible.builtin.template:
+    src: "zabbix/agent2.conf.j2"
+    dest: "/etc/zabbix/zabbix_agent2.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_zabbix_agent2|bool
   notify:
-    - 'Restart zabbix agent 2'
+    - "Restart zabbix agent 2"
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Create zabbix plugins configuration directory'
-  file:
-    path: '/etc/zabbix/zabbix_plugins.conf.d'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
-    state: 'directory'
+- name: "Create zabbix plugins configuration directory"
+  ansible.builtin.file:
+    path: "/etc/zabbix/zabbix_plugins.conf.d"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: "directory"
   when: with_zabbix_agent|bool or with_zabbix_agent2|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Install zabbix plugins configuration (ssl, web availability)'
-  template:
-    src: 'zabbix/plugins/{{ item }}.j2'
-    dest: '/etc/zabbix/zabbix_plugins.conf.d/{{ item }}.yml'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install zabbix plugins configuration (ssl, web availability)"
+  ansible.builtin.template:
+    src: "zabbix/plugins/{{ item }}.j2"
+    dest: "/etc/zabbix/zabbix_plugins.conf.d/{{ item }}.yml"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_zabbix_agent|bool or with_zabbix_agent2|bool
   with_items:
-    - 'ssl-discovery'
-    - 'web-availability-discovery'
+    - "ssl-discovery"
+    - "web-availability-discovery"
   tags:
-    - 'monitoring'
-    - 'zabbix'
+    - "monitoring"
+    - "zabbix"
 
-- name: 'Create zabbix MySQL user for monitoring database server'
+- name: "Create zabbix MySQL user for monitoring database server"
   community.mysql.mysql_user:
-    name: 'zabbix'
-    password: '{{ vault_mysql_zabbix_password }}'
-    priv: '*.*:REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW'
+    name: "zabbix"
+    password: "{{ vault_mysql_zabbix_password }}"
+    priv: "*.*:REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW"
   when: (with_zabbix_agent|bool or with_zabbix_agent2|bool) and with_mysql is defined and with_mysql|bool
   notify:
-    - 'Restart zabbix agent'
+    - "Restart zabbix agent"
   tags:
-    - 'monitoring'
-    - 'zabbix'
-    - 'mysql'
+    - "monitoring"
+    - "zabbix"
+    - "mysql"
 
-- name: 'Change zabbix user HOME directory to /var/lib/zabbix (only with MySQL)'
+- name: "Change zabbix user HOME directory to /var/lib/zabbix (only with MySQL)"
   ansible.builtin.replace:
-    path: '/etc/passwd'
-    regexp: '^(zabbix:.+:)(/nonexistent|/var/run/zabbix/?|/var/lib/zabbix-agent/?)(:.+)$'
-    replace: '\1/var/lib/zabbix\3'
+    path: "/etc/passwd"
+    regexp: "^(zabbix:.+:)(/nonexistent|/var/run/zabbix/?|/var/lib/zabbix-agent/?)(:.+)$"
+    replace: "\\1/var/lib/zabbix\\3"
   when: (with_zabbix_agent|bool or with_zabbix_agent2|bool) and with_mysql is defined and with_mysql|bool
   notify:
-    - 'Restart zabbix agent'
+    - "Restart zabbix agent"
   tags:
-    - 'monitoring'
-    - 'zabbix'
-    - 'mysql'
+    - "monitoring"
+    - "zabbix"
+    - "mysql"
 
-- name: 'Create zabbix user HOME directory: /var/lib/zabbix (only with MySQL)'
+- name: "Create zabbix user HOME directory: /var/lib/zabbix (only with MySQL)"
   ansible.builtin.file:
-    path: '/var/lib/zabbix'
-    state: 'directory'
-    mode: '0755'
-    owner: 'zabbix'
-    group: 'zabbix'
+    path: "/var/lib/zabbix"
+    state: "directory"
+    mode: "0755"
+    owner: "zabbix"
+    group: "zabbix"
   when: (with_zabbix_agent|bool or with_zabbix_agent2|bool) and with_mysql is defined and with_mysql|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
-    - 'mysql'
+    - "monitoring"
+    - "zabbix"
+    - "mysql"
 
-- name: 'Create MySQL configuration file with credentials for zabbix'
-  template:
-    src: 'zabbix/mysql.cnf.j2'
-    dest: '/var/lib/zabbix/.my.cnf'
-    owner: 'zabbix'
-    group: 'zabbix'
-    mode: '0600'
+- name: "Create MySQL configuration file with credentials for zabbix"
+  ansible.builtin.template:
+    src: "zabbix/mysql.cnf.j2"
+    dest: "/var/lib/zabbix/.my.cnf"
+    owner: "zabbix"
+    group: "zabbix"
+    mode: "0600"
   when: (with_zabbix_agent|bool or with_zabbix_agent2|bool) and with_mysql is defined and with_mysql|bool
   tags:
-    - 'monitoring'
-    - 'zabbix'
-    - 'mysql'
+    - "monitoring"
+    - "zabbix"
+    - "mysql"

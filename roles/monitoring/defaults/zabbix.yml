@@ -1,0 +1,9 @@
+---
+#
+# Default variables for Zabbix
+#
+
+with_zabbix_agent: false
+with_zabbix_agent2: false
+zabbix_remote_server: "zabbix.domain.tld"
+zabbix_plugins_config: []

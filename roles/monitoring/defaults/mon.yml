@@ -1,0 +1,6 @@
+---
+#
+# Default variables for mon
+#
+
+with_mon: false

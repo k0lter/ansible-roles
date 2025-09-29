@@ -1,4 +1,6 @@
-- import_tasks: mon.yml
-- import_tasks: zabbix.yml
+---
+- name: "Importing Mon handlers"
+  ansible.builtin.import_tasks: mon.yml
 
-# vim: ft=yaml.ansible
+- name: "Importing Zabbix handlers"
+  ansible.builtin.import_tasks: zabbix.yml
