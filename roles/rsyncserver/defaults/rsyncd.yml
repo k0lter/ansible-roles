@@ -1,10 +1,9 @@
+---
 #
 # Default variables for rsync daemon
 #
 
-with_rsyncd: False
+with_rsyncd: false
 rsyncd_uid: backup
 rsyncd_gid: backup
 rsyncd_max_connections: 10
-
-# vim: ft=yaml.ansible

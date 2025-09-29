@@ -1,6 +1,6 @@
-- import_tasks: 'rsyncd.yml'
+---
+- name: "Import rsyncd handlers"
+  ansible.builtin.import_tasks: "rsyncd.yml"
   when: with_rsyncd|bool
   tags:
-    - 'rsyncd'
-
-# vim: ft=yaml.ansible
+    - "rsyncd"

@@ -1,38 +1,37 @@
-- name: 'Install Rsync daemon related packages'
-  apt:
+---
+- name: "Install Rsync daemon related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'rsync'
-    state: 'present'
+      - "rsync"
+    state: "present"
   tags:
-    - 'rsyncd'
+    - "rsyncd"
 
-- name: 'Create Rsync daemon configuration directory'
-  file:
-    path: '/etc/rsync.d'
-    owner: 'root'
-    group: 'root'
-    mode: 0755
-    state: 'directory'
+- name: "Create Rsync daemon configuration directory"
+  ansible.builtin.file:
+    path: "/etc/rsync.d"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: "directory"
   tags:
-    - 'rsyncd'
+    - "rsyncd"
 
-- name: 'Install Rsync daemon configuration'
-  template:
-    src: 'templates/rsyncd.conf.j2'
-    dest: '/etc/rsyncd.conf'
-    owner: 'root'
-    group: 'root'
-    mode: 0644
+- name: "Install Rsync daemon configuration"
+  ansible.builtin.template:
+    src: "templates/rsyncd.conf.j2"
+    dest: "/etc/rsyncd.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Restart Rsync Daemon'
+    - "Restart Rsync Daemon"
   tags:
-    - 'rsyncd'
+    - "rsyncd"
 
-- name: 'Ensure Rsync daemon is running'
-  service:
-    name: 'rsync'
-    state: 'started'
+- name: "Ensure Rsync daemon is running"
+  ansible.builtin.service:
+    name: "rsync"
+    state: "started"
   tags:
-    - 'rsyncd'
-
-# vim: ft=yaml.ansible
+    - "rsyncd"

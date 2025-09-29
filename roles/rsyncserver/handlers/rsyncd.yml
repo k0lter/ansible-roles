@@ -1,6 +1,5 @@
-- name: 'Restart Rsync Daemon'
-  service:
-    name: 'rsync'
-    state: 'restarted'
-
-# vim: ft=yaml.ansible
+---
+- name: "Restart Rsync Daemon"
+  ansible.builtin.service:
+    name: "rsync"
+    state: "restarted"

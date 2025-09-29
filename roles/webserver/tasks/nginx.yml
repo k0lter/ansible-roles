@@ -1,20 +1,21 @@
-- name: 'Install upstream keyring package for Ondrej Sury Nginx packages'
+---
+- name: "Install upstream keyring package for Ondrej Sury Nginx packages"
   ansible.builtin.apt:
-    deb: 'https://packages.sury.org/debsuryorg-archive-keyring.deb'
+    deb: "https://packages.sury.org/debsuryorg-archive-keyring.deb"
   when: with_nginx|bool and with_nginx_sury|bool and 'debsuryorg-archive-keyring' not in ansible_facts.packages
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install upstream apt repository for Ondrej Sury PHP Nginx packages'
+- name: "Install upstream apt repository for Ondrej Sury PHP Nginx packages"
   ansible.builtin.apt_repository:
-    repo: 'deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ {{ ansible_lsb.codename }} main'
-    filename: 'nginx-sury'
-    state: 'present'
+    repo: "deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ {{ ansible_lsb.codename }} main"
+    filename: "nginx-sury"
+    state: "present"
   when: with_nginx|bool and with_nginx_sury|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
 - name: "Detect Nginx version"
   ansible.builtin.shell:
@@ -38,273 +39,277 @@
 - name: "Install nginx package"
   apt:
     pkg:
-      - 'nginx'
-    state: 'present'
+      - "nginx"
+    state: "present"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install logrotate configuration for nginx'
+- name: "Install logrotate configuration for nginx"
   template:
-    src: 'logrotate/nginx.j2'
-    dest: '/etc/logrotate.d/nginx'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "logrotate/nginx.j2"
+    dest: "/etc/logrotate.d/nginx"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install nginx default file configuration'
+- name: "Install nginx default file configuration"
   template:
-    src: 'nginx/default.j2'
-    dest: '/etc/default/nginx'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/default.j2"
+    dest: "/etc/default/nginx"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Restart nginx'
+    - "Restart nginx"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install custom mime types for nginx'
+- name: "Install custom mime types for nginx"
   template:
-    src: 'nginx/mime.types.custom.j2'
-    dest: '/etc/nginx/mime.types.custom'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/mime.types.custom.j2"
+    dest: "/etc/nginx/mime.types.custom"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Restart nginx'
+    - "Restart nginx"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install nginx configuration'
+- name: "Install nginx configuration"
   template:
-    src: 'nginx/nginx.conf.j2'
-    dest: '/etc/nginx/nginx.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Restart nginx'
+    - "Restart nginx"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install additional nginx configuration params (conf.d/)'
+- name: "Install additional nginx configuration params (conf.d/)"
   template:
-    src: 'nginx/conf.d/{{ item }}.conf.j2'
-    dest: '/etc/nginx/conf.d/{{ item }}.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/conf.d/{{ item }}.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ item }}.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'status'
+    - "status"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install additional nginx configuration params (vhost_*)'
+- name: "Install additional nginx configuration params (vhost_*)"
   template:
-    src: 'nginx/vhost_{{ item }}.j2'
-    dest: '/etc/nginx/vhost_{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/vhost_{{ item }}.j2"
+    dest: "/etc/nginx/vhost_{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'all'
-    - 'expires'
-    - 'cache-fd'
-    - 'protect-files'
-    - 'security'
+    - "all"
+    - "expires"
+    - "cache-fd"
+    - "protect-files"
+    - "security"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install SSL vhost configuration for Nginx'
+- name: "Install SSL vhost configuration for Nginx"
   template:
-    src: 'nginx/vhost_ssl.j2'
-    dest: '/etc/nginx/vhost_ssl-{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  with_items: '{{ ssl_certs }}'
+    src: "nginx/vhost_ssl.j2"
+    dest: "/etc/nginx/vhost_ssl-{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items: "{{ ssl_certs }}"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: ssl_certs|length > 0
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install SSL vhost configuration for Nginx (Lets Encrypt certificates)'
+- name: "Install SSL vhost configuration for Nginx (Lets Encrypt certificates)"
   template:
-    src: 'nginx/vhost_ssl_auto.j2'
+    src: "nginx/vhost_ssl_auto.j2"
     dest: '/etc/nginx/vhost_ssl_auto-{{ item.split(" ")[0] }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  with_items: '{{ ssl_certs_auto }}'
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items: "{{ ssl_certs_auto }}"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install Let Encrypt configuration for Nginx'
+- name: "Install Let Encrypt configuration for Nginx"
   template:
-    src: 'nginx/letsencrypt.j2'
-    dest: '/etc/nginx/letsencrypt'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/letsencrypt.j2"
+    dest: "/etc/nginx/letsencrypt"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Create basic authentication file (Nginx)'
+- name: "Create basic authentication file (Nginx)"
   htpasswd:
-    path: '/etc/nginx/auth_admin'
-    name: '{{ item.name }}'
-    password: '{{ item.password }}'
-    owner: 'root'
-    group: 'www-data'
-    mode: '0640'
-    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+    path: "/etc/nginx/auth_admin"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    owner: "root"
+    group: "www-data"
+    mode: "0640"
+    state: "{% if item.enabled %}present{% else %}absent{% endif %}"
   with_items:
-    - '{ "name": "admin", "password": "{{ http_auth_admin_password }}", "enabled": {{ http_auth_admin_password|length > 0 }} }'
-    - '{ "name": "{{ http_auth_user_name }}", "password": "{{ http_auth_user_password }}", "enabled": {{ http_auth_user_name|length > 0 and http_auth_user_password|length > 0 }} }'
+    - name: "admin"
+      password: "{{ http_auth_admin_password }}"
+      enabled: "{{ http_auth_admin_password | length > 0 }}"
+    - name: "{{ http_auth_user_name }}"
+      password: "{{ http_auth_user_password }}"
+      enabled: "{{ http_auth_user_name | length > 0 and http_auth_user_password| length > 0 }}"
   when: item.enabled|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install PHPMyAdmin virtual host for nginx (sites-available)'
+- name: "Install PHPMyAdmin virtual host for nginx (sites-available)"
   template:
-    src: 'nginx/pma_vhost.j2'
-    dest: '/etc/nginx/sites-available/pma'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/pma_vhost.j2"
+    dest: "/etc/nginx/sites-available/pma"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: with_phpmyadmin|bool and phpmyadmin_nginx_enabled|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install PHPMyAdmin virtual host for nginx (sites-enabled)'
+- name: "Install PHPMyAdmin virtual host for nginx (sites-enabled)"
   file:
-    src: '/etc/nginx/sites-available/pma'
-    path: '/etc/nginx/sites-enabled/pma'
-    state: 'link'
+    src: "/etc/nginx/sites-available/pma"
+    path: "/etc/nginx/sites-enabled/pma"
+    state: "link"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: not ansible_check_mode and with_phpmyadmin|bool and phpmyadmin_nginx_enabled|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install PHPPgAdmin virtual host for nginx (sites-available)'
+- name: "Install PHPPgAdmin virtual host for nginx (sites-available)"
   template:
-    src: 'nginx/pga_vhost.j2'
-    dest: '/etc/nginx/sites-available/pga'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/pga_vhost.j2"
+    dest: "/etc/nginx/sites-available/pga"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: with_phppgadmin|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install PHPPgAdmin virtual host for nginx (sites-enabled)'
+- name: "Install PHPPgAdmin virtual host for nginx (sites-enabled)"
   file:
-    src: '/etc/nginx/sites-available/pga'
-    path: '/etc/nginx/sites-enabled/pga'
-    state: 'link'
+    src: "/etc/nginx/sites-available/pga"
+    path: "/etc/nginx/sites-enabled/pga"
+    state: "link"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: not ansible_check_mode and with_phppgadmin|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install PHP system checks virtual host for nginx (sites-available)'
+- name: "Install PHP system checks virtual host for nginx (sites-available)"
   template:
-    src: 'nginx/sys_vhost.j2'
-    dest: '/etc/nginx/sites-available/sys'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/sys_vhost.j2"
+    dest: "/etc/nginx/sites-available/sys"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: with_phpsyscheck|bool and phpsyscheck_nginx_enabled|bool and with_php|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install PHP system checks virtual host for nginx (sites-enabled)'
+- name: "Install PHP system checks virtual host for nginx (sites-enabled)"
   file:
-    src: '/etc/nginx/sites-available/sys'
-    path: '/etc/nginx/sites-enabled/sys'
-    state: 'link'
+    src: "/etc/nginx/sites-available/sys"
+    path: "/etc/nginx/sites-enabled/sys"
+    state: "link"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: not ansible_check_mode and with_phpsyscheck|bool and phpsyscheck_nginx_enabled|bool and with_php|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install Self virtual host for nginx (sites-available)'
+- name: "Install Self virtual host for nginx (sites-available)"
   template:
-    src: 'nginx/self_vhost.j2'
-    dest: '/etc/nginx/sites-available/self'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/self_vhost.j2"
+    dest: "/etc/nginx/sites-available/self"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: with_selfvhost|bool and selfvhost_nginx_enabled|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install Self virtual host for nginx (sites-enabled)'
+- name: "Install Self virtual host for nginx (sites-enabled)"
   file:
-    src: '/etc/nginx/sites-available/self'
-    path: '/etc/nginx/sites-enabled/self'
-    state: 'link'
+    src: "/etc/nginx/sites-available/self"
+    path: "/etc/nginx/sites-enabled/self"
+    state: "link"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: not ansible_check_mode and with_selfvhost|bool and selfvhost_nginx_enabled|bool
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
-- name: 'Install Cloudflare configuration to set the real ip in logs'
+- name: "Install Cloudflare configuration to set the real ip in logs"
   template:
-    src: 'nginx/cloudflare.conf.j2'
-    dest: '/etc/nginx/snippets/cloudflare.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    src: "nginx/cloudflare.conf.j2"
+    dest: "/etc/nginx/snippets/cloudflare.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: with_cloudflare is defined and with_cloudflare
   tags:
-    - 'web'
-    - 'nginx'
+    - "web"
+    - "nginx"
 
 # vim: ft=yaml.ansible
