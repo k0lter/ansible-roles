@@ -10,9 +10,14 @@
 # line of that file to be used as the name.  The Debian default
 # is /etc/mailname.
 
+{% set compat_level = '0' %}
 {% if ansible_lsb.major_release|int >= 9 %}
+{% set compat_level = '3' %}
+{% if ansible_lsb.major_release|int >= 13 %}
+{% set compat_level = '3.10' %}
+{% endif %}
 # Compatibility level
-compatibility_level = 3
+compatibility_level = {{ compat_level }}
 {% endif %}
 
 smtpd_banner = $myhostname ESMTP $mail_name
@@ -37,7 +42,9 @@ smtpd_tls_mandatory_ciphers = high
 smtpd_tls_mandatory_exclude_ciphers = aNULL, RC4, MD5
 smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1{% if postfix_ssl_fortify %}, !TLSv1.2{% endif +%}
 smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1{% if postfix_ssl_fortify %}, !TLSv1.2{% endif +%}
+{% if compat_level is version('3.7', '<=') %}
 smtpd_tls_dh1024_param_file = /etc/ssl/private/dh2048.pem
+{% endif %}
 {% if postfix_fqdn is defined and ssl_certs_auto_installed is defined and ssl_certs_auto_installed.stdout_lines is defined and postfix_fqdn in ssl_certs_auto_installed.stdout_lines %}
 smtpd_tls_cert_file = /etc/ssl/local/certs/{{ postfix_fqdn }}/cert.pem
 smtpd_tls_key_file = /etc/ssl/local/certs/{{ postfix_fqdn }}/privkey.pem
