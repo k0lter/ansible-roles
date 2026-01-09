@@ -1,4 +1,5 @@
-- name: 'Update GRUB'
-  command: update-grub
-
-# vim: ft=yaml.ansible
+---
+- name: "Update GRUB"
+  ansible.builtin.command: update-grub
+  register: xen_update_grub
+  changed_when: xen_update_grub.rc != 0

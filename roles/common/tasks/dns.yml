@@ -1,32 +1,31 @@
-- name: 'Remove bind9 (not a suitable dnscache) packages'
-  apt:
+---
+- name: "Remove bind9 (not a suitable dnscache) packages"
+  ansible.builtin.apt:
     pkg:
-      - 'bind9'
-    state: 'absent'
-    purge: 'yes'
+      - "bind9"
+    state: "absent"
+    purge: "yes"
   when: with_dnscache|bool
   tags:
-    - 'dns'
+    - "dns"
 
-- name: 'Install unbound (dnscache) packages'
-  apt:
+- name: "Install unbound (dnscache) packages"
+  ansible.builtin.apt:
     pkg:
-      - 'unbound'
-      - 'dns-root-data'
-    state: 'present'
+      - "unbound"
+      - "dns-root-data"
+    state: "present"
   when: with_dnscache|bool
   tags:
-    - 'dns'
+    - "dns"
 
-- name: 'Install resolv.conf'
-  template:
-    src: 'dns/resolv.conf.j2'
-    dest: '/etc/resolv.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install resolv.conf"
+  ansible.builtin.template:
+    src: "dns/resolv.conf.j2"
+    dest: "/etc/resolv.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_dnscache|bool or (nameservers is defined and nameservers|length > 0)
   tags:
-    - 'dns'
-
-# vim: ft=yaml.ansible
+    - "dns"

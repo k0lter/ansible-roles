@@ -1,96 +1,94 @@
+---
 #
 # Default variables
 #
 
-ansible_master: 'root@localhost'
+ansible_master: "root@localhost"
 
 admins: []
 admins_emails:
-  - 'root@localhost'
-with_admins_accounts: True
+  - "root@localhost"
+with_admins_accounts: true
 
-locale: 'en_US.UTF-8'
-timezone_area: 'Europe'
-timezone_city: 'Paris'
+locale: "en_US.UTF-8"
+timezone_area: "Europe"
+timezone_city: "Paris"
 
-with_hosts: False
-with_hostsdeny: False
-hosts_fqdn: True
+with_hosts: false
+with_hostsdeny: false
+hosts_fqdn: true
 hosts_static_lookup: []
+ipv6_disabled: false
 
-ipv6_disabled: False
-
-debian_mirror: 'https://deb.debian.org'
+debian_mirror: "https://deb.debian.org"
 
 apt_keys: []
 apt_repositories: []
 apt_additional_packages: []
 apt_additional_packages_local: []
-with_apt_sources: False
-with_apt_backports: False
-with_base_packages: True
+with_apt_sources: false
+with_apt_backports: false
+with_base_packages: true
 
-hosts_deny_nfs: False
-host_deny_paranoid: False
+hosts_deny_nfs: false
+host_deny_paranoid: false
 
-with_auto_upgrade: False
+with_auto_upgrade: false
 auto_upgrade_additional_patterns: []
+with_logcheck: false
+with_rkhunter: false
+with_chkrootkit: false
 
-with_logcheck: False
-with_rkhunter: False
-with_chkrootkit: False
+with_logrotate4rsyslog_override: true
 
-with_logrotate4rsyslog_override: True
+with_hideproc: false
+hideproc_gid: ""
 
-with_hideproc: False
-hideproc_gid: ''
+with_sudo: true
 
-with_sudo: True
+with_dhparam: true
 
-with_dhparam: True
+with_ntp: true
 
-with_ntp: True
-
-with_firewall: False
-firewall_debug: False
-firewall_interface: Null
+with_firewall: false
+firewall_debug: false
+firewall_interface:
 firewall_public:
-  - 'ssh'
-  - 'http'
-  - 'https'
-  - 'smtp'
+  - "ssh"
+  - "http"
+  - "https"
+  - "smtp"
 
-with_smartd: False
+with_smartd: false
 
-with_postfix: False
-postfix_ssl_fortify: False
-with_postfix_slowsmtp: False
-with_mail_aliases: False
-with_postfix_external_smtp: False
-postfix_external_smtp_host_localdomain: Null
-postfix_external_smtp_credentials: Null
-postfix_external_smtp_relays: Null
-postfix_external_sender_rewrites: Null
-
+with_postfix: false
+postfix_ssl_fortify: false
+with_postfix_slowsmtp: false
+with_mail_aliases: false
+with_postfix_external_smtp: false
+postfix_external_smtp_host_localdomain:
+postfix_external_smtp_credentials:
+postfix_external_smtp_relays:
+postfix_external_sender_rewrites:
 dkim_domains: []
-dkim_selector: 'default'
-with_opendkim: False
+dkim_selector: "default"
+with_opendkim: false
 
-with_rspamd: False
-with_rspamd_upstream: False
-rspamd_composites: True
-rspamd_actions: True
+with_rspamd: false
+with_rspamd_upstream: false
+rspamd_composites: true
+rspamd_actions: true
 rspamd_actions_score_reject: 30
 rspamd_actions_score_add_header: 6
 rspamd_actions_score_greylist: 4
 rspamd_actions_score_rewrite_subject: 8
-rspamd_multimap: True
-rspamd_multimap_prefix: ''
+rspamd_multimap: true
+rspamd_multimap_prefix: ""
 rspamd_external_relay: []
-rspamd_rbl_group: True
-rspamd_redis_history: True
+rspamd_rbl_group: true
+rspamd_redis_history: true
 rspamd_redis_history_nrows: 200
-rspamd_surbl_group: True
+rspamd_surbl_group: true
 rspamd_multimap_rules_body_spammy: []
 rspamd_multimap_rules_headers_spammy: []
 rspamd_multimap_whitelist_sender: []
@@ -105,49 +103,51 @@ rspamd_multimap_score_blacklist_from: 20.0
 rspamd_multimap_score_blacklist_from_domain: 20.0
 rspamd_multimap_score_spammy_body: 1.0
 rspamd_multimap_score_check_headers: 1.0
-rspamd_whitelist: True
+rspamd_whitelist: true
 rspamd_whitelist_dmarc: []
 rspamd_whitelist_spfdkim: []
 rspamd_metrics: {}
-rspamd_regexp: True
-rspamd_milter_headers: True
+rspamd_regexp: true
+rspamd_milter_headers: true
 
-with_rspamd_web: False
-rspamd_web_vhostname: 'rspamd.localhost'
-rspamd_web_vhostip: ''
-rspamd_web_vhostport: 0
-rspamd_web_ssl: False
-rspamd_web_http_auth: True
+with_rspamd_web: false
+rspamd_web_vhostname: "rspamd.localhost"
+rspamd_web_vhostip:
+rspamd_web_vhostip6:
+rspamd_web_vhostport: 80
+rspamd_web_vhostport_ssl: 443
+rspamd_web_http3: false
+rspamd_web_ssl: false
+rspamd_web_http_auth: true
 rspamd_web_http_whitelist_ip: []
-rspamd_web_http_auth_admin_password: ''
+rspamd_web_http_auth_admin_password: ""
 
-with_ssh: True
-ssh_strengthened: True
+with_ssh: true
+ssh_strengthened: true
 ssh_ports:
   - 22
-ssh_usedns: True
+ssh_usedns: true
 ssh_allowed_users: []
 ssh_allowed_groups:
-  - 'root'
-  - 'operator'
-  - '{% if ansible_lsb.major_release|int >= 12 %}_{% endif %}ssh'
+  - "root"
+  - "operator"
+  - "{% if ansible_lsb.major_release | int >= 12 %}_{% endif %}ssh"
 
-with_dnscache: False
+with_dnscache: false
 
-with_docker: False
-with_docker_upstream: False
+with_docker: false
+with_docker_upstream: false
 
-sysfs_disk_settings: False
+sysfs_disk_settings: false
 
-with_dotfiles: False
-dotfiles_repo: 'https://git.openics.org/kolter/dotfiles-sys.git'
-dotfiles_dest: '/srv/hosting-tools/shell'
+with_dotfiles: false
+dotfiles_repo: "https://git.openics.org/kolter/dotfiles-sys.git"
+dotfiles_dest: "/srv/hosting-tools/shell"
 dotfiles_lcsshvars: 0
 
 ssl_certs: []
 ssl_certs_auto: []
-
-with_geoip: False
-geoip_accountid: Null
-geoip_licencekey: Null
+with_geoip: false
+geoip_accountid:
+geoip_licencekey:
 geoip_editionids: []

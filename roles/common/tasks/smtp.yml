@@ -1,109 +1,108 @@
-- name: 'Install Postfix packages'
-  apt:
+---
+- name: "Install Postfix packages"
+  ansible.builtin.apt:
     pkg:
-      - 'postfix'
-      - 'ca-certificates'
-      - 'procmail'
-      - 'libsasl2-modules'
-    install_recommends: 'no'
-    state: 'present'
+      - "postfix"
+      - "ca-certificates"
+      - "procmail"
+      - "libsasl2-modules"
+    install_recommends: "no"
+    state: "present"
   when: with_postfix|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Install mail aliases file'
-  template:
-    src: 'aliases.j2'
-    dest: '/etc/aliases'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install mail aliases file"
+  ansible.builtin.template:
+    src: "aliases.j2"
+    dest: "/etc/aliases"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Regenerate aliases cache'
+    - "Regenerate aliases cache"
   when: with_mail_aliases|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Install Postfix main configuration'
-  template:
-    src: 'postfix/main.cf.j2'
-    dest: '/etc/postfix/main.cf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Postfix main configuration"
+  ansible.builtin.template:
+    src: "postfix/main.cf.j2"
+    dest: "/etc/postfix/main.cf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload Postfix'
+    - "Reload Postfix"
   when: with_postfix|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Update Postfix master config for slowsmtp transport'
-  blockinfile:
-    dest: '/etc/postfix/master.cf'
-    marker: '# ======= {mark} slowsmtp transport (managed by ansible) ======'
+- name: "Update Postfix master config for slowsmtp transport"
+  ansible.builtin.blockinfile:
+    dest: "/etc/postfix/master.cf"
+    marker: "# ======= {mark} slowsmtp transport (managed by ansible) ======"
     content: |
-        slowsmtp  unix  -       -       n       -       5       smtp
-            -o smtp_destination_concurrency_limit=3
-            -o slowsmtp_destination_rate_delay=1
+      slowsmtp  unix  -       -       n       -       5       smtp
+          -o smtp_destination_concurrency_limit=3
+          -o slowsmtp_destination_rate_delay=1
   notify:
-    - 'Reload Postfix'
+    - "Reload Postfix"
   when: with_postfix_slowsmtp|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Install Postfix slowsmtp transport map'
-  template:
-    src: 'postfix/transport_slowsmtp.j2'
-    dest: '/etc/postfix/transport_slowsmtp'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Postfix slowsmtp transport map"
+  ansible.builtin.template:
+    src: "postfix/transport_slowsmtp.j2"
+    dest: "/etc/postfix/transport_slowsmtp"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Rehash slowsmtp transport map'
-    - 'Reload Postfix'
+    - "Rehash slowsmtp transport map"
+    - "Reload Postfix"
   when: with_postfix_slowsmtp|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Install Postfix SASL sender relay map'
-  template:
-    src: 'postfix/sasl_sender_relay.j2'
-    dest: '/etc/postfix/sasl/sender_relay'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: "Install Postfix SASL sender relay map"
+  ansible.builtin.template:
+    src: "postfix/sasl_sender_relay.j2"
+    dest: "/etc/postfix/sasl/sender_relay"
+    owner: "root"
+    group: "root"
+    mode: "0600"
   notify:
-    - 'Rehash SASL sender relay map'
-    - 'Reload Postfix'
+    - "Rehash SASL sender relay map"
+    - "Reload Postfix"
   when: with_postfix_external_smtp|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Install Postfix SASL credentials map'
-  template:
-    src: 'postfix/sasl_credentials.j2'
-    dest: '/etc/postfix/sasl/credentials'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: "Install Postfix SASL credentials map"
+  ansible.builtin.template:
+    src: "postfix/sasl_credentials.j2"
+    dest: "/etc/postfix/sasl/credentials"
+    owner: "root"
+    group: "root"
+    mode: "0600"
   notify:
-    - 'Rehash SASL credentials map'
-    - 'Reload Postfix'
+    - "Rehash SASL credentials map"
+    - "Reload Postfix"
   when: with_postfix_external_smtp|bool
   tags:
-    - 'smtp'
+    - "smtp"
 
-- name: 'Install Postfix SASL sender rewrite map'
-  template:
-    src: 'postfix/sasl_sender_rewrite.j2'
-    dest: '/etc/postfix/sasl/sender_rewrite'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: "Install Postfix SASL sender rewrite map"
+  ansible.builtin.template:
+    src: "postfix/sasl_sender_rewrite.j2"
+    dest: "/etc/postfix/sasl/sender_rewrite"
+    owner: "root"
+    group: "root"
+    mode: "0600"
   notify:
-    - 'Reload Postfix'
+    - "Reload Postfix"
   when: with_postfix_external_smtp|bool and postfix_external_sender_rewrites
   tags:
-    - 'smtp'
-
-# vim: ft=yaml.ansible
+    - "smtp"

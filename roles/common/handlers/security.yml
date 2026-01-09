@@ -1,10 +1,18 @@
-- name: 'Reconfigure unattended-upgrades'
-  raw: rm -f /etc/apt/apt.conf.d/20auto-upgrades* ; UCF_FORCE_CONFFMISS=1 UCF_FORCE_CONFFNEW=1 dpkg-reconfigure --frontend noninteractive unattended-upgrades
+---
+- name: "Reconfigure unattended-upgrades"
+  # noqa yaml[line-length]
+  ansible.builtin.raw: rm -f /etc/apt/apt.conf.d/20auto-upgrades* && UCF_FORCE_CONFFMISS=1 UCF_FORCE_CONFFNEW=1 dpkg-reconfigure --frontend noninteractive unattended-upgrades
+  register: security_reconfigure_unattendedupgrades
+  changed_when: security_reconfigure_unattendedupgrades.rc != 0
 
-- name: 'Reconfigure rkhunter'
-  raw: rm -f /etc/default/rkhunter* ; UCF_FORCE_CONFFMISS=1 UCF_FORCE_CONFFNEW=1 dpkg-reconfigure --frontend noninteractive rkhunter
+- name: "Reconfigure rkhunter"
+  ansible.builtin.raw: rm -f /etc/default/rkhunter* && UCF_FORCE_CONFFMISS=1 UCF_FORCE_CONFFNEW=1 dpkg-reconfigure --frontend noninteractive rkhunter
+  register: security_reconfigure_rkhunter
+  changed_when: security_reconfigure_rkhunter.rc != 0
 
-- name: 'Remount /proc'
-  shell: mount -o remount /proc
-
-# vim: ft=yaml.ansible
+- name: "Remount /proc"
+  ansible.posix.mount:
+    path: "/proc"
+    state: "remounted"
+  register: security_remount_proc
+  changed_when: security_remount_proc.rc != 0

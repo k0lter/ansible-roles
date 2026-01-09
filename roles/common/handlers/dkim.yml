@@ -1,7 +1,8 @@
-- name: 'Restart opendkim'
-  systemd:
-    daemon_reload: 'yes'
-    name: 'opendkim'
-    state: 'restarted'
-
-# vim: ft=yaml.ansible
+---
+- name: "Restart opendkim"
+  ansible.builtin.systemd:
+    daemon_reload: "yes"
+    name: "opendkim"
+    state: "restarted"
+  register: opendkim_restart
+  changed_when: opendkim_restart.rc != 0

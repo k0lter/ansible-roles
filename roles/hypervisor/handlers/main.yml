@@ -1,4 +1,6 @@
-- import_tasks: 'xen.yml'
-- import_tasks: 'ganeti.yml'
+---
+- name: "Importing Xen handlers"
+  ansible.builtin.import_tasks: "xen.yml"
 
-# vim: ft=yaml.ansible
+- name: "Importing Ganeti handlers"
+  ansible.builtin.import_tasks: "ganeti.yml"

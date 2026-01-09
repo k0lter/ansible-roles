@@ -6,8 +6,9 @@
 # Nginx vhost for rspamd
 
 server {
-{% if rspamd_web_vhostip or rspamd_web_vhostport %}
-    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}{% endif %}{% if rspamd_web_vhostip and rspamd_web_vhostport %}:{% endif %}{% if rspamd_web_vhostport %}{{ rspamd_web_vhostport }}{% endif %};
+    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}:{% endif %}{{ rspamd_web_vhostport }};
+{% if rspamd_web_vhostip6 %}
+    listen {% if rspamd_web_vhostip6 %}{{ rspamd_web_vhostip6 }}:{% endif %}{{ rspamd_web_vhostport }};
 {% endif %}
 
     server_name {{ rspamd_web_vhostname }};
@@ -47,7 +48,20 @@ server {
 {% if rspamd_web_ssl and ssl_certs_auto_installed.stdout_lines is defined and rspamd_web_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
 server {
-    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}:{% endif %}{% if rspamd_web_vhostport %}{{ rspamd_web_vhostport }}{% else %}443{% endif %} ssl;
+    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}:{% endif %}{{ rspamd_web_vhostport_ssl }} ssl;
+{% if rspamd_web_http3 %}
+    listen {% if rspamd_web_vhostip %}{{ rspamd_web_vhostip }}:{% endif %}{{ rspamd_web_vhostport_ssl }} quic;
+{% endif %}
+{% if rspamd_web_vhostip6 %}
+    listen {% if rspamd_web_vhostip6 %}{{ rspamd_web_vhostip6 }}:{% endif %}{{ rspamd_web_vhostport_ssl }} ssl;
+{% if rspamd_web_http3 %}
+    listen {% if rspamd_web_vhostip6 %}{{ rspamd_web_vhostip6 }}:{% endif %}{{ rspamd_web_vhostport_ssl }} quic;
+{% endif %}
+{% endif %}
+{% if rspamd_web_http3 %}
+    http2 on;
+    http3 on;
+{% endif %}
 
     server_name {{ rspamd_web_vhostname }};
 

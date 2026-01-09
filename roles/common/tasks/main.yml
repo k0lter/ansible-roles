@@ -1,54 +1,80 @@
-- include_tasks: base.yml
+---
+- name: "Importing base tasks"
+  ansible.builtin.include_tasks: base.yml
   tags:
-    - 'hosts'
-    - 'apt'
-    - 'base'
-    - 'ipv6'
-- include_tasks: utils.yml
+    - "hosts"
+    - "apt"
+    - "base"
+    - "ipv6"
+
+- name: "Importing utils tasks"
+  ansible.builtin.include_tasks: utils.yml
   tags:
-    - 'utils'
-    - 'geoip'
-- include_tasks: dotfiles.yml
+    - "utils"
+    - "geoip"
+
+- name: "Importing dotfiles tasks"
+  ansible.builtin.include_tasks: dotfiles.yml
   when: with_dotfiles|bool
   tags:
-    - 'dotfiles'
-    - 'base'
-- include_tasks: ssl.yml
+    - "dotfiles"
+    - "base"
+
+- name: "Importing ssl tasks"
+  ansible.builtin.include_tasks: ssl.yml
   tags:
-    - 'ssl'
-- include_tasks: dns.yml
+    - "ssl"
+
+- name: "Importing dns tasks"
+  ansible.builtin.include_tasks: dns.yml
   tags:
-    - 'dns'
-- include_tasks: firewall.yml
+    - "dns"
+
+- name: "Importing firewall tasks"
+  ansible.builtin.include_tasks: firewall.yml
   when: with_firewall|bool
   tags:
-    - 'firewall'
-    - 'firewall-rules'
-- include_tasks: security.yml
+    - "firewall"
+    - "firewall-rules"
+
+- name: "Importing security tasks"
+  ansible.builtin.include_tasks: security.yml
   tags:
-    - 'security'
-    - 'logcheck'
-- include_tasks: smtp.yml
+    - "security"
+    - "logcheck"
+
+- name: "Importing smtp tasks"
+  ansible.builtin.include_tasks: smtp.yml
   when: with_postfix|bool or with_mail_aliases|bool
   tags:
-    - 'smtp'
-- include_tasks: dkim.yml
+    - "smtp"
+
+- name: "Importing dkim tasks"
+  ansible.builtin.include_tasks: dkim.yml
   when: with_opendkim|bool
   tags:
-    - 'dkim'
-- include_tasks: rspamd.yml
+    - "dkim"
+
+- name: "Importing rspamd tasks"
+  ansible.builtin.include_tasks: rspamd.yml
   when: with_rspamd|bool
   tags:
-    - 'rspamd'
-    - 'rspamd-rules'
-- include_tasks: ssh.yml
+    - "rspamd"
+    - "rspamd-rules"
+
+- name: "Importing ssh  tasks"
+  ansible.builtin.include_tasks: ssh.yml
   tags:
-    - 'ssh'
-- include_tasks: smartd.yml
+    - "ssh"
+
+- name: "Importing smartd tasks"
+  ansible.builtin.include_tasks: smartd.yml
   when: with_smartd|bool
   tags:
-    - 'smartd'
-- include_tasks: docker.yml
+    - "smartd"
+
+- name: "Importing docker tasks"
+  ansible.builtin.include_tasks: docker.yml
   when: with_docker|bool
   tags:
-    - 'docker'
+    - "docker"

@@ -1,83 +1,84 @@
-- name: 'Install Ganeti related packages'
-  apt:
+---
+- name: "Install Ganeti related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'ganeti'
-      - 'ganeti-instance-debootstrap'
-      - 'drbd-utils'
-      - 'dnsutils'
-    install_recommends: 'no'
-    state: 'present'
+      - "ganeti"
+      - "ganeti-instance-debootstrap"
+      - "drbd-utils"
+      - "dnsutils"
+    install_recommends: "no"
+    state: "present"
   tags:
-    - 'hypervisor'
-    - 'ganeti'
+    - "hypervisor"
+    - "ganeti"
 
-- name: 'Install ganeti instances templates for debootstrap'
-  template:
-    src: 'ganeti/instance-debootstrap/{{ item }}.conf.j2'
-    dest: '/etc/ganeti/instance-debootstrap/variants/{{ item }}.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install ganeti instances templates for debootstrap"
+  ansible.builtin.template:
+    src: "ganeti/instance-debootstrap/{{ item }}.conf.j2"
+    dest: "/etc/ganeti/instance-debootstrap/variants/{{ item }}.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'jessie'
-    - 'stretch'
-    - 'buster'
-    - 'bullseye'
-    - 'bookworm'
+    - "jessie"
+    - "stretch"
+    - "buster"
+    - "bullseye"
+    - "bookworm"
   tags:
-    - 'hypervisor'
-    - 'ganeti'
+    - "hypervisor"
+    - "ganeti"
 
-- name: 'Enable ganeti instances templates for debootstrap'
-  lineinfile:
-    dest: '/etc/ganeti/instance-debootstrap/variants.list'
-    regexp: '^{{ item }}$'
-    line: '{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Enable ganeti instances templates for debootstrap"
+  ansible.builtin.lineinfile:
+    dest: "/etc/ganeti/instance-debootstrap/variants.list"
+    regexp: "^{{ item }}$"
+    line: "{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'jessie'
-    - 'stretch'
-    - 'buster'
-    - 'bullseye'
-    - 'bookworm'
+    - "jessie"
+    - "stretch"
+    - "buster"
+    - "bullseye"
+    - "bookworm"
   tags:
-    - 'hypervisor'
-    - 'ganeti'
+    - "hypervisor"
+    - "ganeti"
 
-- name: 'Exclude DRBD devices from lvm devices while using ganeti'
-  blockinfile:
-    dest: '/etc/lvm/lvm.conf'
-    marker: '    # ======= {mark} Exclude DRBD devices while using ganeti (managed by ansible) ======'
+- name: "Exclude DRBD devices from lvm devices while using ganeti"
+  ansible.builtin.blockinfile:
+    dest: "/etc/lvm/lvm.conf"
+    marker: "    # ======= {mark} Exclude DRBD devices while using ganeti (managed by ansible) ======"
     content: '    filter = ["r|/dev/drbd[0-9]+|"]'
-    insertafter: '^\s*devices\s+{'
+    insertafter: "^\\s*devices\\s+{"
   tags:
-    - 'hypervisor'
-    - 'ganeti'
+    - "hypervisor"
+    - "ganeti"
 
-- name: 'Add options for kernel modules while using ganeti'
-  template:
-    src: 'ganeti/kernel/modprobe.conf.j2'
-    dest: '/etc/modprobe.d/ganeti.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Add options for kernel modules while using ganeti"
+  ansible.builtin.template:
+    src: "ganeti/kernel/modprobe.conf.j2"
+    dest: "/etc/modprobe.d/ganeti.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Rebuild initramfs'
+    - "Rebuild initramfs"
   tags:
-    - 'hypervisor'
-    - 'ganeti'
+    - "hypervisor"
+    - "ganeti"
 
-- name: 'Add kernel modules to load while using ganeti'
-  template:
-    src: 'ganeti/kernel/modules.conf.j2'
-    dest: '/etc/modules-load.d/ganeti.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Add kernel modules to load while using ganeti"
+  ansible.builtin.template:
+    src: "ganeti/kernel/modules.conf.j2"
+    dest: "/etc/modules-load.d/ganeti.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   tags:
-    - 'hypervisor'
-    - 'ganeti'
+    - "hypervisor"
+    - "ganeti"
 
 # vim: ft=yaml.ansible

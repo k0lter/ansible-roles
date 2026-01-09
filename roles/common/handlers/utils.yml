@@ -1,3 +1,5 @@
-
-- name: 'Refresh GeoIP database'
-  command: geoipupdate
+---
+- name: "Refresh GeoIP database"
+  ansible.builtin.command: geoipupdate
+  register: geoip_database_refresh
+  changed_when: geoip_database_refresh.rc != 0

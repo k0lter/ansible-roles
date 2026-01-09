@@ -1,6 +1,7 @@
-- name: 'Apply firewall rules (ferm)'
-  service:
-    name: 'ferm'
-    state: 'reloaded'
-
-# vim: ft=yaml.ansible
+---
+- name: "Apply firewall rules (ferm)"
+  ansible.builtin.service:
+    name: "ferm"
+    state: "reloaded"
+  register: ferm_reload
+  changed_when: ferm_reload.rc != 0

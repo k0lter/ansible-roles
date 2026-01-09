@@ -1,12 +1,14 @@
-- import_tasks: 'xen.yml'
+---
+- name: "Importing Xen tasks"
+  ansible.builtin.import_tasks: "xen.yml"
   when: with_xen|bool
   tags:
-    - 'hypervisor'
-    - 'xen'
-- import_tasks: 'ganeti.yml'
+    - "hypervisor"
+    - "xen"
+
+- name: "Importing Ganeti tasks"
+  ansible.builtin.import_tasks: "ganeti.yml"
   when: with_ganeti|bool
   tags:
-    - 'hypervisor'
-    - 'ganeti'
-
-# vim: ft=yaml.ansible
+    - "hypervisor"
+    - "ganeti"

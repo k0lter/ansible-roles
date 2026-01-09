@@ -1,40 +1,41 @@
-- name: 'Get architecture using dpkg'
-  command: dpkg --print-architecture
+---
+- name: "Get architecture using dpkg"
+  ansible.builtin.command: dpkg --print-architecture
   register: dpkg_architecture
-  changed_when: False
-  check_mode: no
+  changed_when: false
+  check_mode: false
   tags:
-    - 'firewall'
+    - "firewall"
 
-- name: 'Install firewall package (ferm)'
-  apt:
+- name: "Install firewall package (ferm)"
+  ansible.builtin.apt:
     pkg:
-      - 'linux-image-{{ dpkg_architecture.stdout }}'
-      - 'ferm'
-    state: 'present'
+      - "linux-image-{{ dpkg_architecture.stdout }}"
+      - "ferm"
+    state: "present"
   tags:
-    - 'firewall'
+    - "firewall"
 
-- name: 'Install firewall configuration (ferm.conf)'
-  template:
-    src: 'ferm/ferm.conf.j2'
-    dest: '/etc/ferm/ferm.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install firewall configuration (ferm.conf)"
+  ansible.builtin.template:
+    src: "ferm/ferm.conf.j2"
+    dest: "/etc/ferm/ferm.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Apply firewall rules (ferm)'
+    - "Apply firewall rules (ferm)"
   tags:
-    - 'firewall'
-    - 'firewall-rules'
+    - "firewall"
+    - "firewall-rules"
 
-- name: 'Rely on iptables-legacy for firewall configuration (Debian >= 10)'
+- name: "Rely on iptables-legacy for firewall configuration (Debian >= 10)"
   community.general.alternatives:
-    name: 'iptables'
-    path: '/usr/sbin/iptables-legacy'
+    name: "iptables"
+    path: "/usr/sbin/iptables-legacy"
   when: ansible_lsb.major_release|int >= 10
   notify:
-    - 'Apply firewall rules (ferm)'
+    - "Apply firewall rules (ferm)"
   tags:
-    - 'firewall'
-    - 'firewall-rules'
+    - "firewall"
+    - "firewall-rules"

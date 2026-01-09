@@ -1,186 +1,199 @@
-- name: 'Install auto upgrades package'
-  apt:
+---
+- name: "Install auto upgrades package"
+  ansible.builtin.apt:
     pkg:
-      - 'unattended-upgrades'
-    state: 'present'
+      - "unattended-upgrades"
+    state: "present"
   when: with_auto_upgrade|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Reconfigure unattended-upgrades package'
-  debconf:
-    name: 'unattended-upgrades'
-    question: 'unattended-upgrades/enable_auto_updates'
-    value: 'true'
-    vtype: 'boolean'
+- name: "Reconfigure unattended-upgrades package"
+  ansible.builtin.debconf:
+    name: "unattended-upgrades"
+    question: "unattended-upgrades/enable_auto_updates"
+    value: "true"
+    vtype: "boolean"
   notify:
-    - 'Reconfigure unattended-upgrades'
+    - "Reconfigure unattended-upgrades"
   when: with_auto_upgrade|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Update unattended-upgrades configuration'
-  template:
-    src: '{{ item }}'
-    dest: '/etc/apt/apt.conf.d/90unattended-upgrades-local'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Update unattended-upgrades configuration"
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/etc/apt/apt.conf.d/90unattended-upgrades-local"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_first_found:
-    - 'apt/auto-upgrades.{{ ansible_lsb.codename }}.j2'
-    - 'apt/auto-upgrades.j2'
+    - "apt/auto-upgrades.{{ ansible_lsb.codename }}.j2"
+    - "apt/auto-upgrades.j2"
   when: with_auto_upgrade|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Install logcheck packages'
-  apt:
+- name: "Install logcheck packages"
+  ansible.builtin.apt:
     pkg:
-      - 'logcheck'
-      - 'logcheck-database'
-    state: 'present'
+      - "logcheck"
+      - "logcheck-database"
+    state: "present"
   when: with_logcheck|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Install local configuration files for logcheck'
-  copy:
-    src: 'logcheck/{{ item }}_local'
-    dest: '/etc/logcheck/ignore.d.server/{{ item }}_local'
-    owner: 'root'
-    group: 'logcheck'
-    mode: '0644'
+- name: "Install local configuration files for logcheck"
+  ansible.builtin.copy:
+    src: "logcheck/{{ item }}_local"
+    dest: "/etc/logcheck/ignore.d.server/{{ item }}_local"
+    owner: "root"
+    group: "logcheck"
+    mode: "0644"
   with_items:
-    - 'amavisd-new'
-    - 'ansible'
-    - 'apache2'
-    - 'bind'
-    - 'dhclient'
-    - 'dnsmasq'
-    - 'dovecot'
-    - 'dropbear'
-    - 'ferm'
-    - 'gammu'
-    - 'git-daemon'
-    - 'gogs'
-    - 'influxd'
-    - 'ipmi'
-    - 'irqbalance'
-    - 'kernel'
-    - 'libpam-modules'
-    - 'mon'
-    - 'noip2'
-    - 'ntp'
-    - 'openvpn'
-    - 'opendkim'
-    - 'php'
-    - 'postfix'
-    - 'pure-ftpd'
-    - 'pve-cluster'
-    - 'redir'
-    - 'rpc-mountd'
-    - 'rrdcached'
-    - 'rsyslog'
-    - 'smartd'
-    - 'spamd'
-    - 'sshd'
-    - 'svn'
-    - 'sympa'
-    - 'systemd'
-    - 'zabbix-agentd'
+    - "amavisd-new"
+    - "ansible"
+    - "apache2"
+    - "bind"
+    - "dhclient"
+    - "dnsmasq"
+    - "dovecot"
+    - "dropbear"
+    - "ferm"
+    - "gammu"
+    - "git-daemon"
+    - "gogs"
+    - "influxd"
+    - "ipmi"
+    - "irqbalance"
+    - "kernel"
+    - "libpam-modules"
+    - "mon"
+    - "noip2"
+    - "ntp"
+    - "openvpn"
+    - "opendkim"
+    - "php"
+    - "postfix"
+    - "pure-ftpd"
+    - "pve-cluster"
+    - "redir"
+    - "rpc-mountd"
+    - "rrdcached"
+    - "rsyslog"
+    - "smartd"
+    - "spamd"
+    - "sshd"
+    - "svn"
+    - "sympa"
+    - "systemd"
+    - "zabbix-agentd"
   when: with_logcheck|bool
   tags:
-    - 'security'
-    - 'logcheck'
+    - "security"
+    - "logcheck"
 
-- name: 'Update logcheck cron job'
-  template:
-    src: 'cron/logcheck.j2'
-    dest: '/etc/cron.d/logcheck'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Update logcheck cron job"
+  ansible.builtin.template:
+    src: "cron/logcheck.j2"
+    dest: "/etc/cron.d/logcheck"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_logcheck|bool
   tags:
-    - 'security'
-    - 'logcheck'
+    - "security"
+    - "logcheck"
 
-- name: 'Install rkhunter related packages'
-  apt:
+- name: "Install rkhunter related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'lsof'
-      - 'unhide'
-      - 'rkhunter'
-    state: 'present'
+      - "lsof"
+      - "unhide"
+      - "rkhunter"
+    state: "present"
   when: with_rkhunter|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Reconfigure rkhunter package'
-  debconf:
-    name: '{{ item.name }}'
-    question: '{{ item.question }}'
-    value: '{{ item.value }}'
-    vtype: '{{ item.vtype }}'
+- name: "Reconfigure rkhunter package"
+  ansible.builtin.debconf:
+    name: "{{ item.name }}"
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
   with_items:
-    - { name: 'rkhunter', question: 'rkhunter/apt_autogen', value: 'true', vtype: 'boolean' }
-    - { name: 'rkhunter', question: 'rkhunter/cron_daily_run', value: 'true', vtype: 'boolean' }
-    - { name: 'rkhunter', question: 'rkhunter/cron_db_update', value: 'true', vtype: 'boolean' }
+    - name: "rkhunter"
+      question: "rkhunter/apt_autogen"
+      value: "true"
+      vtype: "boolean"
+    - name: "rkhunter"
+      question: "rkhunter/cron_daily_run"
+      value: "true"
+      vtype: "boolean"
+    - name: "rkhunter"
+      question: "rkhunter/cron_db_update"
+      value: "true"
+      vtype: "boolean"
   notify:
-    - 'Reconfigure rkhunter'
+    - "Reconfigure rkhunter"
   when: with_rkhunter|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Update rkhunter configuration'
-  template:
-    src: 'rkhunter/{{ ansible_lsb.codename }}.conf.j2'
-    dest: '/etc/rkhunter.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Update rkhunter configuration"
+  ansible.builtin.template:
+    src: "rkhunter/{{ ansible_lsb.codename }}.conf.j2"
+    dest: "/etc/rkhunter.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_rkhunter|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Update chkrootkit configuration'
-  template: src=chkrootkit/chkrootkit.conf.j2 dest=/etc/chkrootkit.conf owner=root group=root mode=0644
+- name: "Update chkrootkit configuration"
+  ansible.builtin.template:
+    src: chkrootkit/chkrootkit.conf.j2
+    dest: /etc/chkrootkit.conf
+    owner: root
+    group: root
+    mode: "0644"
   when: with_chkrootkit|bool
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Update fstab to hide pids from /proc'
-  lineinfile:
-    dest: '/etc/fstab'
-    regexp: '(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$'
-    line: '\1defaults,hidepid=2\3'
-    backrefs: 'yes'
+- name: "Update fstab to hide pids from /proc"
+  ansible.builtin.lineinfile:
+    dest: "/etc/fstab"
+    regexp: "(^proc\\s+/proc\\s+proc\\s+)(\\S+)(\\s+[0-9]\\s+[0-9])\\s*$"
+    line: "\\1defaults,hidepid=2\\3"
+    backrefs: "yes"
   notify:
-      - 'Remount /proc'
+    - "Remount /proc"
   when: with_hideproc|bool and hideproc_gid|length == 0
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Update fstab to hide pids from /proc with group id (gid)'
-  lineinfile:
-    dest: '/etc/fstab'
-    regexp: '(^proc\s+/proc\s+proc\s+)(\S+)(\s+[0-9]\s+[0-9])\s*$'
-    line: '\1defaults,hidepid=2,gid={{ hideproc_gid }}\3'
-    backrefs: 'yes'
+- name: "Update fstab to hide pids from /proc with group id (gid)"
+  ansible.builtin.lineinfile:
+    dest: "/etc/fstab"
+    regexp: "(^proc\\s+/proc\\s+proc\\s+)(\\S+)(\\s+[0-9]\\s+[0-9])\\s*$"
+    line: "\\1defaults,hidepid=2,gid={{ hideproc_gid }}\\3"
+    backrefs: "yes"
   notify:
-      - 'Remount /proc'
+    - "Remount /proc"
   when: with_hideproc|bool and hideproc_gid|length > 0
   tags:
-    - 'security'
+    - "security"
 
-- name: 'Create Diffie-Helman parameters'
-  command: 'openssl dhparam -2 -out /etc/ssl/private/dh{{ item }}.pem {{ item }}'
+- name: "Create Diffie-Helman parameters"
+  ansible.builtin.command: "openssl dhparam -2 -out /etc/ssl/private/dh{{ item }}.pem {{ item }}"
   args:
-    creates: '/etc/ssl/private/dh{{ item }}.pem'
+    creates: "/etc/ssl/private/dh{{ item }}.pem"
   with_items:
-    - '2048'
+    - "2048"
   when: with_dhparam
   tags:
-    - 'security'
-
-# vim: ft=yaml.ansible
+    - "security"

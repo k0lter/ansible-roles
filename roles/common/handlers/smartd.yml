@@ -1,6 +1,7 @@
-- name: 'Restart smartmontools'
-  service:
-    name: 'smartmontools'
-    state: 'restarted'
-
-# vim: ft=yaml.ansible
+---
+- name: "Restart smartmontools"
+  ansible.builtin.service:
+    name: "smartmontools"
+    state: "restarted"
+  register: smartd_restart
+  changed_when: smartd_restart.rc != 0

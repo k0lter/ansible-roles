@@ -1,10 +1,30 @@
-- import_tasks: base.yml
-- import_tasks: utils.yml
-- import_tasks: firewall.yml
-- import_tasks: security.yml
-- import_tasks: smtp.yml
-- import_tasks: dkim.yml
-- import_tasks: rspamd.yml
-- import_tasks: ssh.yml
-- import_tasks: ssl.yml
-- import_tasks: smartd.yml
+---
+- name: "Importing base handlers"
+  ansible.builtin.import_tasks: base.yml
+
+- name: "Importing utils handlers"
+  ansible.builtin.import_tasks: utils.yml
+
+- name: "Importing firewall handlers"
+  ansible.builtin.import_tasks: firewall.yml
+
+- name: "Importing security handlers"
+  ansible.builtin.import_tasks: security.yml
+
+- name: "Importing smtp handlers"
+  ansible.builtin.import_tasks: smtp.yml
+
+- name: "Importing dkim handlers"
+  ansible.builtin.import_tasks: dkim.yml
+
+- name: "Importing rspamd handlers"
+  ansible.builtin.import_tasks: rspamd.yml
+
+- name: "Importing ssh handlers"
+  ansible.builtin.import_tasks: ssh.yml
+
+- name: "Importing ssl handlers"
+  ansible.builtin.import_tasks: ssl.yml
+
+- name: "Importing smartd handlers"
+  ansible.builtin.import_tasks: smartd.yml

@@ -1,19 +1,26 @@
-- name: 'Reconfigure timezone'
-  raw: rm -f /etc/timezone ; dpkg-reconfigure --frontend noninteractive tzdata
+---
+- name: "Reconfigure timezone"
+  ansible.builtin.raw: rm -f /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+  register: base_reconfigure_timezone
+  changed_when: base_reconfigure_timezone.rc != 0
 
-- name: 'Apply kernel configuration (proc)'
-  service:
-    name: 'procps'
-    state: 'restarted'
+- name: "Apply kernel configuration (proc)"
+  ansible.builtin.service:
+    name: "procps"
+    state: "restarted"
+  register: base_apply_proc_config
+  changed_when: base_apply_proc_config.rc != 0
 
-- name: 'Apply kernel configuration (sys)'
-  service:
-    name: 'sysfsutils'
-    state: 'restarted'
+- name: "Apply kernel configuration (sys)"
+  ansible.builtin.service:
+    name: "sysfsutils"
+    state: "restarted"
+  register: base_apply_sys_config
+  changed_when: base_apply_sys_config.rc != 0
 
-- name: 'Refresh sysfs configuration'
-  shell: cat /etc/sysfs.d/* > /etc/sysfs.conf
+- name: "Refresh sysfs configuration"
+  ansible.builtin.shell: cat /etc/sysfs.d/* > /etc/sysfs.conf
   notify:
-    - 'Apply kernel configuration (sys)'
-
-# vim: ft=yaml.ansible
+    - "Apply kernel configuration (sys)"
+  register: base_refresh_sysfs_config
+  changed_when: base_refresh_sysfs_config.rc != 0

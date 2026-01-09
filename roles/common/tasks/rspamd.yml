@@ -1,220 +1,225 @@
-- name: 'Install upstream apt key for rspamd'
+---
+- name: "Install upstream apt key for rspamd"
   ansible.builtin.get_url:
-    url: 'https://rspamd.com/apt-stable/gpg.key'
+    url: "https://rspamd.com/apt-stable/gpg.key"
     dest: /etc/apt/keyrings/rspamd.asc
+    checksum: "sha256:218ef36314c2e4c8a0b05702cf7489c12e18e69916e805d806e6464d87277bec"
+    mode: "0644"
   when: with_rspamd|bool and with_rspamd_upstream|bool
   tags:
-    - 'rspamd'
+    - "rspamd"
 
-- name: 'Install upstream apt repository for rspamd'
-  apt_repository:
-    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] https://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main'
-    filename: 'rspamd'
-    state: 'present'
+- name: "Install upstream apt repository for rspamd"
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] https://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main"
+    filename: "rspamd"
+    state: "present"
   when: with_rspamd|bool and with_rspamd_upstream|bool
   tags:
-    - 'rspamd'
+    - "rspamd"
 
-- name: 'Install rspamd packages'
-  apt:
+- name: "Install rspamd packages"
+  ansible.builtin.apt:
     pkg:
-      - 'rspamd'
-      - 'redis-server'
-    install_recommends: 'no'
-    state: 'present'
-    update_cache: 'yes'
+      - "rspamd"
+      - "redis-server"
+    install_recommends: "no"
+    state: "present"
+    update_cache: "yes"
   when: with_rspamd|bool
   tags:
-    - 'rspamd'
+    - "rspamd"
 
-- name: 'Create directories for local or overrides configuration files'
-  file:
-    path: '/etc/rspamd/{{ item }}'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Create directories for local or overrides configuration files"
+  ansible.builtin.file:
+    path: "/etc/rspamd/{{ item }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   with_items:
-    - 'local.d/maps.d'
+    - "local.d/maps.d"
   tags:
-    - 'rspamd'
-    - 'rspamd-rules'
+    - "rspamd"
+    - "rspamd-rules"
 
-- name: 'Install local or overrides configuration files'
-  template:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install local or overrides configuration files"
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - src: 'rspamd/local.d/composites.conf.j2'
-      dest: '/etc/rspamd/local.d/composites.conf'
-      installed: '{{ rspamd_composites }}'
-    - src: 'rspamd/local.d/actions.conf.j2'
-      dest: '/etc/rspamd/local.d/actions.conf'
-      installed: '{{ rspamd_actions }}'
-    - src: 'rspamd/local.d/multimap.conf.j2'
-      dest: '/etc/rspamd/local.d/multimap.conf'
-      installed: '{{ rspamd_multimap }}'
-    - src: 'rspamd/local.d/regexp.conf.j2'
-      dest: '/etc/rspamd/local.d/regexp.conf'
-      installed: '{{ rspamd_regexp }}'
-    - src: 'rspamd/local.d/external_relay.conf.j2'
-      dest: '/etc/rspamd/local.d/external_relay.conf'
-      installed: '{{ rspamd_external_relay|length > 0 }}'
-    - src: 'rspamd/local.d/maps.d/external_relay_hostname.map.j2'
-      dest: '/etc/rspamd/local.d/maps.d/external_relay_hostname.map'
-      installed: '{{ rspamd_external_relay|length > 0 }}'
-    - src: 'rspamd/local.d/history_redis.conf.j2'
-      dest: '/etc/rspamd/local.d/history_redis.conf'
-      installed: '{{ rspamd_redis_history }}'
-    - src: 'rspamd/override.d/rbl_group.conf.j2'
-      dest: '/etc/rspamd/override.d/rbl_group.conf'
-      installed: '{{ rspamd_rbl_group  }}'
-    - src: 'rspamd/override.d/surbl_group.conf.j2'
-      dest: '/etc/rspamd/override.d/surbl_group.conf'
-      installed: '{{ rspamd_surbl_group  }}'
-    - src: 'rspamd/local.d/maps.d/dmarc_whitelist.inc.j2'
-      dest: '/etc/rspamd/local.d/maps.d/dmarc_whitelist.inc.local'
-      installed: '{{ rspamd_whitelist }}'
-    - src: 'rspamd/local.d/maps.d/spf_dkim_whitelist.inc.j2'
-      dest: '/etc/rspamd/local.d/maps.d/spf_dkim_whitelist.inc.local'
-      installed: '{{ rspamd_whitelist }}'
-    - src: 'rspamd/local.d/metrics.conf.j2'
-      dest: '/etc/rspamd/local.d/metrics.conf'
-      installed: '{{ rspamd_metrics != {} }}'
+    - src: "rspamd/local.d/composites.conf.j2"
+      dest: "/etc/rspamd/local.d/composites.conf"
+      installed: "{{ rspamd_composites }}"
+    - src: "rspamd/local.d/actions.conf.j2"
+      dest: "/etc/rspamd/local.d/actions.conf"
+      installed: "{{ rspamd_actions }}"
+    - src: "rspamd/local.d/multimap.conf.j2"
+      dest: "/etc/rspamd/local.d/multimap.conf"
+      installed: "{{ rspamd_multimap }}"
+    - src: "rspamd/local.d/regexp.conf.j2"
+      dest: "/etc/rspamd/local.d/regexp.conf"
+      installed: "{{ rspamd_regexp }}"
+    - src: "rspamd/local.d/external_relay.conf.j2"
+      dest: "/etc/rspamd/local.d/external_relay.conf"
+      installed: "{{ rspamd_external_relay | length > 0 }}"
+    - src: "rspamd/local.d/maps.d/external_relay_hostname.map.j2"
+      dest: "/etc/rspamd/local.d/maps.d/external_relay_hostname.map"
+      installed: "{{ rspamd_external_relay | length > 0 }}"
+    - src: "rspamd/local.d/history_redis.conf.j2"
+      dest: "/etc/rspamd/local.d/history_redis.conf"
+      installed: "{{ rspamd_redis_history }}"
+    - src: "rspamd/override.d/rbl_group.conf.j2"
+      dest: "/etc/rspamd/override.d/rbl_group.conf"
+      installed: "{{ rspamd_rbl_group }}"
+    - src: "rspamd/override.d/surbl_group.conf.j2"
+      dest: "/etc/rspamd/override.d/surbl_group.conf"
+      installed: "{{ rspamd_surbl_group }}"
+    - src: "rspamd/local.d/maps.d/dmarc_whitelist.inc.j2"
+      dest: "/etc/rspamd/local.d/maps.d/dmarc_whitelist.inc.local"
+      installed: "{{ rspamd_whitelist }}"
+    - src: "rspamd/local.d/maps.d/spf_dkim_whitelist.inc.j2"
+      dest: "/etc/rspamd/local.d/maps.d/spf_dkim_whitelist.inc.local"
+      installed: "{{ rspamd_whitelist }}"
+    - src: "rspamd/local.d/metrics.conf.j2"
+      dest: "/etc/rspamd/local.d/metrics.conf"
+      installed: "{{ rspamd_metrics != {} }}"
   when: with_rspamd|bool and item.installed|bool
   notify:
-    - 'Restart rspamd'
+    - "Restart rspamd"
   tags:
-    - 'rspamd'
-    - 'rspamd-rules'
+    - "rspamd"
+    - "rspamd-rules"
 
-- name: 'Install local or overrides configuration blocks'
-  blockinfile:
+- name: "Install local or overrides configuration blocks"
+  ansible.builtin.blockinfile:
     block: "{{ lookup('ansible.builtin.template', item.src) }}"
-    path: '{{ item.dest }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-    create: True
+    path: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    create: true
   with_items:
-    - src: 'rspamd/local.d/milter_headers-block.conf.j2'
-      dest: '/etc/rspamd/local.d/milter_headers.conf'
-      installed: '{{ rspamd_milter_headers }}'
+    - src: "rspamd/local.d/milter_headers-block.conf.j2"
+      dest: "/etc/rspamd/local.d/milter_headers.conf"
+      installed: "{{ rspamd_milter_headers }}"
   when: with_rspamd|bool and item.installed|bool
   notify:
-    - 'Restart rspamd'
+    - "Restart rspamd"
   tags:
-    - 'rspamd'
-    - 'rspamd-rules'
+    - "rspamd"
+    - "rspamd-rules"
 
-- name: 'Check if rspamd default and empty local maps have already been installed'
-  template:
-    src: 'rspamd/local.d/maps.d/{{ item }}.j2'
-    dest: '/etc/rspamd/local.d/maps.d/{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Check if rspamd default and empty local maps have already been installed"
+  ansible.builtin.template:
+    src: "rspamd/local.d/maps.d/{{ item }}.j2"
+    dest: "/etc/rspamd/local.d/maps.d/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'body_spammy.inc'
-    - 'headers_spammy.inc'
-    - 'whitelist_sender.inc'
-    - 'whitelist_sender_domain.inc'
-    - 'blacklist_sender.inc'
-    - 'blacklist_sender_domain.inc'
+    - "body_spammy.inc"
+    - "headers_spammy.inc"
+    - "whitelist_sender.inc"
+    - "whitelist_sender_domain.inc"
+    - "blacklist_sender.inc"
+    - "blacklist_sender_domain.inc"
   when: with_rspamd|bool and rspamd_multimap
   notify:
-    - 'Restart rspamd'
+    - "Restart rspamd"
   tags:
-    - 'rspamd'
-    - 'rspamd-rules'
+    - "rspamd"
+    - "rspamd-rules"
 
-- name: 'Install Web Interface virtual host for Nginx (sites-available)'
-  template:
-    src: 'rspamd/nginx/rspamd_vhost.j2'
-    dest: '/etc/nginx/sites-available/rspamd'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Web Interface virtual host for Nginx (sites-available)"
+  ansible.builtin.template:
+    src: "rspamd/nginx/rspamd_vhost.j2"
+    dest: "/etc/nginx/sites-available/rspamd"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: with_rspamd|bool and with_rspamd_web|bool and with_nginx is defined and with_nginx|bool
   tags:
-    - 'rspamd'
-    - 'nginx'
+    - "rspamd"
+    - "nginx"
 
-- name: 'Install Web Interface virtual host for Nginx (sites-enabled)'
-  file:
-    src: '/etc/nginx/sites-available/rspamd'
-    path: '/etc/nginx/sites-enabled/rspamd'
-    state: 'link'
+- name: "Install Web Interface virtual host for Nginx (sites-enabled)"
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/rspamd"
+    path: "/etc/nginx/sites-enabled/rspamd"
+    state: "link"
   notify:
-    - 'Reload nginx'
+    - "Reload nginx"
   when: not ansible_check_mode and with_rspamd|bool and with_rspamd_web|bool and with_nginx is defined and with_nginx|bool
   tags:
-    - 'rspamd'
-    - 'nginx'
+    - "rspamd"
+    - "nginx"
 
-- name: 'Add HTTP authentication for web interface (Nginx)'
-  htpasswd:
-    path: '/etc/nginx/rspamd_admin'
-    name: '{{ item.name }}'
-    password: '{{ item.password }}'
-    owner: 'root'
-    group: 'www-data'
-    mode: '0640'
-    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+- name: "Add HTTP authentication for web interface (Nginx)"
+  community.general.htpasswd:
+    path: "/etc/nginx/rspamd_admin"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    owner: "root"
+    group: "www-data"
+    mode: "0640"
+    state: "{% if item.enabled %}present{% else %}absent{% endif %}"
   with_items:
     - name: "admin"
       password: "{{ rspamd_web_http_auth_admin_password }}"
-      enabled: "{{ rspamd_web_http_auth_admin_password|length > 0 }}"
+      enabled: "{{ rspamd_web_http_auth_admin_password | length > 0 }}"
   when: item.enabled|bool
   tags:
-    - 'rspamd'
-    - 'nginx'
+    - "rspamd"
+    - "nginx"
 
-- name: 'Install Web Interface virtual host for Apache2 (sites-available)'
-  template:
-    src: 'rspamd/apache2/rspamd_vhost.j2'
-    dest: '/etc/apache2/sites-available/rspamd'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+  no_log: true
+- name: "Install Web Interface virtual host for Apache2 (sites-available)"
+  ansible.builtin.template:
+    src: "rspamd/apache2/rspamd_vhost.j2"
+    dest: "/etc/apache2/sites-available/rspamd"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: with_rspamd|bool and with_rspamd_web|bool and with_apache2 is defined and with_apache2|bool
   tags:
-    - 'rspamd'
-    - 'apache2'
+    - "rspamd"
+    - "apache2"
 
-- name: 'Install Web Interface virtual host for Apache2 (sites-enabled)'
-  file:
-    src: '/etc/apache2/sites-available/rspamd'
-    path: '/etc/apache2/sites-enabled/rspamd'
-    state: 'link'
+- name: "Install Web Interface virtual host for Apache2 (sites-enabled)"
+  ansible.builtin.file:
+    src: "/etc/apache2/sites-available/rspamd"
+    path: "/etc/apache2/sites-enabled/rspamd"
+    state: "link"
   notify:
-    - 'Reload apache2'
+    - "Reload apache2"
   when: not ansible_check_mode and with_rspamd|bool and with_rspamd_web|bool and with_apache2 is defined and with_apache2|bool
   tags:
-    - 'rspamd'
-    - 'apache2'
+    - "rspamd"
+    - "apache2"
 
-- name: 'Add HTTP authentication for web interface (Apache2)'
-  htpasswd:
-    path: '/etc/apache2/rspamd_admin'
-    name: '{{ item.name }}'
-    password: '{{ item.password }}'
-    owner: 'root'
-    group: 'www-data'
-    mode: '0640'
-    state: '{% if item.enabled %}present{% else %}absent{% endif %}'
+- name: "Add HTTP authentication for web interface (Apache2)"
+  community.general.htpasswd:
+    path: "/etc/apache2/rspamd_admin"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    owner: "root"
+    group: "www-data"
+    mode: "0640"
+    state: "{% if item.enabled %}present{% else %}absent{% endif %}"
   with_items:
     - name: "admin"
       password: "{{ rspamd_web_http_auth_admin_password }}"
-      enabled: "{{ rspamd_web_http_auth_admin_password|length > 0 }}"
+      enabled: "{{ rspamd_web_http_auth_admin_password | length > 0 }}"
   when: item.enabled|bool
   tags:
-    - 'rspamd'
-    - 'apache2'
+    - "rspamd"
+    - "apache2"
+  no_log: true

@@ -1,54 +1,57 @@
-- name: 'Install Xen related packages'
-  apt:
+---
+- name: "Install Xen related packages"
+  ansible.builtin.apt:
     pkg:
-      - 'xen-system-amd64'
-      - 'grub-xen-host'
-      - 'bridge-utils'
-      - 'debootstrap'
-    install_recommends: 'no'
-    state: 'present'
+      - "xen-system-amd64"
+      - "grub-xen-host"
+      - "bridge-utils"
+      - "debootstrap"
+    install_recommends: "no"
+    state: "present"
   tags:
-    - 'hypervisor'
-    - 'xen'
+    - "hypervisor"
+    - "xen"
 
-- name: 'Add GRUB options for Xen'
-  lineinfile:
-    dest: '/etc/default/grub'
+- name: "Add GRUB options for Xen"
+  ansible.builtin.lineinfile:
+    dest: "/etc/default/grub"
     regexp: '^GRUB_CMDLINE_XEN_DEFAULT='
-    insertafter: '^GRUB_CMDLINE_LINUX='
-    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem  }}M,max:{{ xendom0_mem }}M dom0_max_vcpus={{ xendom0_vcpus }} dom0_vcpus_pin {{ xen_grub_opts }}"'
+    insertafter: "^GRUB_CMDLINE_LINUX="
+    line: 'GRUB_CMDLINE_XEN_DEFAULT="dom0_mem={{ xendom0_mem }}M,max:{{ xendom0_mem }}M dom0_max_vcpus={{ xendom0_vcpus }} dom0_vcpus_pin {{ xen_grub_opts }}"'
   notify:
-    - 'Update GRUB'
+    - "Update GRUB"
   tags:
-    - 'hypervisor'
-    - 'xen'
+    - "hypervisor"
+    - "xen"
 
-- name: 'Set Xen hypervisor to boot first'
-  command: 'dpkg-divert --divert /etc/grub.d/09_linux_xen --rename /etc/grub.d/20_linux_xen creates=/etc/grub.d/09_linux_xen'
+- name: "Set Xen hypervisor to boot first"
+  ansible.builtin.command:
+    creates: /etc/grub.d/09_linux_xen
+    cmd: dpkg-divert --divert /etc/grub.d/09_linux_xen --rename /etc/grub.d/20_linux_xen
   notify:
-    - 'Update GRUB'
+    - "Update GRUB"
 
-- name: 'Configure Xend'
-  template: 
-    src: 'xen/xend-config.sxp.j2'
-    dest: '/etc/xen/xend-config.sxp'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Configure Xend"
+  ansible.builtin.template:
+    src: "xen/xend-config.sxp.j2"
+    dest: "/etc/xen/xend-config.sxp"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   tags:
-    - 'hypervisor'
-    - 'xen'
+    - "hypervisor"
+    - "xen"
 
-- name: 'Configure Xendomains init script (disable save and restore)'
-  lineinfile:
-    dest: '/etc/default/xendomains'
-    regexp: '{{ item.regexp }}'
-    line: '{{ item.line }}'
+- name: "Configure Xendomains init script (disable save and restore)"
+  ansible.builtin.lineinfile:
+    dest: "/etc/default/xendomains"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
   with_items:
-    - { regexp: '^#?XENDOMAINS_RESTORE=', line: 'XENDOMAINS_RESTORE=false' }
-    - { regexp: '^#?XENDOMAINS_SAVE=', line: 'XENDOMAINS_SAVE=' }
+    - regexp: '^#?XENDOMAINS_RESTORE='
+      line: "XENDOMAINS_RESTORE=false"
+    - regexp: '^#?XENDOMAINS_SAVE='
+      line: "XENDOMAINS_SAVE="
   tags:
-    - 'hypervisor'
-    - 'xen'
-
-# vim: ft=yaml.ansible
+    - "hypervisor"
+    - "xen"

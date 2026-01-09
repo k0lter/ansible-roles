@@ -1,40 +1,39 @@
-- name: 'Install smartmontools package'
-  apt:
+---
+- name: "Install smartmontools package"
+  ansible.builtin.apt:
     pkg:
-      - 'smartmontools'
-    state: 'present'
+      - "smartmontools"
+    state: "present"
   tags:
-    - 'smartd'
+    - "smartd"
 
-- name: 'Install smartd configuration'
-  template:
-    src: 'smartd/smartd.conf.j2'
-    dest: '/etc/smartd.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install smartd configuration"
+  ansible.builtin.template:
+    src: "smartd/smartd.conf.j2"
+    dest: "/etc/smartd.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Restart smartmontools'
+    - "Restart smartmontools"
   tags:
-    - 'smartd'
+    - "smartd"
 
-- name: 'Update smartmontools default/init parameters'
-  template:
-    src: 'smartd/default.j2'
-    dest: '/etc/default/smartmontools'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Update smartmontools default/init parameters"
+  ansible.builtin.template:
+    src: "smartd/default.j2"
+    dest: "/etc/default/smartmontools"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   notify:
-    - 'Restart smartmontools'
+    - "Restart smartmontools"
   tags:
-    - 'smartd'
+    - "smartd"
 
-- name: 'Ensure smartmontools is running'
-  service:
-    name: 'smartmontools'
-    state: 'started'
+- name: "Ensure smartmontools is running"
+  ansible.builtin.service:
+    name: "smartmontools"
+    state: "started"
   tags:
-    - 'smartd'
-
-# vim: ft=yaml.ansible
+    - "smartd"

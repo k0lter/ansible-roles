@@ -104,7 +104,7 @@ sender_canonical_maps = regexp:/etc/postfix/sasl/sender_rewrite
 {% endif %}
 {% endif %}
 
-alias_maps = hash:/etc/aliases
+alias_maps = hash:/etc/aliases{% if postfix_aliases is defined %} {{ postfix_aliases|join(' ') }}{% endif +%}
 alias_database = $alias_maps
 
 {% if with_postfix_slowsmtp|bool %}

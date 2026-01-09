@@ -1,243 +1,257 @@
-- name: 'Add {{ selfvhost_vhostname }} to SSL certs to install'
-  set_fact:
+---
+- name: "Add {{ selfvhost_vhostname }} to SSL certs to install"
+  ansible.builtin.set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [selfvhost_vhostname] }}"
   when: with_selfvhost is defined and selfvhost_vhostname != 'localhost' and with_selfvhost|bool
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Add {{ phpsyscheck_vhostname }} to SSL certs to install'
-  set_fact:
+- name: "Add {{ phpsyscheck_vhostname }} to SSL certs to install"
+  ansible.builtin.set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [phpsyscheck_vhostname] }}"
   when: with_php is defined and with_php|bool and with_phpsyscheck is defined and with_phpsyscheck|bool and phpsyscheck_ssl is defined and phpsyscheck_ssl|bool
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Add {{ phpmyadmin_vhostname }} to SSL certs to install'
-  set_fact:
+- name: "Add {{ phpmyadmin_vhostname }} to SSL certs to install"
+  ansible.builtin.set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [phpmyadmin_vhostname] }}"
-  when: with_php is defined and with_php|bool and ((with_phpmyadmin is defined and with_phpmyadmin|bool) or (with_phpmyadmin4 is defined and with_phpmyadmin4|bool)) and phpmyadmin_ssl is defined and phpmyadmin_ssl|bool
-- name: 'Create ssl certificates directory'
-  file:
-    path: '/etc/ssl/local/certs'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+  when: with_php is defined and with_php|bool and ((with_phpmyadmin is defined and with_phpmyadmin|bool) or (with_phpmyadmin4 is defined and
+    with_phpmyadmin4|bool)) and phpmyadmin_ssl is defined and phpmyadmin_ssl|bool
+- name: "Create ssl certificates directory"
+  ansible.builtin.file:
+    path: "/etc/ssl/local/certs"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   when: ssl_certs|length > 0 or ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Add {{ rspamd_web_vhostname }} to SSL certs to install'
-  set_fact:
+- name: "Add {{ rspamd_web_vhostname }} to SSL certs to install"
+  ansible.builtin.set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [rspamd_web_vhostname] }}"
   when: with_rspamd|bool and with_rspamd_web|bool and rspamd_web_ssl is defined and rspamd_web_ssl|bool
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Create ssl certificates directories for each domain'
-  file:
-    path: '/etc/ssl/local/certs/{{ item }}'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Create ssl certificates directories for each domain"
+  ansible.builtin.file:
+    path: "/etc/ssl/local/certs/{{ item }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   with_items: "{{ ssl_certs }}"
   when: ssl_certs|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install ssl certificates (certificate)'
-  copy:
+- name: "Install ssl certificates (certificate)"
+  ansible.builtin.copy:
     content: "{{ lookup('file', 'data/ssl/' + item + '/' + item + '.crt') }}"
-    dest: '/etc/ssl/local/certs/{{ item }}/cert.pem'
-    owner: 'root'
-    group: 'root'
-    mode: '0640'
+    dest: "/etc/ssl/local/certs/{{ item }}/cert.pem"
+    owner: "root"
+    group: "root"
+    mode: "0640"
   register: ssl_cert_result
-  with_items: '{{ ssl_certs }}'
+  with_items: "{{ ssl_certs }}"
   when: ssl_certs|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install ssl certificates (private key)'
-  copy:
+- name: "Install ssl certificates (private key)"
+  ansible.builtin.copy:
     content: "{{ lookup('file', 'data/ssl/' + item + '/' + item + '.key') }}"
-    dest: '/etc/ssl/local/certs/{{ item }}/privkey.pem'
-    owner: 'root'
-    group: 'root'
-    mode: '0640'
+    dest: "/etc/ssl/local/certs/{{ item }}/privkey.pem"
+    owner: "root"
+    group: "root"
+    mode: "0640"
   register: ssl_key_result
-  with_items: '{{ ssl_certs }}'
+  with_items: "{{ ssl_certs }}"
   when: ssl_certs|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install ssl certificates (chain)'
-  copy:
+- name: "Install ssl certificates (chain)"
+  ansible.builtin.copy:
     content: "{{ lookup('file', 'data/ssl/' + item + '/bundle.crt') }}"
-    dest: '/etc/ssl/local/certs/{{ item }}/chain.pem'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    dest: "/etc/ssl/local/certs/{{ item }}/chain.pem"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   register: ssl_chain_result
-  with_items: '{{ ssl_certs }}'
+  with_items: "{{ ssl_certs }}"
   when: ssl_certs|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Gathering info about ssl full chain (certificate + chain)'
-  stat:
-    path: '/etc/ssl/local/certs/{{ item }}/fullchain.pem'
-  with_items: '{{ ssl_certs }}'
+- name: "Gathering info about ssl full chain (certificate + chain)"
+  ansible.builtin.stat:
+    path: "/etc/ssl/local/certs/{{ item }}/fullchain.pem"
+  with_items: "{{ ssl_certs }}"
   register: ssl_fullchain_stats
   when: ssl_certs|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Gathering info about ssl bundle (key + fullchain)'
-  stat:
-    path: '/etc/ssl/local/certs/{{ item }}/bundle.pem'
-  with_items: '{{ ssl_certs }}'
+- name: "Gathering info about ssl bundle (key + fullchain)"
+  ansible.builtin.stat:
+    path: "/etc/ssl/local/certs/{{ item }}/bundle.pem"
+  with_items: "{{ ssl_certs }}"
   register: ssl_bundle_stats
   when: ssl_certs|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Create ssl certificates full chain (certificate + chain)'
-  shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/fullchain.pem'
-  with_items: '{{ ssl_fullchain_stats.results }}'
+- name: "Create ssl certificates full chain (certificate + chain)"
+  # noqa: command-instead-of-module
+  ansible.builtin.shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' >
+    '/etc/ssl/local/certs/{{ item.item }}/fullchain.pem'
+  register: ssl_fullchain_generate
+  changed_when: ssl_fullchain_generate.rc != 0
+  with_items: "{{ ssl_fullchain_stats.results }}"
   when: ssl_certs|length > 0 and (not item.stat.exists or ssl_cert_result is changed or ssl_chain_result is changed)
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Create ssl certificates bundle (key + certificate + bundle)'
-  shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/privkey.pem' '/etc/ssl/local/certs/{{ item.item }}/cert.pem' '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/bundle.pem'
-  with_items: '{{ ssl_bundle_stats.results }}'
+- name: "Create ssl certificates bundle (key + certificate + bundle)"
+  # noqa: command-instead-of-module
+  ansible.builtin.shell: sed '/^\s*$/d' '/etc/ssl/local/certs/{{ item.item }}/privkey.pem' '/etc/ssl/local/certs/{{ item.item }}/cert.pem'
+    '/etc/ssl/local/certs/{{ item.item }}/chain.pem' > '/etc/ssl/local/certs/{{ item.item }}/bundle.pem'
+  register: ssl_bundle_generate
+  changed_when: ssl_bundle_generate.rc != 0
+  with_items: "{{ ssl_bundle_stats.results }}"
   when: ssl_certs|length > 0 and (not item.stat.exists or ssl_key_result is changed or ssl_cert_result is changed or ssl_chain_result is changed)
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install Lets Encrypt client (dehydrated)'
-  apt:
-    pkg: 'dehydrated'
-    state: 'present'
-    default_release: '{{ ansible_lsb.codename }}'
+- name: "Install Lets Encrypt client (dehydrated)"
+  ansible.builtin.apt:
+    pkg: "dehydrated"
+    state: "present"
+    default_release: "{{ ansible_lsb.codename }}"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install Lets Encrypt domains configuration for dehydrated)'
-  template:
-    src: 'dehydrated/domains.j2'
-    dest: '/etc/dehydrated/domains.txt'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Lets Encrypt domains configuration for dehydrated)"
+  ansible.builtin.template:
+    src: "dehydrated/domains.j2"
+    dest: "/etc/dehydrated/domains.txt"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Create dehydrated hooks directory'
-  file:
-    path: '/etc/dehydrated/hooks'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Create dehydrated hooks directory"
+  ansible.builtin.file:
+    path: "/etc/dehydrated/hooks"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install configuration for hooks support in dehydrated'
-  template:
-    src: 'dehydrated/config_hooks.sh.j2'
-    dest: '/etc/dehydrated/conf.d/hooks.sh'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install configuration for hooks support in dehydrated"
+  ansible.builtin.template:
+    src: "dehydrated/config_hooks.sh.j2"
+    dest: "/etc/dehydrated/conf.d/hooks.sh"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install hook script for dehydrated'
-  template:
-    src: 'dehydrated/hook.sh.j2'
-    dest: '/etc/dehydrated/hook.sh'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Install hook script for dehydrated"
+  ansible.builtin.template:
+    src: "dehydrated/hook.sh.j2"
+    dest: "/etc/dehydrated/hook.sh"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install dehydrated hooks for various services'
-  template:
-    src: 'dehydrated/hooks/{{ item.name }}.sh.j2'
-    dest: '/etc/dehydrated/hooks/{{ item.name }}.sh'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Install dehydrated hooks for various services"
+  ansible.builtin.template:
+    src: "dehydrated/hooks/{{ item.name }}.sh.j2"
+    dest: "/etc/dehydrated/hooks/{{ item.name }}.sh"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   with_items:
     - name: "nginx"
-      enabled: "{{ with_nginx is defined and with_nginx|bool }}"
+      enabled: "{{ with_nginx is defined and with_nginx | bool }}"
     - name: "apache2"
-      enabled: "{{ with_apache2 is defined and with_apache2|bool }}"
+      enabled: "{{ with_apache2 is defined and with_apache2 | bool }}"
     - name: "dovecot"
-      enabled: "{{ with_dovecot is defined and with_dovecot|bool }}"
+      enabled: "{{ with_dovecot is defined and with_dovecot | bool }}"
   when: ssl_certs_auto|length > 0 and item.enabled
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'List Lets Encrypt SSL installed certificates'
-  shell: find /var/lib/dehydrated/certs -iname privkey.pem | cut -d / -f6
+- name: "List Lets Encrypt SSL installed certificates"
+  ansible.builtin.shell: find /var/lib/dehydrated/certs -iname privkey.pem | cut -d / -f6
   register: ssl_certs_auto_installed
-  changed_when: False
-  ignore_errors: True
-  check_mode: no
+  changed_when: false
+  ignore_errors: true
+  check_mode: false
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Create generic symlinks to Lets Encrypt SSL certificates'
-  file:
-    src: '/var/lib/dehydrated/certs/{{ item }}'
-    dest: '/etc/ssl/local/certs/{{ item }}'
-    owner: 'root'
-    group: 'root'
+- name: "Create generic symlinks to Lets Encrypt SSL certificates"
+  ansible.builtin.file:
+    src: "/var/lib/dehydrated/certs/{{ item }}"
+    dest: "/etc/ssl/local/certs/{{ item }}"
+    owner: "root"
+    group: "root"
     state: link
   with_items: "{{ ssl_certs_auto_installed.stdout_lines }}"
   when: ssl_certs_auto|length > 0 and ssl_certs_auto_installed.stdout_lines|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'List Lets Encrypt SSL certificates to be generated'
-  shell: egrep -v '^#' /etc/dehydrated/domains.txt | cut -d ' ' -f 1 | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem" || echo "${c}" ; done
+- name: "List Lets Encrypt SSL certificates to be generated"
+  ansible.builtin.shell: egrep -v '^#' /etc/dehydrated/domains.txt | cut -d ' ' -f 1 | while read c ; do test -f "/var/lib/dehydrated/certs/${c}/privkey.pem"
+    || echo "${c}" ; done
   register: ssl_certs_auto_missing
-  ignore_errors: True
-  check_mode: no
+  ignore_errors: true
+  check_mode: false
   changed_when: ssl_certs_auto_missing.stdout_lines != []
   notify:
-    - 'Generate Lets Encrypt SSL certificates'
+    - "Generate Lets Encrypt SSL certificates"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Install Lets Encrypt cron job'
-  template:
-    src: 'cron/letsencrypt.j2'
-    dest: '/etc/cron.d/letsencrypt-local'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install Lets Encrypt cron job"
+  ansible.builtin.template:
+    src: "cron/letsencrypt.j2"
+    dest: "/etc/cron.d/letsencrypt-local"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
+    - "ssl"
 
-- name: 'Register and accept Lets Encrypt terms of service'
-  shell: if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then dehydrated --register --accept-terms ; fi
-  changed_when: False
+- name: "Register and accept Lets Encrypt terms of service"
+  ansible.builtin.shell: >-
+    set -o pipefail && if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then
+      dehydrated --register --accept-terms ;
+    fi
+  args:
+    executable: /bin/bash
+  changed_when: false
   when: ssl_certs_auto|length > 0
   tags:
-    - 'ssl'
-
-# vim: ft=yaml.ansible
+    - "ssl"

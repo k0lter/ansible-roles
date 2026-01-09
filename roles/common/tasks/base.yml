@@ -1,339 +1,346 @@
-- name: 'Gather packages facts'
+---
+- name: "Gather packages facts"
   ansible.builtin.package_facts:
     manager: auto
 
-- name: 'Install hosts file'
-  template:
-    src: 'hosts.j2'
-    dest: '/etc/hosts'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install hosts file"
+  ansible.builtin.template:
+    src: "hosts.j2"
+    dest: "/etc/hosts"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_hosts|bool
   tags:
-    - 'hosts'
-    - 'base'
+    - "hosts"
+    - "base"
 
-- name: 'Install hosts.deny file'
-  template:
-    src: 'hosts.deny.j2'
-    dest: '/etc/hosts.deny'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install hosts.deny file"
+  ansible.builtin.template:
+    src: "hosts.deny.j2"
+    dest: "/etc/hosts.deny"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_hostsdeny|bool
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Write /etc/apt/apt.conf.d configuration files'
-  template:
-    src: 'apt/apt-{{ item }}.j2'
-    dest: '/etc/apt/apt.conf.d/99{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Write /etc/apt/apt.conf.d configuration files"
+  ansible.builtin.template:
+    src: "apt/apt-{{ item }}.j2"
+    dest: "/etc/apt/apt.conf.d/99{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'nopdiffs'
-    - 'norecommends'
-    - 'progressbar'
+    - "nopdiffs"
+    - "norecommends"
+    - "progressbar"
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Create directories for apt sources'
-  file:
-    path: '{{ item }}'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Create directories for apt sources"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   with_items:
-    - '/etc/apt/keyrings'
-    - '/etc/apt/sources.list.d'
-    - '/etc/apt/mirrors'
+    - "/etc/apt/keyrings"
+    - "/etc/apt/sources.list.d"
+    - "/etc/apt/mirrors"
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Create apt mirrors files'
-  template:
-    src: 'apt/mirrors/{{ item }}.list.j2'
-    dest: '/etc/apt/mirrors/{{ item }}.list'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Create apt mirrors files"
+  ansible.builtin.template:
+    src: "apt/mirrors/{{ item }}.list.j2"
+    dest: "/etc/apt/mirrors/{{ item }}.list"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - 'debian'
-    - 'debian-security'
+    - "debian"
+    - "debian-security"
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Write /etc/apt/sources.list'
-  template:
-    src: 'apt/sources.{{ ansible_lsb.codename }}.list.j2'
-    dest: '/etc/apt/sources.list'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Write /etc/apt/sources.list"
+  ansible.builtin.template:
+    src: "apt/sources.{{ ansible_lsb.codename }}.list.j2"
+    dest: "/etc/apt/sources.list"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   register: apt_sources
   when: ansible_lsb.major_release|int <= 12
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Write /etc/apt/sources.list.d/debian.sources'
-  template:
-    src: 'apt/debian.sources.j2'
-    dest: '/etc/apt/sources.list.d/debian.sources'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Write /etc/apt/sources.list.d/debian.sources"
+  ansible.builtin.template:
+    src: "apt/debian.sources.j2"
+    dest: "/etc/apt/sources.list.d/debian.sources"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   register: apt_sources
   when: ansible_lsb.major_release|int >= 12
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Refresh apt cache'
-  apt:
-    update_cache: yes
+- name: "Refresh apt cache"
+  # noqa: no-handler
+  ansible.builtin.apt:
+    update_cache: true
   when: apt_sources.changed
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Install apt key for custom Debian repositories'
+- name: "Install apt key for custom Debian repositories"
   ansible.builtin.get_url:
-    url: '{{ item.url }}'
-    dest: '/etc/apt/keyrings/{{ item.name }}.asc'
-    checksum: '{{ item.checksum }}'
-  with_items: '{{ apt_keys }}'
+    url: "{{ item.url }}"
+    dest: "/etc/apt/keyrings/{{ item.name }}.asc"
+    checksum: "{{ item.checksum }}"
+    mode: "0644"
+  with_items: "{{ apt_keys }}"
   when: apt_keys|length > 0
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Add apt sources for custom Debian repositories'
-  block:
-    - name: 'Remove Debian repository (without signed-by)'
-      apt_repository:
-        repo: 'deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
-        state: 'absent'
-      with_items: '{{ apt_repositories }}'
-    - name: 'Add Debian repository (with signed-by)'
-      apt_repository:
-        repo: 'deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}'
-        filename: '{{ item.name }}'
-        state: 'present'
-      with_items: '{{ apt_repositories }}'
+- name: "Add apt sources for custom Debian repositories"
   when: apt_repositories|length > 0
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Remove old format apt key for custom Debian repositories'
+  block:
+    - name: "Remove Debian repository (without signed-by)"
+      ansible.builtin.apt_repository:
+        repo: "deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}"
+        state: "absent"
+      with_items: "{{ apt_repositories }}"
+    - name: "Add Debian repository (with signed-by)"
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}"
+        filename: "{{ item.name }}"
+        state: "present"
+      with_items: "{{ apt_repositories }}"
+- name: "Remove old format apt key for custom Debian repositories"
   ansible.builtin.apt_key:
-    id: '{{ item.id }}'
-    state: 'absent'
-  with_items: '{{ apt_keys }}'
+    id: "{{ item.id }}"
+    state: "absent"
+  with_items: "{{ apt_keys }}"
   when: apt_keys|length > 0
   tags:
-    - 'apt'
-    - 'base'
+    - "apt"
+    - "base"
 
-- name: 'Install base packages'
-  apt:
+- name: "Install base packages"
+  ansible.builtin.apt:
     pkg:
-      - 'rsyslog'
-      - 'apticron'
-      - 'locales-all'
-      - 'locales'
-      - 'lsb-release'
-      - 'facter'
-      - 'zsh'
-      - 'git-core'
-      - 'tig'
-      - 'vim-nox'
-      - 'ccze'
-      - 'tree'
-      - 'pydf'
-      - 'htop'
-      - 'sudo'
-      - 'sysfsutils'
-      - 'tmux'
-      - 'rsync'
-      - 'ca-certificates'
-      - 'sysstat'
-      - 'etckeeper'
-      - 'sharutils'
-      - 'ncdu'
-      - 'bzip2'
-      - 'xz-utils'
-      - 'file'
-      - 'zstd'
-      - 'kitty-terminfo'
-    install_recommends: 'no'
-    state: 'present'
+      - "rsyslog"
+      - "apticron"
+      - "locales-all"
+      - "locales"
+      - "lsb-release"
+      - "facter"
+      - "zsh"
+      - "git-core"
+      - "tig"
+      - "vim-nox"
+      - "ccze"
+      - "tree"
+      - "pydf"
+      - "htop"
+      - "sudo"
+      - "sysfsutils"
+      - "tmux"
+      - "rsync"
+      - "ca-certificates"
+      - "sysstat"
+      - "etckeeper"
+      - "sharutils"
+      - "ncdu"
+      - "bzip2"
+      - "xz-utils"
+      - "file"
+      - "zstd"
+      - "kitty-terminfo"
+    install_recommends: "no"
+    state: "present"
   when: with_base_packages
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install additional packages'
-  apt:
-    pkg: '{{ apt_additional_packages }}'
-    install_recommends: 'no'
-    state: 'present'
+- name: "Install additional packages"
+  ansible.builtin.apt:
+    pkg: "{{ apt_additional_packages }}"
+    install_recommends: "no"
+    state: "present"
   when: apt_additional_packages|length > 0
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install additional packages (local)'
-  apt:
-    pkg: '{{ apt_additional_packages_local }}'
-    install_recommends: 'no'
-    state: 'present'
+- name: "Install additional packages (local)"
+  ansible.builtin.apt:
+    pkg: "{{ apt_additional_packages_local }}"
+    install_recommends: "no"
+    state: "present"
   when: apt_additional_packages_local|length > 0
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install ntp daemon'
-  apt:
-    pkg: 'ntp'
-    install_recommends: 'no'
-    state: 'present'
+- name: "Install ntp daemon"
+  ansible.builtin.apt:
+    pkg: "ntp"
+    install_recommends: "no"
+    state: "present"
   when: with_ntp|bool
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Configure default locale ({{ locale }})'
-  command: update-locale 'LANG={{ locale }}'
-  changed_when: False
+- name: "Configure default locale ({{ locale }})"
+  ansible.builtin.command: update-locale 'LANG={{ locale }}'
+  changed_when: false
   when: locale is defined and locale|length > 0
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Configure default timezone'
-  debconf:
-    name: '{{ item.name }}'
-    question: '{{ item.question }}'
-    value: '{{ item.value }}'
-    vtype: '{{ item.vtype }}'
+- name: "Configure default timezone"
+  ansible.builtin.debconf:
+    name: "{{ item.name }}"
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
   with_items:
-    - { name: 'tzdata', question: 'tzdata/Areas', value: '{{ timezone_area }}', vtype: 'select' }
-    - { name: 'tzdata', question: 'tzdata/Zones/{{ timezone_area }}', value: '{{ timezone_city }}', vtype: 'select' }
+    - name: "tzdata"
+      question: "tzdata/Areas"
+      value: "{{ timezone_area }}"
+      vtype: "select"
+    - name: "tzdata"
+      question: "tzdata/Zones/{{ timezone_area }}"
+      value: "{{ timezone_city }}"
+      vtype: "select"
   notify:
-    - 'Reconfigure timezone'
+    - "Reconfigure timezone"
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Override logrotate configuration for rsyslog'
-  template:
-    src: 'logrotate/rsyslog.j2'
-    dest: '/etc/logrotate.d/rsyslog'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Override logrotate configuration for rsyslog"
+  ansible.builtin.template:
+    src: "logrotate/rsyslog.j2"
+    dest: "/etc/logrotate.d/rsyslog"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   when: with_logrotate4rsyslog_override
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install kernel configuration (proc)'
-  template:
-    src: 'kernel/sysctl.d/{{ item }}.j2'
-    dest: '/etc/sysctl.d/{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install kernel configuration (proc)"
+  ansible.builtin.template:
+    src: "kernel/sysctl.d/{{ item }}.j2"
+    dest: "/etc/sysctl.d/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - '05-ipv6.conf'
-    - '10-increase-file-descriptors.conf'
+    - "05-ipv6.conf"
+    - "10-increase-file-descriptors.conf"
   notify:
-    - 'Apply kernel configuration (proc)'
+    - "Apply kernel configuration (proc)"
   tags:
-    - 'base'
-    - 'ipv6'
+    - "base"
+    - "ipv6"
 
-- name: 'Create sysfs configuration directory - /etc/sysfs.d'
-  file:
-    path: '/etc/sysfs.d'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
+- name: "Create sysfs configuration directory - /etc/sysfs.d"
+  ansible.builtin.file:
+    path: "/etc/sysfs.d"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install kernel configuration (sys)'
-  template:
-    src: 'kernel/sysfs.d/{{ item }}.j2'
-    dest: '/etc/sysfs.d/{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install kernel configuration (sys)"
+  ansible.builtin.template:
+    src: "kernel/sysfs.d/{{ item }}.j2"
+    dest: "/etc/sysfs.d/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - '00-sysfs-prolog.conf'
+    - "00-sysfs-prolog.conf"
   notify:
-    - 'Refresh sysfs configuration'
+    - "Refresh sysfs configuration"
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install kernel configuration (sys) for disks'
-  template:
-    src: 'kernel/sysfs.d/{{ item }}.j2'
-    dest: '/etc/sysfs.d/{{ item }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+- name: "Install kernel configuration (sys) for disks"
+  ansible.builtin.template:
+    src: "kernel/sysfs.d/{{ item }}.j2"
+    dest: "/etc/sysfs.d/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items:
-    - '10-disks.conf'
+    - "10-disks.conf"
   notify:
-    - 'Refresh sysfs configuration'
+    - "Refresh sysfs configuration"
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install sudo configuration'
-  template:
-    src: 'sudo/local-admin.j2'
-    dest: '/etc/sudoers.d/local-admin'
-    owner: 'root'
-    group: 'root'
-    mode: '0440'
+- name: "Install sudo configuration"
+  ansible.builtin.template:
+    src: "sudo/local-admin.j2"
+    dest: "/etc/sudoers.d/local-admin"
+    owner: "root"
+    group: "root"
+    mode: "0440"
   when: with_sudo
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install unprivileged user'
-  user:
-    name: '{{ item.user }}'
-    comment: '{{ item.fullname }}'
-    groups: 'adm,operator,sudo'
-    append: 'yes'
-    shell: '/bin/zsh'
-    state: 'present'
-  with_items: '{{ admins }}'
+- name: "Install unprivileged user"
+  ansible.builtin.user:
+    name: "{{ item.user }}"
+    comment: "{{ item.fullname }}"
+    groups: "adm,operator,sudo"
+    append: "yes"
+    shell: "/bin/zsh"
+    state: "present"
+  with_items: "{{ admins }}"
   when: admins|length > 0 and with_admins_accounts
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install SSH key for unprivileged user'
-  authorized_key:
-    user: '{{ item.user }}'
+- name: "Install SSH key for unprivileged user"
+  ansible.posix.authorized_key:
+    user: "{{ item.user }}"
     key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
-    state: 'present'
-  with_items: '{{ admins }}'
+    state: "present"
+  with_items: "{{ admins }}"
   when: admins|length > 0 and with_admins_accounts
   tags:
-    - 'base'
+    - "base"
 
-- name: 'Install SSH key for root'
-  authorized_key:
-    user: 'root'
+- name: "Install SSH key for root"
+  ansible.posix.authorized_key:
+    user: "root"
     key: "{{ lookup('file', 'data/users/' + item.user + '/sshkey.pub') }}"
-    state: 'present'
-  with_items: '{{ admins }}'
+    state: "present"
+  with_items: "{{ admins }}"
   when: admins|length > 0
   tags:
-    - 'base'
-
-# vim: ft=yaml.ansible
+    - "base"

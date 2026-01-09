@@ -1,5 +1,5 @@
-- name: 'Generate Lets Encrypt SSL certificates'
-  shell: dehydrated --cron >/dev/null
-  ignore_errors: True
-
-# vim: ft=yaml.ansible
+---
+- name: "Generate Lets Encrypt SSL certificates"
+  ansible.builtin.shell: dehydrated --cron >/dev/null
+  register: dehydrated_refresh
+  changed_when: dehydrated_refresh.rc != 0
