@@ -19,18 +19,6 @@
   tags:
     - "smartd"
 
-- name: "Update smartmontools default/init parameters"
-  ansible.builtin.template:
-    src: "smartd/default.j2"
-    dest: "/etc/default/smartmontools"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-    - "Restart smartmontools"
-  tags:
-    - "smartd"
-
 - name: "Ensure smartmontools is running"
   ansible.builtin.service:
     name: "smartmontools"
