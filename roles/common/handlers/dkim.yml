@@ -4,5 +4,3 @@
     daemon_reload: "yes"
     name: "opendkim"
     state: "restarted"
-  register: opendkim_restart
-  changed_when: opendkim_restart.rc != 0

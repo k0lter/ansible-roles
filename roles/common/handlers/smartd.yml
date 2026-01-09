@@ -3,5 +3,3 @@
   ansible.builtin.service:
     name: "smartmontools"
     state: "restarted"
-  register: smartd_restart
-  changed_when: smartd_restart.rc != 0

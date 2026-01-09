@@ -1,25 +1,25 @@
 ---
 - name: "Regenerate aliases cache"
   ansible.builtin.command: "newaliases"
-  register: postfix_newaliases
-  changed_when: postfix_newaliases.rc != 0
+  register: common_postfix_newaliases
+  changed_when: common_postfix_newaliases.rc != 0
 
 - name: "Reload Postfix"
   ansible.builtin.command: "postfix reload"
-  register: postfix_reload
-  changed_when: postfix_reload.rc != 0
+  register: common_postfix_reload
+  changed_when: common_postfix_reload.rc != 0
 
 - name: "Rehash slowsmtp transport map"
   ansible.builtin.command: "postmap /etc/postfix/transport_slowsmtp"
-  register: postfix_slowsmtp_postmap
-  changed_when: postfix_slowsmtp_postmap.rc != 0
+  register: common_postfix_slowsmtp_postmap
+  changed_when: common_postfix_slowsmtp_postmap.rc != 0
 
 - name: "Rehash SASL credentials map"
   ansible.builtin.command: "postmap /etc/postfix/sasl/credentials"
-  register: postfix_saslcreds_postmap
-  changed_when: postfix_saslcreds_postmap.rc != 0
+  register: common_postfix_saslcreds_postmap
+  changed_when: common_postfix_saslcreds_postmap.rc != 0
 
 - name: "Rehash SASL sender relay map"
   ansible.builtin.command: "postmap /etc/postfix/sasl/sender_relay"
-  register: postfix_saslrelay_postmap
-  changed_when: postfix_saslrelay_postmap.rc != 0
+  register: common_postfix_saslrelay_postmap
+  changed_when: common_postfix_saslrelay_postmap.rc != 0

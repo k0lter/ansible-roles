@@ -3,5 +3,3 @@
   ansible.builtin.service:
     name: "ssh"
     state: "restarted"
-  register: ssh_restart
-  changed_when: ssh_restart.rc != 0

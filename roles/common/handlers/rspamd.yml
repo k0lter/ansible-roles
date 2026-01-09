@@ -3,5 +3,3 @@
   ansible.builtin.systemd:
     name: "rspamd"
     state: "restarted"
-  register: rspamd_restart
-  changed_when: rspamd_restart.rc != 0

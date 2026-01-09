@@ -3,5 +3,3 @@
   ansible.builtin.service:
     name: "ferm"
     state: "reloaded"
-  register: ferm_reload
-  changed_when: ferm_reload.rc != 0

@@ -1,5 +1,5 @@
 ---
 - name: "Generate Lets Encrypt SSL certificates"
   ansible.builtin.shell: dehydrated --cron >/dev/null
-  register: dehydrated_refresh
-  changed_when: dehydrated_refresh.rc != 0
+  register: common_dehydrated_refresh
+  changed_when: common_dehydrated_refresh.rc != 0
