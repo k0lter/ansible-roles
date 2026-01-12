@@ -20,11 +20,12 @@
     group: "root"
     mode: "0644"
   with_items:
-    - "jessie"
-    - "stretch"
-    - "buster"
-    - "bullseye"
-    - "bookworm"
+    - 'jessie'
+    - 'stretch'
+    - 'buster'
+    - 'bullseye'
+    - 'bookworm'
+    - 'trixie'
   tags:
     - "hypervisor"
     - "ganeti"
@@ -38,11 +39,12 @@
     group: "root"
     mode: "0644"
   with_items:
-    - "jessie"
-    - "stretch"
-    - "buster"
-    - "bullseye"
-    - "bookworm"
+    - 'jessie'
+    - 'stretch'
+    - 'buster'
+    - 'bullseye'
+    - 'bookworm'
+    - 'trixie'
   tags:
     - "hypervisor"
     - "ganeti"
@@ -80,5 +82,3 @@
   tags:
     - "hypervisor"
     - "ganeti"
-
-# vim: ft=yaml.ansible
