@@ -25,7 +25,7 @@
   with_items:
     - "http2"
   changed_when: false
-  when: ansible_lsb.major_release|int >= 9
+  when: ansible_facts['lsb']['major_release']|int >= 9
   tags:
     - "web"
     - "apache2"
@@ -80,7 +80,7 @@
     mode: "0644"
   notify:
     - "Reload apache2"
-  when: ansible_lsb.major_release|int < 8
+  when: ansible_facts['lsb']['major_release']|int < 8
   tags:
     - "web"
     - "apache2"
@@ -94,7 +94,7 @@
     mode: "0644"
   notify:
     - "Reload apache2"
-  when: ansible_lsb.major_release|int >= 8
+  when: ansible_facts['lsb']['major_release']|int >= 8
   tags:
     - "web"
     - "apache2"

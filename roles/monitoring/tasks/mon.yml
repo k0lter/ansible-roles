@@ -20,7 +20,7 @@
 
 - name: "Install mon configuration"
   ansible.builtin.template:
-    src: "mon/{{ ansible_hostname }}.conf.j2"
+    src: "mon/{{ ansible_facts['hostname'] }}.conf.j2"
     dest: "/etc/mon/mon.cf"
     owner: "root"
     group: "root"

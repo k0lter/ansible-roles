@@ -149,7 +149,7 @@ ServerActive={{ zabbix_remote_server }}
 # Default:
 # Hostname=
 
-Hostname={{ ansible_hostname }}
+Hostname={{ ansible_facts['hostname'] }}
 
 ### Option: HostnameItem
 #   Item used for generating Hostname if it is undefined. Ignored if Hostname is defined.

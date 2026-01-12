@@ -33,7 +33,7 @@
   community.general.alternatives:
     name: "iptables"
     path: "/usr/sbin/iptables-legacy"
-  when: ansible_lsb.major_release|int >= 10
+  when: ansible_facts['lsb']['major_release']|int >= 10
   notify:
     - "Apply firewall rules (ferm)"
   tags:

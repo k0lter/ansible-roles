@@ -11,9 +11,9 @@
 # is /etc/mailname.
 
 {% set compat_level = '0' %}
-{% if ansible_lsb.major_release|int >= 9 %}
+{% if ansible_facts['lsb']['major_release']|int >= 9 %}
 {% set compat_level = '3' %}
-{% if ansible_lsb.major_release|int >= 13 %}
+{% if ansible_facts['lsb']['major_release']|int >= 13 %}
 {% set compat_level = '3.10' %}
 {% endif %}
 # Compatibility level
@@ -49,10 +49,10 @@ smtpd_tls_dh1024_param_file = /etc/ssl/private/dh2048.pem
 smtpd_tls_cert_file = /etc/ssl/local/certs/{{ postfix_fqdn }}/cert.pem
 smtpd_tls_key_file = /etc/ssl/local/certs/{{ postfix_fqdn }}/privkey.pem
 smtpd_tls_CAfile = /etc/ssl/local/certs/{{ postfix_fqdn }}/fullchain.pem
-{% elif ssl_certs_auto_installed is defined and ssl_certs_auto_installed.stdout_lines is defined and ansible_fqdn in ssl_certs_auto_installed.stdout_lines %}
-smtpd_tls_cert_file = /etc/ssl/local/certs/{{ ansible_fqdn }}/cert.pem
-smtpd_tls_key_file = /etc/ssl/local/certs/{{ ansible_fqdn }}/privkey.pem
-smtpd_tls_CAfile = /etc/ssl/local/certs/{{ ansible_fqdn }}/fullchain.pem
+{% elif ssl_certs_auto_installed is defined and ssl_certs_auto_installed.stdout_lines is defined and ansible_facts['fqdn'] in ssl_certs_auto_installed.stdout_lines %}
+smtpd_tls_cert_file = /etc/ssl/local/certs/{{ ansible_facts['fqdn'] }}/cert.pem
+smtpd_tls_key_file = /etc/ssl/local/certs/{{ ansible_facts['fqdn'] }}/privkey.pem
+smtpd_tls_CAfile = /etc/ssl/local/certs/{{ ansible_facts['fqdn'] }}/fullchain.pem
 {% else %}
 smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
 smtpd_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
@@ -81,11 +81,11 @@ tls_medium_cipherlist = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA25
 {% if postfix_fqdn is defined %}
 myhostname = {{ postfix_fqdn }}
 {% else %}
-myhostname = {{ ansible_fqdn }}
+myhostname = {{ ansible_facts['fqdn'] }}
 {% endif %}
 myorigin = $myhostname
 mydomain = $myhostname
-mydestination = $myhostname {% if postfix_hostname is defined %}{{ postfix_hostname }}{% else %}{{ ansible_hostname }}{% endif %} localhost localhost.localdomain
+mydestination = $myhostname {% if postfix_hostname is defined %}{{ postfix_hostname }}{% else %}{{ ansible_facts['hostname'] }}{% endif %} localhost localhost.localdomain
 
 {% if smtp_relay_host is defined %}
 relayhost = {{ smtp_relay_host }}

@@ -131,7 +131,7 @@ ssh_allowed_users: []
 ssh_allowed_groups:
   - "root"
   - "operator"
-  - "{% if ansible_lsb.major_release | int >= 12 %}_{% endif %}ssh"
+  - "{% if ansible_facts['lsb']['major_release'] | int >= 12 %}_{% endif %}ssh"
 
 with_dnscache: false
 

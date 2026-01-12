@@ -400,7 +400,7 @@ catch_workers_output = yes
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 php_admin_flag[cgi.fix_pathinfo] = on
-{% if ansible_lsb.major_release|int < 8 %}
+{% if ansible_facts['lsb']['major_release']|int < 8 %}
 {% if php_local_config_web is defined %}
 {% set _dummy = php_config_web.update(php_local_config_web) %}
 {% endif %}

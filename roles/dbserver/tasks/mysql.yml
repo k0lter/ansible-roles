@@ -4,9 +4,9 @@
     pkg:
       - "mysql-server"
       - "mysql-client"
-      - 'python{{ ansible_python.version.major | replace("2", "") }}-mysqldb'
+      - 'python{{ ansible_facts["python"]["version"]["major"] | replace("2", "") }}-mysqldb'
     state: "present"
-  when: with_mysql|bool and ansible_lsb.major_release|int < 10
+  when: with_mysql|bool and ansible_facts['lsb']['major_release']|int < 10
   tags:
     - "mysql"
     - "sql"
@@ -16,9 +16,9 @@
     pkg:
       - "mariadb-server"
       - "mariadb-client"
-      - 'python{{ ansible_python.version.major | replace("2", "") }}-mysqldb'
+      - 'python{{ ansible_facts["python"]["version"]["major"] | replace("2", "") }}-mysqldb'
     state: "present"
-  when: with_mariadb|bool or (with_mysql|bool and ansible_lsb.major_release|int >= 10)
+  when: with_mariadb|bool or (with_mysql|bool and ansible_facts['lsb']['major_release']|int >= 10)
   tags:
     - "mysql"
     - "sql"

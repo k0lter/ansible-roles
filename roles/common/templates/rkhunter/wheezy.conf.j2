@@ -269,10 +269,10 @@ ALLOW_SSH_PROT_V1=0
 #
 ENABLE_TESTS="all"
 {% set disable_tests = [] %}
-{% if not ansible_virtualization_role is defined or ansible_virtualization_role != 'guest' %}
+{% if not ansible_facts['virtualization_role'] is defined or ansible_facts['virtualization_role'] != 'guest' %}
   {% if disable_tests.append('os_specific') %}{% endif %}
 {%- endif %}
-{% if not ansible_virtualization_role is defined or ansible_virtualization_role != 'host' %}
+{% if not ansible_facts['virtualization_role'] is defined or ansible_facts['virtualization_role'] != 'host' %}
     {% if disable_tests.append('promisc') %}{% endif %}
 {%- endif %}
 DISABLE_TESTS="suspscan hidden_procs deleted_files packet_cap_apps apps {{ disable_tests|join(' ') }}"

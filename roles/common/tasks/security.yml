@@ -28,7 +28,7 @@
     group: "root"
     mode: "0644"
   with_first_found:
-    - "apt/auto-upgrades.{{ ansible_lsb.codename }}.j2"
+    - "apt/auto-upgrades.{{ ansible_facts['lsb']['codename'] }}.j2"
     - "apt/auto-upgrades.j2"
   when: with_auto_upgrade|bool
   tags:
@@ -144,7 +144,7 @@
 
 - name: "Update rkhunter configuration"
   ansible.builtin.template:
-    src: "rkhunter/{{ ansible_lsb.codename }}.conf.j2"
+    src: "rkhunter/{{ ansible_facts['lsb']['codename'] }}.conf.j2"
     dest: "/etc/rkhunter.conf"
     owner: "root"
     group: "root"

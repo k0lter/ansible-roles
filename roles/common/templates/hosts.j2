@@ -5,11 +5,11 @@
 {% endif %}
 
 127.0.0.1 localhost.localdomain localhost
-{% if hosts_fqdn and ansible_default_ipv4.address is defined %}
-{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}
+{% if hosts_fqdn and ansible_facts['default_ipv4.address'] is defined %}
+{{ ansible_facts['default_ipv4.address'] }} {{ ansible_facts['fqdn'] }} {{ ansible_facts['hostname'] }}
 {% endif %}
-{% if hosts_fqdn and ansible_default_ipv6.address is defined %}
-{{ ansible_default_ipv6.address }} {{ ansible_fqdn }} {{ ansible_hostname }}
+{% if hosts_fqdn and ansible_facts['default_ipv6.address'] is defined %}
+{{ ansible_facts['default_ipv6.address'] }} {{ ansible_facts['fqdn'] }} {{ ansible_facts['hostname'] }}
 {% endif %}
 {% if hosts_static_lookup %}
 {% for h in hosts_static_lookup %}

@@ -182,10 +182,10 @@ http {
     # Diffie-Hellman parameter for DHE ciphersuites
     ssl_dhparam /etc/ssl/private/dh2048.pem;
 
-{% if http_ssl_strengthened and ansible_lsb.major_release|int >= 10 %}
+{% if http_ssl_strengthened and ansible_facts['lsb']['major_release']|int >= 10 %}
     ssl_protocols   TLSv1.3;
 {% else %}
-    ssl_protocols   TLSv1.2{%if ansible_lsb.major_release|int >= 10 %} TLSv1.3{% endif %};
+    ssl_protocols   TLSv1.2{%if ansible_facts['lsb']['major_release']|int >= 10 %} TLSv1.3{% endif %};
     ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
 {% endif %}
     ssl_prefer_server_ciphers  on;

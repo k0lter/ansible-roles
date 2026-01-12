@@ -9,7 +9,7 @@
 
 - name: "Install upstream apt repository for Ondrej Sury PHP Nginx packages"
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ {{ ansible_lsb.codename }} main"
+    repo: "deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ {{ ansible_facts['lsb']['codename'] }} main"
     filename: "nginx-sury"
     state: "present"
   when: with_nginx|bool and with_nginx_sury|bool

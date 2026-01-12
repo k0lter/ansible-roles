@@ -5,7 +5,7 @@
 {% endif %}
 
 types {
-{% if ansible_lsb.major_release|int <= 10 %}
+{% if ansible_facts['lsb']['major_release']|int <= 10 %}
     application/font-woff2              woff2;
 {% endif %}
     application/x-font-truetype         ttf;

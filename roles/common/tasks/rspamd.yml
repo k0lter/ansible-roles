@@ -11,7 +11,7 @@
 
 - name: "Install upstream apt repository for rspamd"
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] https://rspamd.com/apt-stable/ {{ ansible_lsb.codename }} main"
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.asc] https://rspamd.com/apt-stable/ {{ ansible_facts['lsb']['codename'] }} main"
     filename: "rspamd"
     state: "present"
   when: with_rspamd|bool and with_rspamd_upstream|bool

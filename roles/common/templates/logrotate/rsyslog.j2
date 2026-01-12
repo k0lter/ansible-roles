@@ -22,9 +22,9 @@
     delaycompress
     compress
     postrotate
-{% if ansible_lsb.codename == 'lenny' or ansible_lsb.codename == 'squeeze' %}
+{% if ansible_facts['lsb']['codename'] == 'lenny' or ansible_facts['lsb']['codename'] == 'squeeze' %}
         invoke-rc.d rsyslog reload > /dev/null
-{% elif ansible_lsb.codename == 'jessie' or ansible_lsb.codename == 'stretch' %}
+{% elif ansible_facts['lsb']['codename'] == 'jessie' or ansible_facts['lsb']['codename'] == 'stretch' %}
         invoke-rc.d rsyslog rotate > /dev/null
 {% else %}
         /usr/lib/rsyslog/rsyslog-rotate
@@ -48,9 +48,9 @@
     delaycompress
     sharedscripts
     postrotate
-{% if ansible_lsb.codename == 'lenny' or ansible_lsb.codename == 'squeeze' %}
+{% if ansible_facts['lsb']['codename'] == 'lenny' or ansible_facts['lsb']['codename'] == 'squeeze' %}
         invoke-rc.d rsyslog reload > /dev/null
-{% elif ansible_lsb.codename == 'jessie' or ansible_lsb.codename == 'stretch' %}
+{% elif ansible_facts['lsb']['codename'] == 'jessie' or ansible_facts['lsb']['codename'] == 'stretch' %}
         invoke-rc.d rsyslog rotate > /dev/null
 {% else %}
         /usr/lib/rsyslog/rsyslog-rotate

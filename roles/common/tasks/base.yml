@@ -72,13 +72,13 @@
 
 - name: "Write /etc/apt/sources.list"
   ansible.builtin.template:
-    src: "apt/sources.{{ ansible_lsb.codename }}.list.j2"
+    src: "apt/sources.{{ ansible_facts['lsb']['codename'] }}.list.j2"
     dest: "/etc/apt/sources.list"
     owner: "root"
     group: "root"
     mode: "0644"
   register: apt_sources
-  when: ansible_lsb.major_release|int <= 12
+  when: ansible_facts['lsb']['major_release']|int <= 12
   tags:
     - "apt"
     - "base"
@@ -91,7 +91,7 @@
     group: "root"
     mode: "0644"
   register: apt_sources
-  when: ansible_lsb.major_release|int >= 12
+  when: ansible_facts['lsb']['major_release']|int >= 12
   tags:
     - "apt"
     - "base"
@@ -126,12 +126,12 @@
   block:
     - name: "Remove Debian repository (without signed-by)"
       ansible.builtin.apt_repository:
-        repo: "deb {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}"
+        repo: "deb {{ item.uri }} {{ ansible_facts['lsb']['codename'] }} {{ item.sections }}"
         state: "absent"
       with_items: "{{ apt_repositories }}"
     - name: "Add Debian repository (with signed-by)"
       ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_lsb.codename }} {{ item.sections }}"
+        repo: "deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_facts['lsb']['codename'] }} {{ item.sections }}"
         filename: "{{ item.name }}"
         state: "present"
       with_items: "{{ apt_repositories }}"

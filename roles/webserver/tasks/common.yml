@@ -2,8 +2,8 @@
 - name: "Install Python passlib"
   ansible.builtin.apt:
     pkg:
-      - 'python{{ ansible_python.version.major | replace("2", "") }}-setuptools'
-      - 'python{{ ansible_python.version.major | replace("2", "") }}-passlib'
+      - 'python{{ ansible_facts["python"]["version"]["major"] | replace("2", "") }}-setuptools'
+      - 'python{{ ansible_facts["python"]["version"]["major"] | replace("2", "") }}-passlib'
     state: "present"
   tags:
     - "web"

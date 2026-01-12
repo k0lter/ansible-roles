@@ -8,6 +8,6 @@
     mode: "0644"
   notify:
     - "Load kernel modules for ftp server"
-  when: ansible_lsb.major_release|int >= 8
+  when: ansible_facts['lsb']['major_release']|int >= 8
   tags:
     - "ftp"

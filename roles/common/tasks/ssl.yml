@@ -131,7 +131,7 @@
   ansible.builtin.apt:
     pkg: "dehydrated"
     state: "present"
-    default_release: "{{ ansible_lsb.codename }}"
+    default_release: "{{ ansible_facts['lsb']['codename'] }}"
   when: ssl_certs_auto|length > 0
   tags:
     - "ssl"

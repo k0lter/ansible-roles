@@ -18,7 +18,7 @@
     mode: "0644"
   notify:
     - Restart ssh
-  when: with_ssh|bool and ansible_lsb.major_release|int <= 8
+  when: with_ssh|bool and ansible_facts['lsb']['major_release']|int <= 8
   tags:
     - "ssh"
 
@@ -31,20 +31,20 @@
     mode: "0644"
   notify:
     - Restart ssh
-  when: with_ssh|bool and ansible_lsb.major_release|int >= 9 and ansible_lsb.major_release|int <= 10
+  when: with_ssh|bool and ansible_facts['lsb']['major_release']|int >= 9 and ansible_facts['lsb']['major_release']|int <= 10
   tags:
     - "ssh"
 
 - name: "Install sshd default configuration (11 <= Debian <= 12)"
   ansible.builtin.template:
-    src: "ssh/sshd_config.{{ ansible_lsb.codename }}.j2"
+    src: "ssh/sshd_config.{{ ansible_facts['lsb']['codename'] }}.j2"
     dest: "/etc/ssh/sshd_config"
     owner: "root"
     group: "root"
     mode: "0644"
   notify:
     - Restart ssh
-  when: with_ssh|bool and ansible_lsb.major_release|int >= 11 and ansible_lsb.major_release|int <= 12
+  when: with_ssh|bool and ansible_facts['lsb']['major_release']|int >= 11 and ansible_facts['lsb']['major_release']|int <= 12
   tags:
     - "ssh"
 
@@ -57,7 +57,7 @@
     mode: "0644"
   notify:
     - Restart ssh
-  when: with_ssh|bool and ansible_lsb.major_release|int >= 11
+  when: with_ssh|bool and ansible_facts['lsb']['major_release']|int >= 11
   tags:
     - "ssh"
 

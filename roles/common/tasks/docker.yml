@@ -10,7 +10,7 @@
 
 - name: Install upstream apt repository for docker
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_facts['lsb']['codename'] }} stable"
     filename: docker
     state: present
   when: with_docker|bool and with_docker_upstream|bool
