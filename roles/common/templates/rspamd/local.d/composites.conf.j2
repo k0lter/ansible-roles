@@ -6,6 +6,11 @@
 #
 # Local Composites
 #
+
+{{ rspamd_multimap_prefix }}RELAYED_BY_MAILINBLACK {
+    description = "Email relayed via Mail In Black to an allowed recipient domain.";
+    expression = "({{ rspamd_multimap_prefix }}MAILINBLACK_IPS and {{ rspamd_multimap_prefix }}MAILINBLACK_DOMAIN)";
+    score = {{ rspamd_composite_score_mailinblack_relayed }};
 }
 
 {{ rspamd_multimap_prefix }}FREEMAIL_HARDFAIL_SPF_OR_DMARC {

@@ -7,6 +7,27 @@
 # Local Multimap settings
 #
 
+{{ rspamd_multimap_prefix }}MAILINBLACK_DOMAIN {
+  group = "Custom Rules";
+  description = "Domain incoming emails are relayed by Mail In Black.";
+  type = "rcpt";
+  filter = "email:domain";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/mailinblack_domains.inc"
+  ]
+  score = 0.0;
+}
+
+{{ rspamd_multimap_prefix }}MAILINBLACK_IPS {
+  group = "Custom Rules";
+  description = "Email is relayed through Mail In Black.";
+  type = "ip";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/mailinblack_ips.inc"
+  ]
+  score = 0.0;
+}
+
 {{ rspamd_multimap_prefix }}WHITELIST_ENVFROM {
   group = "Custom Rules";
   description = "Envelope sender address in sender whitelist.";

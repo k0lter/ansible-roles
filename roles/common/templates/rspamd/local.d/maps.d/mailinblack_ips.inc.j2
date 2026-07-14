@@ -1,0 +1,11 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Mail In Black IP blocks
+#
+{% for ipblock in rspamd_multimap_mailinblack_ips %}
+{{ ipblock }}
+{% endfor %}

@@ -1,0 +1,12 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Domains allowed to be relayed by Mail In Black
+#
+{% for domain in rspamd_multimap_mailinblack_domains %}
+{{ domain }}
+{% endfor %}
+
