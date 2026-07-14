@@ -31,7 +31,7 @@ events {
     # When you need > 8000 * cpu_cores connections, you start optimizing your OS,
     # and this is probably the point at where you hire people who are smarter than
     # you, as this is *a lot* of requests.
-worker_connections 4096;
+worker_connections {{ nginx_worker_connections }};
     # Event model to use
     use epoll;
 }
