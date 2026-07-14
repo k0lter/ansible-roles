@@ -1,0 +1,14 @@
+
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+geoip2 /var/lib/GeoIP/GeoLite2-Country.mmdb {
+    $geoip2_country_code country iso_code;
+}
+
+geoip2 /var/lib/GeoIP/GeoLite2-ASN.mmdb {
+    $geoip2_asn autonomous_system_number;
+    $geoip2_asn_name autonomous_system_organization;
+}

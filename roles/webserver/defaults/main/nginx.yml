@@ -13,6 +13,7 @@ nginx_security_xxssprotection: true
 nginx_security_xcontenttypeoptions: true
 nginx_fpm_openbasedir_enforced: false
 nginx_logfmt_json: false
+nginx_geoip: false
 
 selfvhost_nginx_enabled: true
 phpmyadmin_nginx_enabled: true
