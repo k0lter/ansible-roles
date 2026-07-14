@@ -7,14 +7,31 @@
 # Protect hidden files and directories
 #
 
+# All hidden files except .well-known
 location ~* (?:^|/)\.(?!well-known) {
     return 404;
 }
 
-location ~* (?:\.(?:bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)|~)$ {
+# Sensible extensions
+location ~* (?:\.(?:bak|config(\.js)?|sqlite|sql(\..+)?|fla|psd|xd|ini|log|sh|inc|swp|dist|env|key|pem|crt)|~)$ {
     return 404;
 }
 
-location ~* /(?:composer\.(?:lock|json)|docker-compose\.yml|Dockerfile)$ {
+# Sensible paths
+location ~* (^|/)(backups?)/ {
+    return 404;
+}
+
+# Sensible files
+location ~* (^|/)(Dockerfile|README|ARCHITECTURE|DEPLOYMENT|DESIGN)\.md$ {
+    return 404;
+}
+location ~* (^|/)(Pipfile|Gemfile|composer|yarn|package(-lock)?|pnpm-lock|uv)\.(lock|json)$ {
+    return 404;
+}
+location ~* (^|/)(database|secrets|parameters|docker-compose|moon)\.ya?ml$ {
+    return 404;
+}
+location ~* (^|/)(credentials|pyproject\.toml)$ {
     return 404;
 }
