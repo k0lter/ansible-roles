@@ -6,17 +6,16 @@
 #
 # Local Composites
 #
-FREEMAIL_HARDFAIL_SPF {
-    expression = "(FREEMAIL_FROM or FREEMAIL_ENVFROM) and R_SPF_FAIL";
-    score = 25.0;
 }
 
-FREEMAIL_SOFTFAIL_SPF {
-    expression = "(FREEMAIL_FROM or FREEMAIL_ENVFROM) and R_SPF_SOFTFAIL";
-    score = 15.0;
+{{ rspamd_multimap_prefix }}FREEMAIL_HARDFAIL_SPF_OR_DMARC {
+    description = "Email from free mail provider with SPF or DKIM hard fail.";
+    expression = "(not {{ rspamd_multimap_prefix }}RELAYED_BY_MAILINBLACK) and (FREEMAIL_FROM or FREEMAIL_ENVFROM) and (R_SPF_FAIL or DMARC_POLICY_REJECT or DMARC_POLICY_QUARANTINE)";
+    score = {{ rspamd_composite_score_freemail_hardfail_spfdmarc }};
 }
 
-FREEMAIL_SOFTFAIL_DMARC {
-    expression = "(FREEMAIL_FROM or FREEMAIL_ENVFROM) and DMARC_POLICY_SOFTFAIL";
-    score = 15.0;
+{{ rspamd_multimap_prefix }}FREEMAIL_SOFTFAIL_SPF_OR_DMARC {
+    description = "Email from free mail provider with SPF or DKIM soft fail.";
+    expression = "(not {{ rspamd_multimap_prefix }}RELAYED_BY_MAILINBLACK) and (FREEMAIL_FROM or FREEMAIL_ENVFROM) and (R_SPF_SOFTFAIL or DMARC_POLICY_SOFTFAIL)";
+    score = {{ rspamd_composite_score_freemail_softfail_spfdmarc }};
 }

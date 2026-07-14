@@ -105,6 +105,8 @@ rspamd_multimap_score_blacklist_from: 20.0
 rspamd_multimap_score_blacklist_from_domain: 20.0
 rspamd_multimap_score_spammy_body: 1.0
 rspamd_multimap_score_check_headers: 1.0
+rspamd_composite_score_freemail_hardfail_spfdmarc: 25.0
+rspamd_composite_score_freemail_softfail_spfdmarc: 15.0
 rspamd_whitelist: true
 rspamd_whitelist_dmarc: []
 rspamd_whitelist_spfdkim: []
