@@ -117,30 +117,39 @@
     - "apt"
     - "base"
 
-- name: "Add apt sources for custom Debian repositories"
+- name: 'Remove Debian repository (without signed-by)'
+  apt_repository:
+    repo: "deb {{ item.uri }} {{ ansible_facts['lsb']['codename'] }} {{ item.sections }}"
+    state: 'absent'
+  with_items: '{{ apt_repositories }}'
   when: apt_repositories|length > 0
   tags:
     - "apt"
     - "base"
 
-  block:
-    - name: "Remove Debian repository (without signed-by)"
-      ansible.builtin.apt_repository:
-        repo: "deb {{ item.uri }} {{ ansible_facts['lsb']['codename'] }} {{ item.sections }}"
-        state: "absent"
-      with_items: "{{ apt_repositories }}"
-    - name: "Add Debian repository (with signed-by)"
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_facts['lsb']['codename'] }} {{ item.sections }}"
-        filename: "{{ item.name }}"
-        state: "present"
-      with_items: "{{ apt_repositories }}"
-- name: "Remove old format apt key for custom Debian repositories"
-  ansible.builtin.apt_key:
-    id: "{{ item.id }}"
-    state: "absent"
-  with_items: "{{ apt_keys }}"
-  when: apt_keys|length > 0
+- name: 'Add or remove Debian repository (old format) (with signed-by)'
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/{{ item.name }}.asc] {{ item.uri }} {{ ansible_facts['lsb']['codename'] }} {{ item.sections }}"
+    filename: '{{ item.name }}'
+    state: 'absent'
+  with_items: '{{ apt_repositories }}'
+  when: apt_repositories|length > 0 and ansible_facts['lsb']['major_release']|int >= 12
+  tags:
+    - "apt"
+    - "base"
+
+- name: 'Add Debian repository (new Deb822 format)'
+  deb822_repository:
+    name: '{{ item.name }}'
+    types: 'deb'
+    uris: '{{ item.uri }}'
+    suites: "{{ ansible_facts['lsb']['codename'] }}"
+    components: '{{ item.sections }}'
+    signed_by: '/etc/apt/keyrings/{{ item.name }}.asc'
+    state: 'present'
+    install_python_debian: true
+  with_items: '{{ apt_repositories }}'
+  when: apt_repositories|length > 0 and ansible_facts['lsb']['major_release']|int >= 12
   tags:
     - "apt"
     - "base"
@@ -176,6 +185,8 @@
       - "file"
       - "zstd"
       - "kitty-terminfo"
+      - "python3-debian"
+      - "python3-setuptools"
     install_recommends: "no"
     state: "present"
   when: with_base_packages
@@ -196,6 +207,7 @@
     pkg: "{{ apt_additional_packages_local }}"
     install_recommends: "no"
     state: "present"
+    update_cache: true
   when: apt_additional_packages_local|length > 0
   tags:
     - "base"
