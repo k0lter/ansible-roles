@@ -12,7 +12,7 @@
   when: with_apache2|bool
   tags:
     - "web"
-    - "apache2"
+    - "nginx"
 
 - name: "Importing PHP tasks"
   ansible.builtin.import_tasks: nginx.yml

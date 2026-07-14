@@ -1,7 +1,7 @@
 ---
 - name: "Detect Nginx version"
   ansible.builtin.shell:
-    cmd: set -o pipefail && apt policy nginx 2>/dev/null | sed -En 's/^\s*Candidate:\s*(.+)$/\1/p'
+    cmd: set -o pipefail && apt policy nginx 2>/dev/null | sed -En 's/^\s*Candidate:\s*([0-9\.]+).+$/\1/p'
     executable: /bin/bash
   register: nginx_version
   check_mode: false
@@ -13,7 +13,7 @@
 
 - name: "Detect if Nginx supports http/3"
   ansible.builtin.set_fact:
-    with_http3: nginx_version.stdout_lines|first is version('1.25', '>='
+    with_http3: "{{ nginx_version.stdout is version('1.25', '>=') | bool }}"
   when: with_nginx|bool and with_http3 is not defined
   tags:
     - "web"
