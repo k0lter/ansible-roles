@@ -1,0 +1,17 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+--
+--  {{ ansible_controlled }}
+--
+{% endif %}
+
+--
+-- Add symbol for emails received via authenticated SMTP
+-- 
+rspamd_config.{{ rspamd_multimap_prefix }}SMTP_AUTH = {
+    score = -0.1,
+    description = 'Email received via authenticated SMTP',
+    callback = function(task)
+        local user = task:get_user()
+        return user and user ~= ''
+    end,
+}

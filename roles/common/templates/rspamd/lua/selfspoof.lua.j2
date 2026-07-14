@@ -1,0 +1,39 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+--
+--  {{ ansible_controlled }}
+--
+{% endif %}
+--
+-- Avoid reject for self-spoofed unauthenticated messages
+--
+
+local rspamd_logger = require "rspamd_logger"
+local action_to_filter = "reject"
+local action_after_spoofing = "rewrite subject"
+
+rspamd_config:register_symbol({
+    name = "{{ rspamd_multimap_prefix }}SELF_SPOOFING",
+    type = "postfilter",
+    priority = 1000,
+    description = "Avoid reject for self-spoofed unauthenticated messages",
+
+    callback = function(task)
+        local user = task:get_user()
+        local authenticated = user and user ~= ""
+
+        local action = task:get_metric_action()
+
+        if not authenticated
+            and action == action_to_filter
+            and task:has_symbol("FROM_EQ_ENVFROM") then
+
+            rspamd_logger.infox(task,
+                "Self spoofing detected, changing action '%s' to '%s'",
+                action,
+                action_after_spoofing
+            )
+
+            task:set_pre_result(action_after_spoofing, "Self spoofing detected")
+        end
+    end,
+})

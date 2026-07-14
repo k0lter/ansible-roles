@@ -39,6 +39,7 @@
     mode: "0755"
   with_items:
     - 'local.d/maps.d'
+    - 'lua.local.d'
   tags:
     - "rspamd"
     - "rspamd-rules"
@@ -138,8 +139,23 @@
     - "rspamd"
     - "rspamd-rules"
 
+- name: 'Install custom lua scripts'
 - name: "Install Web Interface virtual host for Nginx (sites-available)"
   ansible.builtin.template:
+    src: 'rspamd/lua/{{ item }}.lua.j2'
+    dest: '/etc/rspamd/lua.local.d/{{ item }}.lua'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'authenticated'
+    - 'selfspoof'
+  when: with_rspamd|bool and rspamd_lua_rules|bool
+  notify:
+    - 'Restart rspamd'
+  tags:
+    - 'rspamd'
+    - 'rspamd-rules'
     src: "rspamd/nginx/rspamd_vhost.j2"
     dest: "/etc/nginx/sites-available/rspamd"
     owner: "root"
