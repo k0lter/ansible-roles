@@ -7,6 +7,16 @@
 # Local Multimap settings
 #
 
+{{ rspamd_multimap_prefix }}UNTRUSTED_COUNTRY {
+  group = "Custom Rules";
+  description = "Country associated to ASN sender IP is not fully trusted.";
+  type = "country";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/untrusted_countries.inc"
+  ];
+  score = {{ rspamd_multimap_score_untrusted_country }};
+}
+
 {{ rspamd_multimap_prefix }}MAILINBLACK_DOMAIN {
   group = "Custom Rules";
   description = "Domain incoming emails are relayed by Mail In Black.";

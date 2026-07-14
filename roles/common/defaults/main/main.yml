@@ -104,6 +104,7 @@ rspamd_multimap_mailinblack_ips:
   - '185.209.210.0/24'
   - '185.209.211.0/24'
 rspamd_multimap_mailinblack_domains: []
+rspamd_multimap_untrusted_countries: []
 rspamd_multimap_score_whitelist_envfrom: -9.0
 rspamd_multimap_score_whitelist_envfrom_domain: -9.0
 rspamd_multimap_score_whitelist_from: -2.2
@@ -112,6 +113,7 @@ rspamd_multimap_score_blacklist_from: 20.0
 rspamd_multimap_score_blacklist_from_domain: 20.0
 rspamd_multimap_score_spammy_body: 1.0
 rspamd_multimap_score_check_headers: 1.0
+rspamd_multimap_score_untrusted_country: 3.0
 rspamd_composite_score_freemail_hardfail_spfdmarc: 25.0
 rspamd_composite_score_freemail_softfail_spfdmarc: 15.0
 rspamd_composite_score_mailinblack_relayed: -5.0

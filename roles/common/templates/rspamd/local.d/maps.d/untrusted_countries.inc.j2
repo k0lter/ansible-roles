@@ -1,0 +1,12 @@
+{% if ansible_controlled is defined and ansible_controlled != "" %}
+#
+# {{ ansible_controlled }}
+#
+{% endif %}
+#
+# Country code of untrusted countries
+#
+{% for country_code in rspamd_multimap_untrusted_countries %}
+{{ country_code }}
+{% endfor %}
+
