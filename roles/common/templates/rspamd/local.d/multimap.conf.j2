@@ -69,7 +69,7 @@
   selector = "from('smtp'):domain";
   regexp = "true";
   map = [
-    "$LOCAL_CONFDIR/local.dmaps.d/whitelist_sender_domain.inc"
+    "$LOCAL_CONFDIR/local.d/maps.d/whitelist_sender_domain.inc"
   ];
   score = {{ rspamd_multimap_score_whitelist_envfrom_domain }};
 }

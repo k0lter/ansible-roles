@@ -38,7 +38,7 @@
     group: "root"
     mode: "0755"
   with_items:
-    - "local.d/maps.d"
+    - 'local.d/maps.d'
   tags:
     - "rspamd"
     - "rspamd-rules"
@@ -51,42 +51,42 @@
     group: "root"
     mode: "0644"
   with_items:
-    - src: "rspamd/local.d/composites.conf.j2"
-      dest: "/etc/rspamd/local.d/composites.conf"
-      installed: "{{ rspamd_composites }}"
-    - src: "rspamd/local.d/actions.conf.j2"
-      dest: "/etc/rspamd/local.d/actions.conf"
-      installed: "{{ rspamd_actions }}"
-    - src: "rspamd/local.d/multimap.conf.j2"
-      dest: "/etc/rspamd/local.d/multimap.conf"
-      installed: "{{ rspamd_multimap }}"
-    - src: "rspamd/local.d/regexp.conf.j2"
-      dest: "/etc/rspamd/local.d/regexp.conf"
-      installed: "{{ rspamd_regexp }}"
-    - src: "rspamd/local.d/external_relay.conf.j2"
-      dest: "/etc/rspamd/local.d/external_relay.conf"
-      installed: "{{ rspamd_external_relay | length > 0 }}"
-    - src: "rspamd/local.d/maps.d/external_relay_hostname.map.j2"
-      dest: "/etc/rspamd/local.d/maps.d/external_relay_hostname.map"
-      installed: "{{ rspamd_external_relay | length > 0 }}"
-    - src: "rspamd/local.d/history_redis.conf.j2"
-      dest: "/etc/rspamd/local.d/history_redis.conf"
-      installed: "{{ rspamd_redis_history }}"
-    - src: "rspamd/override.d/rbl_group.conf.j2"
-      dest: "/etc/rspamd/override.d/rbl_group.conf"
-      installed: "{{ rspamd_rbl_group }}"
-    - src: "rspamd/override.d/surbl_group.conf.j2"
-      dest: "/etc/rspamd/override.d/surbl_group.conf"
-      installed: "{{ rspamd_surbl_group }}"
-    - src: "rspamd/local.d/maps.d/dmarc_whitelist.inc.j2"
-      dest: "/etc/rspamd/local.d/maps.d/dmarc_whitelist.inc.local"
-      installed: "{{ rspamd_whitelist }}"
-    - src: "rspamd/local.d/maps.d/spf_dkim_whitelist.inc.j2"
-      dest: "/etc/rspamd/local.d/maps.d/spf_dkim_whitelist.inc.local"
-      installed: "{{ rspamd_whitelist }}"
-    - src: "rspamd/local.d/metrics.conf.j2"
-      dest: "/etc/rspamd/local.d/metrics.conf"
-      installed: "{{ rspamd_metrics != {} }}"
+    - src: 'rspamd/local.d/composites.conf.j2'
+      dest: '/etc/rspamd/local.d/composites.conf'
+      installed: '{{ rspamd_composites }}'
+    - src: 'rspamd/local.d/actions.conf.j2'
+      dest: '/etc/rspamd/local.d/actions.conf'
+      installed: '{{ rspamd_actions }}'
+    - src: 'rspamd/local.d/multimap.conf.j2'
+      dest: '/etc/rspamd/local.d/multimap.conf'
+      installed: '{{ rspamd_multimap }}'
+    - src: 'rspamd/local.d/regexp.conf.j2'
+      dest: '/etc/rspamd/local.d/regexp.conf'
+      installed: '{{ rspamd_regexp }}'
+    - src: 'rspamd/local.d/external_relay.conf.j2'
+      dest: '/etc/rspamd/local.d/external_relay.conf'
+      installed: '{{ rspamd_external_relay|length > 0 }}'
+    - src: 'rspamd/local.d/maps.d/external_relay_hostname.map.j2'
+      dest: '/etc/rspamd/local.d/maps.d/external_relay_hostname.map'
+      installed: '{{ rspamd_external_relay|length > 0 }}'
+    - src: 'rspamd/local.d/history_redis.conf.j2'
+      dest: '/etc/rspamd/local.d/history_redis.conf'
+      installed: '{{ rspamd_redis_history }}'
+    - src: 'rspamd/override.d/rbl_group.conf.j2'
+      dest: '/etc/rspamd/override.d/rbl_group.conf'
+      installed: '{{ rspamd_rbl_group }}'
+    - src: 'rspamd/override.d/surbl_group.conf.j2'
+      dest: '/etc/rspamd/override.d/surbl_group.conf'
+      installed: '{{ rspamd_surbl_group }}'
+    - src: 'rspamd/local.d/maps.d/dmarc_whitelist.inc.j2'
+      dest: '/etc/rspamd/local.d/maps.d/dmarc_whitelist.inc.local'
+      installed: '{{ rspamd_whitelist }}'
+    - src: 'rspamd/local.d/maps.d/spf_dkim_whitelist.inc.j2'
+      dest: '/etc/rspamd/local.d/maps.d/spf_dkim_whitelist.inc.local'
+      installed: '{{ rspamd_whitelist }}'
+    - src: 'rspamd/local.d/metrics.conf.j2'
+      dest: '/etc/rspamd/local.d/metrics.conf'
+      installed: '{{ rspamd_metrics|length > 0 }}'
   when: with_rspamd|bool and item.installed|bool
   notify:
     - "Restart rspamd"
@@ -113,20 +113,24 @@
     - "rspamd"
     - "rspamd-rules"
 
-- name: "Check if rspamd default and empty local maps have already been installed"
+- name: 'Check if rspamd default and empty local maps have already been installed'
   ansible.builtin.template:
-    src: "rspamd/local.d/maps.d/{{ item }}.j2"
-    dest: "/etc/rspamd/local.d/maps.d/{{ item }}"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+    src: 'rspamd/local.d/maps.d/{{ item }}.inc.j2'
+    dest: '/etc/rspamd/local.d/maps.d/{{ item }}.inc'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   with_items:
-    - "body_spammy.inc"
-    - "headers_spammy.inc"
-    - "whitelist_sender.inc"
-    - "whitelist_sender_domain.inc"
-    - "blacklist_sender.inc"
-    - "blacklist_sender_domain.inc"
+    - 'body_spammy'
+    - 'headers_spammy'
+    - 'whitelist_sender'
+    - 'whitelist_sender_domain'
+    - 'blacklist_sender'
+    - 'blacklist_sender_domain'
+    - 'mailinblack_ips'
+    - 'mailinblack_domains'
+    - 'untrusted_countries'
+    - 'local_domains'
   when: with_rspamd|bool and rspamd_multimap
   notify:
     - "Restart rspamd"
