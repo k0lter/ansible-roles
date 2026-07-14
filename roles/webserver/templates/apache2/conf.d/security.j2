@@ -85,8 +85,8 @@ TraceEnable Off
 #
 # Examples:
 #
-RedirectMatch 404 (\.svn|\.git|composer\.(lock|json)|docker-compose\.yml|Dockerfile)
-RedirectMatch 404 \.(bak|config|sql|sql\..+|fla|psd|xd|ini|log|sh|inc|swp|dist|env)$
+RedirectMatch 404 (?i)(~$|/(backups?)/|/\.(bash|zsh|svn|git)|\b(Pipfile|Gemfile|composer|yarn|package(-lock)?|pnpm-lock|uv)\.(lock|json)\b|\b(database|secrets|parameters|docker-compose|moon)\.ya?ml\b|\bDockerfile\b|\b(README|ARCHITECTURE|DEPLOYMENT|DESIGN)\.md\b|\b(credentials|pyproject\.toml)\b)
+RedirectMatch 404 (?i)\.(bak|config(\.js)?|sqlite|sql(\..+)?|fla|psd|xd|ini|log|sh|inc|swp|dist|env|key|pem|crt)$
 
 #
 # Setting this header will prevent MSIE from interpreting files as something
