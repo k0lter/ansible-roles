@@ -29,7 +29,7 @@
 </VirtualHost>
 {% if selfvhost_ssl and ssl_certs_auto_installed.stdout_lines is defined and selfvhost_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
-<VirtualHost {%if selfvhost_vhostip %}{{ selfvhost_vhostip }}{% else %}*{% endif %}:{%if selfvhost_vhostport %}{{ selfvhost_vhostport }}{% else %}443{% endif %}>
+<VirtualHost {%if selfvhost_vhostip %}{{ selfvhost_vhostip }}{% else %}*{% endif %}:{{ selfvhost_vhostport_ssl }}>
     ServerName {{ selfvhost_vhostname }}
 
     <IfModule http2_module>

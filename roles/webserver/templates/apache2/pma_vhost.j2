@@ -64,7 +64,7 @@
 </VirtualHost>
 {% if phpmyadmin_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpmyadmin_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
-<VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{%if phpmyadmin_vhostport %}{{ phpmyadmin_vhostport }}{% else %}443{% endif %}>
+<VirtualHost {%if phpmyadmin_vhostip %}{{ phpmyadmin_vhostip }}{% else %}*{% endif %}:{{ selfvhost_vhostport_ssl }}>
     ServerName {{ phpmyadmin_vhostname }}
 
     <IfModule http2_module>

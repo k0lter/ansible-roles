@@ -55,7 +55,7 @@ server {
 {% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
 server {
-    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{{ phpsyscheck_vhostporti_ssl }} ssl;
+    listen {% if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}:{% endif %}{{ phpsyscheck_vhostport_ssl }} ssl;
 {% if phpsyscheck_vhostip6 %}
     listen {% if phpsyscheck_vhostip6 %}{{ phpsyscheck_vhostip6 }}:{% endif %}{{ phpsyscheck_vhostport_ssl }} ssl;
 {% endif %}

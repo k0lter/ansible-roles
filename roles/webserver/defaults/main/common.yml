@@ -17,6 +17,7 @@ selfvhost_vhostip6:
 selfvhost_vhostport: 80
 selfvhost_vhostport_ssl: 443
 selfvhost_ssl: false
+selfvhost_ssl_auto: true
 
 with_phpmyadmin: false
 phpmyadmin_rootdir: "/usr/share/phpmyadmin"

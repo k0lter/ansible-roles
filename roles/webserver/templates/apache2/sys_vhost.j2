@@ -52,7 +52,7 @@
 </VirtualHost>
 {% if phpsyscheck_ssl and ssl_certs_auto_installed.stdout_lines is defined and phpsyscheck_vhostname in ssl_certs_auto_installed.stdout_lines %}
 
-<VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{%if phpsyscheck_vhostport %}{{ phpsyscheck_vhostport }}{% else %}443{% endif %}>
+<VirtualHost {%if phpsyscheck_vhostip %}{{ phpsyscheck_vhostip }}{% else %}*{% endif %}:{{ selfvhost_vhostport_ssl }}>
     ServerName {{ phpsyscheck_vhostname }}
 
     <IfModule http2_module>

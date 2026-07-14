@@ -274,6 +274,17 @@
     - "web"
     - "nginx"
 
+- name: "Remove Nginx default vhost when Self virtual vhost is default"
+  ansible.builtin.file:
+    path: '/etc/nginx/sites-enabled/default'
+    state: 'absent'
+  notify:
+    - "Reload nginx"
+  when: with_selfvhost|bool and selfvhost_isdefault|bool and selfvhost_nginx_enabled|bool
+  tags:
+    - "web"
+    - "nginx"
+
 - name: "Install Self virtual host for nginx (sites-available)"
   ansible.builtin.template:
     src: "nginx/self_vhost.j2"
