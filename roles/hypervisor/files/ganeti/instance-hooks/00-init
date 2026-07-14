@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# {{{ init
+init() {
+    echo "[INFO] dumping environment variables"
+    env
+}
+# }}}
+
+# {{{ main
+init
+exit 0
+# }}}
+
+# vim: foldmethod=marker foldlevel=0 foldenable

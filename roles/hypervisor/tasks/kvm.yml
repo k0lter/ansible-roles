@@ -1,0 +1,14 @@
+---
+- name: "Install KVM related packages"
+  ansible.builtin.apt:
+    pkg:
+      - "qemu-system-x86"
+      - "qemu-utils"
+      - "bridge-utils"
+      - "debootstrap"
+      - "irqbalance"
+    install_recommends: "no"
+    state: "present"
+  tags:
+    - "hypervisor"
+    - "kvm"

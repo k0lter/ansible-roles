@@ -3,14 +3,13 @@
 # Default variables for hypervisors
 #
 
+with_kvm: false
+
 with_xen: false
 # dom0 memory amount in MB
 xendom0_mem: 1024
 # dom0 vcpus count
 xendom0_vcpus: 1
-
 xen_grub_opts: ""
 
 with_ganeti: false
-
-# vim: ft=yaml.ansible

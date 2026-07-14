@@ -1,4 +1,11 @@
 ---
+- name: "Importing KVM tasks"
+  ansible.builtin.import_tasks: "kvm.yml"
+  when: with_kvm|bool
+  tags:
+    - "hypervisor"
+    - "kvm"
+
 - name: "Importing Xen tasks"
   ansible.builtin.import_tasks: "xen.yml"
   when: with_xen|bool

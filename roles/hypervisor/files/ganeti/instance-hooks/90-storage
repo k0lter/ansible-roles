@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# {{{ storage_setup
+storage_setup() {
+    mkdir -p "${TARGET}/etc"
+    if [ -n "${DISK_COUNT}" ] && [ ${DISK_COUNT} -gt 1 ] && [ -n "${DISK_1_PATH}" ]; then
+        echo "[INFO] Creating and enabling swap partition"
+        swap_dev="${DISK_1_PATH}"
+        mkswap "${swap_dev}"
+        swap_uuid="$(blkid "${swap_dev}" -o value -s UUID)"
+cat << EOF >> "${TARGET}/etc/fstab"
+UUID=${swap_uuid}   none            swap    defaults        0       0
+EOF
+    fi
+}
+# }}}
+
+# {{{ main
+if [ -z "${TARGET}" -o ! -d "${TARGET}" ]; then
+    echo "[ERR] Instance bootstrap hook: missing target directory, aborting." 1>&2
+    exit 1
+fi
+
+if [ "$(mountpoint -d /)" = "$(mountpoint -d "${TARGET}")" ]; then
+    echo "[ERR] The target directory seems to be the root dir, aborting." 1>&2
+    exit 1
+fi
+
+storage_setup
+
+exit 0
+# }}}
+
+# vim: foldmethod=marker foldlevel=0 foldenable

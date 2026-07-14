@@ -6,6 +6,7 @@
       - "grub-xen-host"
       - "bridge-utils"
       - "debootstrap"
+      - "irqbalance"
     install_recommends: "no"
     state: "present"
   tags:

@@ -49,6 +49,22 @@
     - "hypervisor"
     - "ganeti"
 
+- name: "Install ganeti instance-debootstrap hooks"
+  ansible.builtin.copy:
+    src: "ganeti/instance-hooks/{{ item }}"
+    dest: "/etc/ganeti/instance-debootstrap/hooks/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  with_items:
+    - "00-init"
+    - "10-packages"
+    - "60-grub"
+    - "90-storage"
+  tags:
+    - "hypervisor"
+    - "ganeti"
+
 - name: "Exclude DRBD devices from lvm devices while using ganeti"
   ansible.builtin.blockinfile:
     dest: "/etc/lvm/lvm.conf"

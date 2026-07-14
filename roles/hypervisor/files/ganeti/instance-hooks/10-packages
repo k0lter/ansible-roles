@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# {{{ Variables
+APT_OPTS="-qq --yes --no-install-recommends -o 'Apt::Cmd::Disable-Script-Warning=true' -o 'Dpkg::Use-Pty=0'"
+
+PKG_COMMON="linux-image-amd64 gnupg openssh-server python3-apt python3-debian lsb-release gnupg net-tools"
+PKG_XEN="grub2-common"
+PKG_KVM="acpi-support-base udev qemu-guest-agent systemd-timesyncd"
+# }}}
+
+# {{{ setup_openssh
+setup_openssh() {
+    echo "[INFO] Configuring additionnal SSH port (45022)"
+    if [ -f "${TARGET}/etc/ssh/sshd_config" ]; then
+        sed -i -r 's/^#?Port .*$/Port 45022/' "${TARGET}/etc/ssh/sshd_config"
+    fi
+}
+# }}}
+
+# {{{ install_packages
+install_packages() {
+    echo "[INFO] Installing additionnal packages (${HYPERVISOR})"
+
+    PACKAGES="${PKG_COMMON}"
+    if [ "${HYPERVISOR}" = "xen-pvm" ] || [ "${HYPERVISOR}" = "xen-hvm" ]; then
+        PACKAGES="${PACKAGES} ${PKG_XEN}"
+    elif [ "${HYPERVISOR}" = "kvm" ]; then
+        PACKAGES="${PACKAGES} ${PKG_KVM}"
+    fi
+
+    export DEBIAN_FRONTEND="noninteractive"
+    chroot "${TARGET}" apt ${APT_OPTS} install ${PACKAGES}
+    chroot "${TARGET}" apt clean
+}
+# }}}
+
+ # {{{ main
+if [ -z "${TARGET}" -o ! -d "${TARGET}" ]; then
+    echo "[ERR] Instance bootstrap hook: missing target directory" 1>&2
+    exit 1
+fi
+
+if [ "$(mountpoint -d /)" = "$(mountpoint -d "${TARGET}")" ]; then
+    echo "[ERR] The target directory seems to be the root dir, aborting." 1>&2
+    exit 1
+fi
+
+install_packages
+setup_openssh
+
+exit 0
+# }}}
+
+# vim: foldmethod=marker foldlevel=0 foldenable
