@@ -6,5 +6,23 @@
 
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
+
 Unattended-Upgrade::Mail "root";
-//Unattended-Upgrade::MailOnlyOnError "true";
+Unattended-Upgrade::MailReport "only-on-error";
+
+// Automatically upgrade packages from these origin patterns
+Unattended-Upgrade::Origins-Pattern {
+    // Archive or Suite based matching:
+    // Note that this will silently match a different release after
+    // migration to the specified archive (e.g. testing becomes the
+    // new stable).
+    "o=Debian,a={{ ansible_facts['lsb']['codename'] }}";
+    "o=Debian,a={{ ansible_facts['lsb']['codename'] }}-updates";
+//  "o=Debian,a={{ ansible_facts['lsb']['codename'] }}-proposed-updates";
+    "origin=Debian,archive={{ ansible_facts['lsb']['codename'] }},label=Debian-Security";
+{% if auto_upgrade_additional_patterns %}
+{% for pattern in auto_upgrade_additional_patterns %}
+    "{{ pattern }}";
+{% endfor %}
+{% endif %}
+};
