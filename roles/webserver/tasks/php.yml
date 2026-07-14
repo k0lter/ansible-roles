@@ -1,18 +1,23 @@
 ---
+- name: "Gather packages facts for PHP sury if required"
+  ansible.builtin.package_facts:
+    manager: auto
+  when: with_php|bool and with_php_sury|bool and ansible_facts.packages is not defined
+  tags:
+    - "web"
+    - "php"
+    - "phpsury"
+
 - name: "Install upstream keyring package for Ondrej Sury PHP packages"
   ansible.builtin.apt:
     deb: "https://packages.sury.org/debsuryorg-archive-keyring.deb"
-  when: with_php|bool and with_php_sury|bool and 'debsuryorg-archive-keyring' not in ansible_facts.packages
+  when: with_php|bool and with_php_sury|bool and ('debsuryorg-archive-keyring' not in ansible_facts.packages or ansible_facts.packages['debsuryorg-archive-keyring'][0].version is version('2025.11.18', '<'))
   tags:
     - "web"
     - "php"
+    - "phpsury"
 
 - name: "Install upstream apt repository for Ondrej Sury PHP packages"
-  when: with_php|bool and with_php_sury|bool
-  tags:
-    - "web"
-    - "php"
-
   block:
     - name: "Remove upstream apt repository for Ondrej Sury PHP packages (old format)"
       ansible.builtin.apt_repository:
@@ -24,6 +29,12 @@
         repo: "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ {{ ansible_facts['lsb']['codename'] }} main"
         filename: "php-sury"
         state: "present"
+  when: with_php|bool and with_php_sury|bool
+  tags:
+    - "web"
+    - "php"
+    - "phpsury"
+
 - name: "Install common PHP dependencies PHP5"
   ansible.builtin.apt:
     pkg:
