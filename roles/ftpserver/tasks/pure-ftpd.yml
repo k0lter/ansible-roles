@@ -21,15 +21,7 @@
       line: "{% if ftp_tls_only %}3{% else %}2{% endif %}"
     - dest: "TLSCipherSuite"
       regexp: "^.*$"
-      line: >-
-        ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:
-        ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:
-        DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:
-        ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:
-        ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:
-        ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:
-        DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:
-        !aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK:!SSLv3:!SSLv2:!TLSv1
+      line: ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK:!SSLv3:!SSLv2:!TLSv1
   notify:
     - "Restart pure-ftpd"
   when: with_ftp_tls|bool
@@ -44,7 +36,7 @@
     state: "link"
   notify:
     - "Restart pure-ftpd"
-  when: with_ftp_tls|bool and ftp_tls_domain
+  when: with_ftp_tls|bool and ftp_tls_domain|length > 0
   tags:
     - "ftp"
     - "pure-ftpd"
@@ -71,31 +63,31 @@
   with_items:
     - dest: "BrokenClientsCompatibility"
       regexp: "^(yes|no)"
-      line: "yes"
+      line: "{{ pureftpd_conf_broken_clients_compatibility }}"
     - dest: "ChrootEveryone"
       regexp: "^(yes|no)"
-      line: "yes"
+      line: "{{ pureftpd_conf_chroot_everyone }}"
     - dest: "DontResolve"
       regexp: "^(yes|no)"
-      line: "yes"
+      line: "{{ pureftpd_conf_dont_resolve }}"
     - dest: "NoAnonymous"
       regexp: "^(yes|no)"
-      line: "yes"
+      line: "{{ pureftpd_conf_no_anonymous }}"
     - dest: "NoChmod"
       regexp: "^(yes|no)"
-      line: "yes"
+      line: "{{ pureftpd_conf_no_chmod }}"
     - dest: "PAMAuthentication"
       regexp: "^(yes|no)"
-      line: "yes"
+      line: "{{ pureftpd_conf_pam_authentication }}"
     - dest: "VerboseLog"
       regexp: "^(yes|no)"
-      line: "no"
+      line: "{{ pureftpd_conf_verbose_log }}"
     - dest: "MinUID"
       regexp: "^[0-9]+$"
-      line: "34" # Debian's uid(backup) = 34
+      line: "{{ pureftpd_conf_min_uid }}"
     - dest: "PassivePortRange"
       regexp: "^[0-9]+ [0-9]+$"
-      line: "64000 65000"
+      line: "{{ pureftpd_conf_passive_port_range }}"
   notify:
     - "Restart pure-ftpd"
   tags:

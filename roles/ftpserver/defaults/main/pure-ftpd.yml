@@ -5,5 +5,15 @@
 
 with_ftp_tls: false
 ftp_tls_only: true
-ftp_tls_domain:
+ftp_tls_domain: ""
 ftp_accounts: []
+
+pureftpd_conf_broken_clients_compatibility: "yes"
+pureftpd_conf_chroot_everyone: "yes"
+pureftpd_conf_dont_resolve: "yes"
+pureftpd_conf_no_anonymous: "yes"
+pureftpd_conf_no_chmod: "yes"
+pureftpd_conf_pam_authentication: "yes"
+pureftpd_conf_verbose_log: "no"
+pureftpd_conf_min_uid: "34" # Debian's uid(backup) = 34
+pureftpd_conf_passive_port_range: "64000 65000"
