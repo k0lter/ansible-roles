@@ -161,8 +161,9 @@ smtpd_sender_restrictions =
 {% if with_opendkim is defined and with_opendkim|bool %}
 # DKIM support
 milter_default_action = accept
+milter_protocol = 6
 smtpd_milters = inet:localhost:8891
-non_smtpd_milters = inet:localhost:8891
+non_smtpd_milters = $smtpd_milters
 {% endif %}
 {% if postfix_config is defined %}
 # Additionnal configuration
