@@ -48,7 +48,7 @@ with_sudo: true
 
 with_dhparam: true
 
-with_ntp: true
+with_ntp: false
 
 with_firewall: false
 firewall_debug: false
