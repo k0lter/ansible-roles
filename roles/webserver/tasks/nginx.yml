@@ -1,22 +1,4 @@
 ---
-- name: "Install upstream keyring package for Ondrej Sury Nginx packages"
-  ansible.builtin.apt:
-    deb: "https://packages.sury.org/debsuryorg-archive-keyring.deb"
-  when: with_nginx|bool and with_nginx_sury|bool and 'debsuryorg-archive-keyring' not in ansible_facts.packages
-  tags:
-    - "web"
-    - "nginx"
-
-- name: "Install upstream apt repository for Ondrej Sury PHP Nginx packages"
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ {{ ansible_facts['lsb']['codename'] }} main"
-    filename: "nginx-sury"
-    state: "present"
-  when: with_nginx|bool and with_nginx_sury|bool
-  tags:
-    - "web"
-    - "nginx"
-
 - name: "Detect Nginx version"
   ansible.builtin.shell:
     cmd: set -o pipefail && apt policy nginx 2>/dev/null | sed -En 's/^\s*Candidate:\s*(.+)$/\1/p'
