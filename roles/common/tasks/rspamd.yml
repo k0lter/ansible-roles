@@ -140,7 +140,6 @@
     - "rspamd-rules"
 
 - name: 'Install custom lua scripts'
-- name: "Install Web Interface virtual host for Nginx (sites-available)"
   ansible.builtin.template:
     src: 'rspamd/lua/{{ item }}.lua.j2'
     dest: '/etc/rspamd/lua.local.d/{{ item }}.lua'
@@ -156,11 +155,14 @@
   tags:
     - 'rspamd'
     - 'rspamd-rules'
-    src: "rspamd/nginx/rspamd_vhost.j2"
-    dest: "/etc/nginx/sites-available/rspamd"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+
+- name: 'Install Web Interface virtual host for Nginx (sites-available)'
+  ansible.builtin.template:
+    src: 'rspamd/nginx/rspamd_vhost.j2'
+    dest: '/etc/nginx/sites-available/rspamd'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   notify:
     - "Reload nginx"
   when: with_rspamd|bool and with_rspamd_web|bool and with_nginx is defined and with_nginx|bool
@@ -194,11 +196,11 @@
       password: "{{ rspamd_web_http_auth_admin_password }}"
       enabled: "{{ rspamd_web_http_auth_admin_password | length > 0 }}"
   when: item.enabled|bool
+  no_log: true
   tags:
     - "rspamd"
     - "nginx"
 
-  no_log: true
 - name: "Install Web Interface virtual host for Apache2 (sites-available)"
   ansible.builtin.template:
     src: "rspamd/apache2/rspamd_vhost.j2"

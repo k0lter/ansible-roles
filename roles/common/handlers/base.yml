@@ -2,7 +2,7 @@
 - name: "Reconfigure timezone"
   ansible.builtin.raw: rm -f /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
   register: common_base_reconfigure_timezone
-  changed_when: base_reconfigure_timezone.rc != 0
+  changed_when: common_base_reconfigure_timezone.rc != 0
 
 - name: "Apply kernel configuration (proc)"
   ansible.builtin.service:

@@ -1,20 +1,19 @@
----
-- name: "Add {{ selfvhost_vhostname }} to SSL certs to install"
-  ansible.builtin.set_fact:
+- name: 'Add self vhost name ({{ selfvhost_vhostname | default("") }}) to SSL certs to install'
+  set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [selfvhost_vhostname] }}"
-  when: with_selfvhost is defined and selfvhost_vhostname != 'localhost' and with_selfvhost|bool
+  when: with_selfvhost is defined and with_selfvhost|bool and selfvhost_vhostname != 'localhost' and with_selfvhost|bool and selfvhost_ssl_auto|bool
   tags:
     - "ssl"
 
-- name: "Add {{ phpsyscheck_vhostname }} to SSL certs to install"
-  ansible.builtin.set_fact:
+- name: 'Add PHP system check vhost name ({{ phpsyscheck_vhostname | default("") }}) to SSL certs to install'
+  set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [phpsyscheck_vhostname] }}"
   when: with_php is defined and with_php|bool and with_phpsyscheck is defined and with_phpsyscheck|bool and phpsyscheck_ssl is defined and phpsyscheck_ssl|bool
   tags:
     - "ssl"
 
-- name: "Add {{ phpmyadmin_vhostname }} to SSL certs to install"
-  ansible.builtin.set_fact:
+- name: 'Add PHPMyAdmin vhost name ({{ phpmyadmin_vhostname | default("") }}) to SSL certs to install'
+  set_fact:
     ssl_certs_auto: "{{ ssl_certs_auto + [phpmyadmin_vhostname] }}"
   when: with_php is defined and with_php|bool and ((with_phpmyadmin is defined and with_phpmyadmin|bool) or (with_phpmyadmin4 is defined and
     with_phpmyadmin4|bool)) and phpmyadmin_ssl is defined and phpmyadmin_ssl|bool
@@ -245,12 +244,7 @@
     - "ssl"
 
 - name: "Register and accept Lets Encrypt terms of service"
-  ansible.builtin.shell: >-
-    set -o pipefail && if dehydrated --help | grep -q -- 'register' && dehydrated --help | grep -q -- 'accept-terms' ; then
-      dehydrated --register --accept-terms ;
-    fi
-  args:
-    executable: /bin/bash
+  ansible.builtin.shell: dehydrated --register --accept-terms
   changed_when: false
   when: ssl_certs_auto|length > 0
   tags:

@@ -102,7 +102,7 @@
     group: "root"
     mode: "0600"
   notify:
-    - "Reload Postfix"
-  when: with_postfix_external_smtp|bool and postfix_external_sender_rewrites
+    - 'Reload Postfix'
+  when: with_postfix_external_smtp|bool and postfix_external_sender_rewrites|length > 0
   tags:
     - "smtp"
