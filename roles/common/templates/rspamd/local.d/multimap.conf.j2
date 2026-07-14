@@ -38,6 +38,18 @@
   score = 0.0;
 }
 
+{{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM {
+  group = "Custom Rules";
+  description = "Envelope sender domain is local.";
+  type = "selector";
+  selector = "from('smtp'):domain";
+  map = [
+    "$LOCAL_CONFDIR/local.d/maps.d/local_domains.inc",
+    "$LOCAL_CONFDIR/local.d/maps.d/local_domains-dynamic.inc"
+  ];
+  score = {{ rspamd_multimap_score_local_domain_from }};
+}
+
 {{ rspamd_multimap_prefix }}WHITELIST_ENVFROM {
   group = "Custom Rules";
   description = "Envelope sender address in sender whitelist.";

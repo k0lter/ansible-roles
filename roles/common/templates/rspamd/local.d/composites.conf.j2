@@ -7,6 +7,36 @@
 # Local Composites
 #
 
+{{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM_SOFTFAIL_SPF_OR_DMARC {
+    description = "Email sent with a local domain as sender with SPF or DMARC failed.";
+    expression = "not ARC_ALLOW and {{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM and (R_SPF_SOFTFAIL or DMARC_POLICY_SOFTFAIL)";
+    score = {{ rspamd_composite_score_local_domain_from_spf_dmarc_softfailed }};
+}
+
+{{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM_HARDFAIL_SPF_OR_DMARC {
+    description = "Email sent with a local domain as sender with SPF or DMARC failed.";
+    expression = "not ARC_ALLOW and {{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM and (R_SPF_FAIL or DMARC_POLICY_REJECT or DMARC_POLICY_QUARANTINE)";
+    score = {{ rspamd_composite_score_local_domain_from_spf_dmarc_hardfailed }};
+}
+
+{{ rspamd_multimap_prefix }}TO_SELF_LOCAL_DOMAIN_FAIL_SPF_OR_DMARC {
+    description = "Email sent to same local domain as sender with SPF or DMARC failed.";
+    expression = "{{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM and (TO_EQ_FROM or TO_DOM_EQ_FROM_DOM) and (R_SPF_FAIL or DMARC_POLICY_REJECT or DMARC_POLICY_QUARANTINE)";
+    score = {{ rspamd_composite_score_internal_domain_spf_dmarc_failed }};
+}
+
+{{ rspamd_multimap_prefix }}TO_SELF_NO_SMTP_AUTH {
+    description = "Email sent from same address as sender without SMTP authentication.";
+    expression = "{{ rspamd_multimap_prefix }}LOCAL_DOMAIN_FROM and TO_EQ_FROM and not {{ rspamd_multimap_prefix }}SMTP_AUTH";
+    score = 1.0;
+}
+
+{{ rspamd_multimap_prefix }}TO_SELF_DOMAIN_FAIL_SPF_OR_DMARC {
+    description = "Email sent to same domain as sender with SPF or DMARC failed.";
+    expression = "(not {{ rspamd_multimap_prefix }}TO_SELF_LOCAL_DOMAIN_FAIL_SPF_OR_DMARC) and (TO_EQ_FROM or TO_DOM_EQ_FROM_DOM) and (R_SPF_FAIL or DMARC_POLICY_REJECT or DMARC_POLICY_QUARANTINE)";
+    score = {{ rspamd_composite_score_internal_domain_spf_dmarc_failed }};
+}
+
 {{ rspamd_multimap_prefix }}RELAYED_BY_MAILINBLACK {
     description = "Email relayed via Mail In Black to an allowed recipient domain.";
     expression = "({{ rspamd_multimap_prefix }}MAILINBLACK_IPS and {{ rspamd_multimap_prefix }}MAILINBLACK_DOMAIN)";
